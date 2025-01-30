@@ -2,42 +2,181 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>王离谱的小破站</title>
-        <link>https://example.org/</link>
+        <link>https://blog.yearsuns.com/</link>
         <description>Recent content on 王离谱的小破站</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zn-cn</language>
-        <lastBuildDate>Thu, 30 Jan 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>My First Post</title>
-        <link>https://example.org/posts/my-first-post/</link>
+        <language>zh-cn</language>
+        <copyright>王离谱</copyright>
+        <lastBuildDate>Thu, 30 Jan 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>如何赚它一百万？</title>
+        <link>https://blog.yearsuns.com/posts/how-to-earn-your-first-million/</link>
         <pubDate>Thu, 30 Jan 2025 14:59:56 +0800</pubDate>
         
-        <guid>https://example.org/posts/my-first-post/</guid>
-        <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction
-&lt;/h2&gt;&lt;p&gt;This is &lt;strong&gt;bold&lt;/strong&gt; text, and this is &lt;em&gt;emphasized&lt;/em&gt; text.&lt;/p&gt;
-&lt;p&gt;Visit the &lt;a class=&#34;link&#34; href=&#34;https://gohugo.com.cn&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;Hugo&lt;/a&gt; website!&lt;/p&gt;
+        <guid>https://blog.yearsuns.com/posts/how-to-earn-your-first-million/</guid>
+        <description>&lt;p&gt;想赚到100万？&lt;/p&gt;
+&lt;p&gt;先搞清楚赚钱的本质——&lt;strong&gt;交换&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;第一步赚钱的底层逻辑&#34;&gt;&lt;strong&gt;第一步：赚钱的底层逻辑&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;赚钱的方式大致分为三种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;打工&lt;/strong&gt;：出卖时间换工资，收入受限。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;复利式赚钱&lt;/strong&gt;：一次投入，多次收益（写书、课程、短视频）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;杠杆式赚钱&lt;/strong&gt;：雇佣他人时间，放大收益（开公司、做投资）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;想提升收入，就得&lt;strong&gt;提高单位时间的价值&lt;/strong&gt;，直到你不得不花钱购买别人的时间。&lt;/p&gt;
+&lt;h2 id=&#34;第二步普通人如何赚100万&#34;&gt;&lt;strong&gt;第二步：普通人如何赚100万？&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;赚钱是选择大于努力，真正赚钱的路子，大多数人没见过。&lt;/p&gt;
+&lt;h3 id=&#34;赚钱的四个关键点&#34;&gt;&lt;strong&gt;赚钱的四个关键点&lt;/strong&gt;：
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;选对赛道&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;80%的人在苦赚辛苦钱，20%的人在赚轻松钱。&lt;/li&gt;
+&lt;li&gt;选准行业，紧贴市场需求，钱自然流向你。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;持续精进&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;赚钱没有一蹴而就，一边做一边调整，越做越精准。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;疯狂执行&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;选定方向后别犹豫，拼尽全力。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;等待运气&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;你努力的时间越长，成功的概率越大。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;第三步副业到底怎么搞&#34;&gt;&lt;strong&gt;第三步：副业到底怎么搞？&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;搞副业，先思考四个问题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;你为谁提供服务？&lt;/li&gt;
+&lt;li&gt;你能解决什么问题？&lt;/li&gt;
+&lt;li&gt;你的产品/服务值多少钱？&lt;/li&gt;
+&lt;li&gt;你的竞争力是什么？&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;如果不知道做什么，先去做&lt;strong&gt;变现能力强的赛道&lt;/strong&gt;，比如短视频、直播、社群电商等。&lt;/p&gt;
+&lt;h3 id=&#34;副业赚钱闭环流量产品转化&#34;&gt;&lt;strong&gt;副业赚钱闭环：流量→产品→转化&lt;/strong&gt;
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;流量&lt;/strong&gt;：通过短视频、社交平台、广告吸引用户。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;产品&lt;/strong&gt;：提供有价值的内容、服务或商品。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;转化&lt;/strong&gt;：让用户愿意为你的产品买单。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;副业成长路径&#34;&gt;&lt;strong&gt;副业成长路径&lt;/strong&gt;
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;赚到第一块钱&lt;/strong&gt;，建立信心。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;收入与主业持平&lt;/strong&gt;，不怕被裁员。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;副业收入 5 倍于主业&lt;/strong&gt;，考虑全职搞。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;第四步如何投资理财让钱生钱&#34;&gt;&lt;strong&gt;第四步：如何投资理财，让钱生钱？&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;存款1000万以下的人，不建议全职投资，那是幻想。&lt;/p&gt;
+&lt;h3 id=&#34;投资的四象限&#34;&gt;&lt;strong&gt;投资的四象限&lt;/strong&gt;
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;&lt;/th&gt;
+          &lt;th&gt;赚钱&lt;/th&gt;
+          &lt;th&gt;亏钱&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;简单&lt;/td&gt;
+          &lt;td&gt;基金、转债&lt;/td&gt;
+          &lt;td&gt;彩票&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;复杂&lt;/td&gt;
+          &lt;td&gt;股票、套利&lt;/td&gt;
+          &lt;td&gt;炒股盲目冲动&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;基金投资&lt;/strong&gt;：选指数基金，拉长周期，避免追涨杀跌。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;可转债&lt;/strong&gt;：用&amp;quot;打新债&amp;quot;、&amp;ldquo;双低策略&amp;quot;来低风险获利。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;套利机会&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;资本市场套利：可转债折价、LOF基金套利&lt;/li&gt;
+&lt;li&gt;实体套利：抢茅台、抢演唱会门票&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;聪明的投资者不会和大佬抢肉吃，而是利用信息差寻找确定性收益。&lt;/p&gt;
+&lt;h2 id=&#34;最后如何打造你的稳赚系统&#34;&gt;&lt;strong&gt;最后，如何打造你的“稳赚系统”？&lt;/strong&gt;
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;搞钱闭环&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;创富&lt;/strong&gt;：通过副业/创业获取现金流。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;增富&lt;/strong&gt;：用投资理财让钱滚钱。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;选对方向，持续执行&lt;/strong&gt;，赚钱就是信息差+执行力。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;加入核心圈子，获取赚钱信息差&lt;/strong&gt;，越早行动，越早收益。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;想赚100万？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;选赛道&lt;/strong&gt;，找到赚钱路子。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;敢执行&lt;/strong&gt;，不断优化策略。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;会投资&lt;/strong&gt;，让钱生钱。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;别再等了，干就完了！&lt;/p&gt;
+&lt;p&gt;本文是根据迟帅老师的【赚它一百万商业手册】总结而来&lt;/p&gt;
 </description>
         </item>
         <item>
-        <title>My Second Post</title>
-        <link>https://example.org/posts/my-second-post/</link>
-        <pubDate>Thu, 30 Jan 2025 14:59:56 +0800</pubDate>
-        
-        <guid>https://example.org/posts/my-second-post/</guid>
-        <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction
-&lt;/h2&gt;&lt;p&gt;This is &lt;strong&gt;bold&lt;/strong&gt; text, and this is &lt;em&gt;emphasized&lt;/em&gt; text.&lt;/p&gt;
-&lt;p&gt;Visit the &lt;a class=&#34;link&#34; href=&#34;https://gohugo.com.cn&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;Hugo&lt;/a&gt; website!&lt;/p&gt;
-</description>
-        </item>
-        <item>
-        <title></title>
-        <link>https://example.org/about/</link>
+        <title>Archives</title>
+        <link>https://blog.yearsuns.com/archives/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://example.org/about/</guid>
-        <description>&lt;p&gt;about page&lt;/p&gt;
+        <guid>https://blog.yearsuns.com/archives/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>关于站长</title>
+        <link>https://blog.yearsuns.com/about/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://blog.yearsuns.com/about/</guid>
+        <description>&lt;h3 id=&#34;站长是谁&#34;&gt;站长是谁
+&lt;/h3&gt;&lt;p&gt;王离谱，沙雕一枚，早年做过全职码农，因不善于加班，故而英年早辞，现以各种兼职谋生。&lt;/p&gt;
+&lt;p&gt;三个缺点：&lt;strong&gt;记仇、吃货、爱装X&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;三个优点：&lt;strong&gt;帅、帅、还是tmd帅&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;三个爱好：&lt;strong&gt;登山、健身、装X&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;建站的初衷&#34;&gt;建站的初衷
+&lt;/h3&gt;&lt;p&gt;分享知识、分享见解、分享生活。&lt;/p&gt;
+&lt;p&gt;信奉“助人者人恒助之”，所以希望这个小破站能够帮助更多的人。&lt;/p&gt;
+&lt;p&gt;在这个过程中，也想够寻找一些志同道合的小伙伴，一起搞钱，共同逐梦。&lt;/p&gt;
+&lt;h3 id=&#34;未来的计划&#34;&gt;未来的计划
+&lt;/h3&gt;&lt;p&gt;紧随AI的浪潮，搞更多的钱，帮更多的人，装更多的X。&lt;/p&gt;
+&lt;h3 id=&#34;一句想说的话&#34;&gt;一句想说的话
+&lt;/h3&gt;&lt;p&gt;睁眼观世界，闭眼世界观&lt;/p&gt;
+&lt;h3 id=&#34;请站长喝杯咖啡&#34;&gt;请站长喝杯咖啡
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/about/wechat_payment.png&#34;
+	width=&#34;261&#34;
+	height=&#34;256&#34;
+	srcset=&#34;https://blog.yearsuns.com/about/wechat_payment_hu_7110ac74c750e57.png 480w, https://blog.yearsuns.com/about/wechat_payment_hu_2b8d77efea6a55db.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;微信扫码&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;101&#34;
+		data-flex-basis=&#34;244px&#34;
+	
+&gt;&lt;/p&gt;
 </description>
+        </item>
+        <item>
+        <title>搜索</title>
+        <link>https://blog.yearsuns.com/search/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://blog.yearsuns.com/search/</guid>
+        <description></description>
         </item>
         
     </channel>
