@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="想要一个自己的博客，省心又免费？\n试试 Hugo + GitHub Pages！只需几个步骤，就能搭建一个 高速、免费、可自动部署 的个人博客网站。\n1. 安装 Hugo Windows 用 Scoop（推荐）：\nscoop install hugo 或者直接去 Hugo 官方网站 下载。\nMac brew install hugo Linux sudo apt install hugo # Debian/Ubuntu sudo dnf install hugo # Fedora 检查是否安装成功：\nhugo version 2. 创建 Hugo 博客 hugo new site myblog cd myblog Hugo 会生成一个网站的基本目录结构。\n3. 选择并安装主题 去 Hugo Themes 找个喜欢的主题，比如 ananke，然后安装：\ngit init git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke 然后编辑 config.toml：\n">
+<title>使用 Hugo &#43; GitHub 搭建个人博客（自动部署）</title>
+
+<link rel='canonical' href='https://blog.yearsuns.com/posts/%E6%8A%80%E6%9C%AF/how-to-build-a-personal-blog-with-hugo-and-github-pages/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="使用 Hugo + GitHub 搭建个人博客（自动部署）">
+<meta property='og:description' content="想要一个自己的博客，省心又免费？\n试试 Hugo + GitHub Pages！只需几个步骤，就能搭建一个 高速、免费、可自动部署 的个人博客网站。\n1. 安装 Hugo Windows 用 Scoop（推荐）：\nscoop install hugo 或者直接去 Hugo 官方网站 下载。\nMac brew install hugo Linux sudo apt install hugo # Debian/Ubuntu sudo dnf install hugo # Fedora 检查是否安装成功：\nhugo version 2. 创建 Hugo 博客 hugo new site myblog cd myblog Hugo 会生成一个网站的基本目录结构。\n3. 选择并安装主题 去 Hugo Themes 找个喜欢的主题，比如 ananke，然后安装：\ngit init git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke 然后编辑 config.toml：\n">
+<meta property='og:url' content='https://blog.yearsuns.com/posts/%E6%8A%80%E6%9C%AF/how-to-build-a-personal-blog-with-hugo-and-github-pages/'>
+<meta property='og:site_name' content='王离谱的小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts' /><meta property='article:tag' content='hugo' /><meta property='article:tag' content='技术' /><meta property='article:tag' content='教程' /><meta property='article:published_time' content='2025-01-30T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-01-30T14:59:56&#43;08:00'/>
+<meta name="twitter:title" content="使用 Hugo + GitHub 搭建个人博客（自动部署）">
+<meta name="twitter:description" content="想要一个自己的博客，省心又免费？\n试试 Hugo + GitHub Pages！只需几个步骤，就能搭建一个 高速、免费、可自动部署 的个人博客网站。\n1. 安装 Hugo Windows 用 Scoop（推荐）：\nscoop install hugo 或者直接去 Hugo 官方网站 下载。\nMac brew install hugo Linux sudo apt install hugo # Debian/Ubuntu sudo dnf install hugo # Fedora 检查是否安装成功：\nhugo version 2. 创建 Hugo 博客 hugo new site myblog cd myblog Hugo 会生成一个网站的基本目录结构。\n3. 选择并安装主题 去 Hugo Themes 找个喜欢的主题，比如 ananke，然后安装：\ngit init git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke 然后编辑 config.toml：\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王离谱的小破站</a></h1>
+            <h2 class="site-description">破破烂烂</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>分类</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://tools.yearsuns.com' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>工具</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-安装-hugo"><strong>1. 安装 Hugo</strong></a>
+      <ul>
+        <li><a href="#windows"><strong>Windows</strong></a></li>
+        <li><a href="#mac"><strong>Mac</strong></a></li>
+        <li><a href="#linux"><strong>Linux</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#2-创建-hugo-博客"><strong>2. 创建 Hugo 博客</strong></a></li>
+    <li><a href="#3-选择并安装主题"><strong>3. 选择并安装主题</strong></a></li>
+    <li><a href="#4-添加第一篇文章"><strong>4. 添加第一篇文章</strong></a></li>
+    <li><a href="#5-本地预览"><strong>5. 本地预览</strong></a></li>
+    <li><a href="#6-发布到-github"><strong>6. 发布到 GitHub</strong></a>
+      <ul>
+        <li><a href="#1创建-github-仓库"><strong>（1）创建 GitHub 仓库</strong></a></li>
+        <li><a href="#2把源码推送到私有仓库"><strong>（2）把源码推送到私有仓库</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#7-创建-github-tokengithub_token"><strong>7. 创建 GitHub Token（GITHUB_TOKEN）</strong></a>
+      <ul>
+        <li><a href="#1生成-token"><strong>（1）生成 Token</strong></a></li>
+        <li><a href="#2添加到-github-actions"><strong>（2）添加到 GitHub Actions</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#8-配置-github-actions自动部署"><strong>8. 配置 GitHub Actions（自动部署）</strong></a></li>
+    <li><a href="#9-配置-github-pages"><strong>9. 配置 GitHub Pages</strong></a></li>
+    <li><a href="#10-提交修改自动部署"><strong>10. 提交修改，自动部署！</strong></a></li>
+    <li><a href="#总结"><strong>总结</strong></a></li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%8A%80%E6%9C%AF/" >
+                技术
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/%E6%8A%80%E6%9C%AF/how-to-build-a-personal-blog-with-hugo-and-github-pages/">使用 Hugo &#43; GitHub 搭建个人博客（自动部署）</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025年01月30日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 2 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>想要一个自己的博客，省心又免费？</p>
+<p>试试 <strong>Hugo + GitHub Pages</strong>！只需几个步骤，就能搭建一个 <strong>高速、免费、可自动部署</strong> 的个人博客网站。</p>
+<h2 id="1-安装-hugo"><strong>1. 安装 Hugo</strong>
+</h2><h3 id="windows"><strong>Windows</strong>
+</h3><p>用 <strong>Scoop</strong>（推荐）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scoop install hugo
+</span></span></code></pre></div><p>或者直接去 <a class="link" href="https://gohugo.io/getting-started/installing/"  target="_blank" rel="noopener"
+    >Hugo 官方网站</a> 下载。</p>
+<h3 id="mac"><strong>Mac</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>brew install hugo
+</span></span></code></pre></div><h3 id="linux"><strong>Linux</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo apt install hugo  <span style="color:#75715e"># Debian/Ubuntu</span>
+</span></span><span style="display:flex;"><span>sudo dnf install hugo  <span style="color:#75715e"># Fedora</span>
+</span></span></code></pre></div><p>检查是否安装成功：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>hugo version
+</span></span></code></pre></div><h2 id="2-创建-hugo-博客"><strong>2. 创建 Hugo 博客</strong>
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>hugo new site myblog
+</span></span><span style="display:flex;"><span>cd myblog
+</span></span></code></pre></div><p>Hugo 会生成一个网站的基本目录结构。</p>
+<h2 id="3-选择并安装主题"><strong>3. 选择并安装主题</strong>
+</h2><p>去 <a class="link" href="https://themes.gohugo.io/"  target="_blank" rel="noopener"
+    >Hugo Themes</a> 找个喜欢的主题，比如 <code>ananke</code>，然后安装：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>git init
+</span></span><span style="display:flex;"><span>git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke
+</span></span></code></pre></div><p>然后编辑 <code>config.toml</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#a6e22e">theme</span> = <span style="color:#e6db74">&#34;ananke&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#34;https://&lt;username&gt;.github.io/&#34;</span>
+</span></span></code></pre></div><h2 id="4-添加第一篇文章"><strong>4. 添加第一篇文章</strong>
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>hugo new posts/my-first-post.md
+</span></span></code></pre></div><p>然后编辑 <code>content/posts/my-first-post.md</code>，加上内容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-md" data-lang="md"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>title: &#34;我的第一篇博客&#34;
+</span></span><span style="display:flex;"><span>date: 2025-01-31T12:00:00+08:00
+</span></span><span style="display:flex;"><span>draft: false
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>Hello, Hugo!
+</span></span></code></pre></div><h2 id="5-本地预览"><strong>5. 本地预览</strong>
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>hugo server -D
+</span></span></code></pre></div><p>然后在浏览器访问 <code>http://localhost:1313</code> 看效果。</p>
+<h2 id="6-发布到-github"><strong>6. 发布到 GitHub</strong>
+</h2><h3 id="1创建-github-仓库"><strong>（1）创建 GitHub 仓库</strong>
+</h3><ul>
+<li><strong>私有仓库</strong>：<code>myblog-src</code>（存源码）</li>
+<li><strong>公开仓库</strong>：<code>&lt;username&gt;.github.io</code>（存生成的网站文件）</li>
+</ul>
+<h3 id="2把源码推送到私有仓库"><strong>（2）把源码推送到私有仓库</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>git remote add origin https://github.com/&lt;username&gt;/myblog-src.git
+</span></span><span style="display:flex;"><span>git branch -M master
+</span></span><span style="display:flex;"><span>git add .
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;初始化 Hugo 博客&#34;</span>
+</span></span><span style="display:flex;"><span>git push -u origin master
+</span></span></code></pre></div><h2 id="7-创建-github-tokengithub_token"><strong>7. 创建 GitHub Token（GITHUB_TOKEN）</strong>
+</h2><p>由于我们要把生成的静态网站推送到 <code>username.github.io</code> 仓库，需要 GitHub Token 进行授权。</p>
+<h3 id="1生成-token"><strong>（1）生成 Token</strong>
+</h3><ol>
+<li>进入 GitHub，点击右上角头像，选择 <strong>Settings</strong></li>
+<li>在左侧菜单选择 <strong>Developer settings → Personal access tokens → Fine-grained tokens</strong></li>
+<li>点击 <strong>Generate new token</strong>，然后：
+<ul>
+<li><strong>Repository access</strong> 选择 <code>Only select repositories</code>，勾选 <code>&lt;username&gt;.github.io</code></li>
+<li><strong>Permissions</strong>：
+<ul>
+<li><code>Contents</code>: 选择 <strong>Read and Write</strong></li>
+<li>其他保持默认</li>
+</ul>
+</li>
+<li><strong>点击 Generate token</strong></li>
+</ul>
+</li>
+<li><strong>复制 Token</strong>，保存到本地（只能看一次）。</li>
+</ol>
+<h3 id="2添加到-github-actions"><strong>（2）添加到 GitHub Actions</strong>
+</h3><ol>
+<li>进入 <code>myblog-src</code> 仓库</li>
+<li>打开 <strong>Settings → Secrets and variables → Actions → New repository secret</strong></li>
+<li>Name 填写 <code>DEPLOY_TOKEN</code>，Value 粘贴刚才复制的 Token，点击 <strong>Add secret</strong></li>
+</ol>
+<h2 id="8-配置-github-actions自动部署"><strong>8. 配置 GitHub Actions（自动部署）</strong>
+</h2><p>在 <code>myblog-src</code> 仓库中，新建 <code>.github/workflows/deploy.yml</code>，写入：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># Sample workflow for building and deploying a Hugo site to GitHub Pages</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Deploy Hugo site to Pages</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">on</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Runs on pushes targeting the default branch</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">push</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">branches</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">master</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Default to bash</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">defaults</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">run</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">shell</span>: <span style="color:#ae81ff">bash</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">jobs</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">deploy</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">env</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">HUGO_VERSION</span>: <span style="color:#ae81ff">0.142.0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">steps</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install Hugo CLI</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          &amp;&amp; sudo dpkg -i ${{ runner.temp }}/hugo.deb</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v4</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">submodules</span>: <span style="color:#ae81ff">recursive</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">fetch-depth</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build Web</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: <span style="color:#ae81ff">hugo -D</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Deploy Web</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">peaceiris/actions-gh-pages@v4</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">PERSONAL_TOKEN</span>: <span style="color:#ae81ff">${{ secrets.BLOG_TOKEN }}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">EXTERNAL_REPOSITORY</span>: <span style="color:#ae81ff">&lt;username&gt;/&lt;username&gt;.github.io</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">PUBLISH_BRANCH</span>: <span style="color:#ae81ff">master</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">PUBLISH_DIR</span>: <span style="color:#ae81ff">./public</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">commit_message</span>: <span style="color:#ae81ff">auto deploy</span>
+</span></span></code></pre></div><h2 id="9-配置-github-pages"><strong>9. 配置 GitHub Pages</strong>
+</h2><p>进入 <code>&lt;username&gt;.github.io</code> 仓库：</p>
+<ul>
+<li><strong>Settings → Pages</strong></li>
+<li><strong>Branch 选择 <code>master</code></strong></li>
+<li><strong>点击 Save</strong></li>
+</ul>
+<h2 id="10-提交修改自动部署"><strong>10. 提交修改，自动部署！</strong>
+</h2><p>以后只需提交博客源码，GitHub Actions 会自动部署：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>git add .
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;更新文章&#34;</span>
+</span></span><span style="display:flex;"><span>git push
+</span></span></code></pre></div><p>稍等片刻，你的博客就会出现在：<br>
+👉 <code>https://&lt;username&gt;.github.io/</code></p>
+<h2 id="总结"><strong>总结</strong>
+</h2><p>你已经成功使用 <strong>Hugo + GitHub Pages</strong> 搭建了一个 <strong>私有源码、自动部署</strong> 的个人博客！🎉<br>
+随时写文章，推送后 <strong>自动上线</strong>，是不是超简单？💡</p>
+<p>🚀 <strong>快去试试吧！</strong></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/hugo/">Hugo</a>
+        
+            <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+        
+            <a href="/tags/%E6%95%99%E7%A8%8B/">教程</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 王离谱
+    </section>
+    
+    <section class="powerby">
+        
+            <a href="https://beian.miit.gov.cn/">粤ICP备2022043168号</a> <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
