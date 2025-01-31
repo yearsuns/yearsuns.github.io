@@ -9,10 +9,10 @@
         <copyright>王离谱</copyright>
         <lastBuildDate>Thu, 30 Jan 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/tags/%E6%95%99%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>使用 Hugo &#43; GitHub 搭建个人博客（自动部署）</title>
-        <link>https://blog.yearsuns.com/posts/%E6%8A%80%E6%9C%AF/how-to-build-a-personal-blog-with-hugo-and-github-pages/</link>
+        <link>https://blog.yearsuns.com/posts/it/how-to-build-a-personal-blog-with-hugo-and-github-pages/</link>
         <pubDate>Thu, 30 Jan 2025 14:59:56 +0800</pubDate>
         
-        <guid>https://blog.yearsuns.com/posts/%E6%8A%80%E6%9C%AF/how-to-build-a-personal-blog-with-hugo-and-github-pages/</guid>
+        <guid>https://blog.yearsuns.com/posts/it/how-to-build-a-personal-blog-with-hugo-and-github-pages/</guid>
         <description>&lt;p&gt;想要一个自己的博客，省心又免费？&lt;/p&gt;
 &lt;p&gt;试试 &lt;strong&gt;Hugo + GitHub Pages&lt;/strong&gt;！只需几个步骤，就能搭建一个 &lt;strong&gt;高速、免费、可自动部署&lt;/strong&gt; 的个人博客网站。&lt;/p&gt;
 &lt;h2 id=&#34;1-安装-hugo&#34;&gt;&lt;strong&gt;1. 安装 Hugo&lt;/strong&gt;
