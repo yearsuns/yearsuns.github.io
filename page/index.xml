@@ -2,16 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Pages on 王离谱的小破站</title>
-        <link>https://blog.yearsuns.com/pages/</link>
+        <link>https://blog.yearsuns.com/page/</link>
         <description>Recent content in Pages on 王离谱的小破站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <copyright>王离谱</copyright><atom:link href="https://blog.yearsuns.com/pages/index.xml" rel="self" type="application/rss+xml" /><item>
+        <copyright>王离谱</copyright><atom:link href="https://blog.yearsuns.com/page/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Archives</title>
         <link>https://blog.yearsuns.com/archives/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
         <guid>https://blog.yearsuns.com/archives/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Search</title>
+        <link>https://blog.yearsuns.com/search/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://blog.yearsuns.com/search/</guid>
         <description></description>
         </item>
         <item>
@@ -65,14 +73,6 @@
 	
 &gt;&lt;/p&gt;
 </description>
-        </item>
-        <item>
-        <title>搜索</title>
-        <link>https://blog.yearsuns.com/search/</link>
-        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-        
-        <guid>https://blog.yearsuns.com/search/</guid>
-        <description></description>
         </item>
         
     </channel>

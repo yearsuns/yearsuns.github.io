@@ -4,13 +4,13 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="想要一个自己的博客，省心又免费？\n试试 Hugo + GitHub Pages！只需几个步骤，就能搭建一个 高速、免费、可自动部署 的个人博客网站。\n1. 安装 Hugo Windows 用 Scoop（推荐）：\nscoop install hugo 或者直接去 Hugo 官方网站 下载。\nMac brew install hugo Linux sudo apt install hugo # Debian/Ubuntu sudo dnf install hugo # Fedora 检查是否安装成功：\nhugo version 2. 创建 Hugo 博客 hugo new site myblog cd myblog Hugo 会生成一个网站的基本目录结构。\n3. 选择并安装主题 去 Hugo Themes 找个喜欢的主题，比如 ananke，然后安装：\ngit init git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke 然后编辑 config.toml：\n">
 <title>使用 Hugo &#43; GitHub 搭建个人博客（自动部署）</title>
 
-<link rel='canonical' href='https://blog.yearsuns.com/posts/it/how-to-build-a-personal-blog-with-hugo-and-github-pages/'>
+<link rel='canonical' href='https://blog.yearsuns.com/p/how-to-build-a-personal-blog-with-hugo-and-github-pages/'>
 
 <link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="使用 Hugo + GitHub 搭建个人博客（自动部署）">
 <meta property='og:description' content="想要一个自己的博客，省心又免费？\n试试 Hugo + GitHub Pages！只需几个步骤，就能搭建一个 高速、免费、可自动部署 的个人博客网站。\n1. 安装 Hugo Windows 用 Scoop（推荐）：\nscoop install hugo 或者直接去 Hugo 官方网站 下载。\nMac brew install hugo Linux sudo apt install hugo # Debian/Ubuntu sudo dnf install hugo # Fedora 检查是否安装成功：\nhugo version 2. 创建 Hugo 博客 hugo new site myblog cd myblog Hugo 会生成一个网站的基本目录结构。\n3. 选择并安装主题 去 Hugo Themes 找个喜欢的主题，比如 ananke，然后安装：\ngit init git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke 然后编辑 config.toml：\n">
-<meta property='og:url' content='https://blog.yearsuns.com/posts/it/how-to-build-a-personal-blog-with-hugo-and-github-pages/'>
+<meta property='og:url' content='https://blog.yearsuns.com/p/how-to-build-a-personal-blog-with-hugo-and-github-pages/'>
 <meta property='og:site_name' content='王离谱的小破站'>
-<meta property='og:type' content='article'><meta property='article:section' content='Posts' /><meta property='article:tag' content='hugo' /><meta property='article:tag' content='技术' /><meta property='article:tag' content='教程' /><meta property='article:published_time' content='2025-01-30T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-01-30T14:59:56&#43;08:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='hugo' /><meta property='article:tag' content='技术' /><meta property='article:tag' content='教程' /><meta property='article:published_time' content='2025-01-30T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-01-30T14:59:56&#43;08:00'/>
 <meta name="twitter:title" content="使用 Hugo + GitHub 搭建个人博客（自动部署）">
 <meta name="twitter:description" content="想要一个自己的博客，省心又免费？\n试试 Hugo + GitHub Pages！只需几个步骤，就能搭建一个 高速、免费、可自动部署 的个人博客网站。\n1. 安装 Hugo Windows 用 Scoop（推荐）：\nscoop install hugo 或者直接去 Hugo 官方网站 下载。\nMac brew install hugo Linux sudo apt install hugo # Debian/Ubuntu sudo dnf install hugo # Fedora 检查是否安装成功：\nhugo version 2. 创建 Hugo 博客 hugo new site myblog cd myblog Hugo 会生成一个网站的基本目录结构。\n3. 选择并安装主题 去 Hugo Themes 找个喜欢的主题，比如 ananke，然后安装：\ngit init git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke 然后编辑 config.toml：\n">
     <link rel="shortcut icon" href="/logo.png" />
@@ -183,18 +183,23 @@
         
         
         <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
             <a href='/about/' >
                 
                 
                 
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="12" cy="7" r="4" />
-  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-</svg>
-
-
-
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
                 
                 <span>关于</span>
             </a>
@@ -305,7 +310,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/posts/it/how-to-build-a-personal-blog-with-hugo-and-github-pages/">使用 Hugo &#43; GitHub 搭建个人博客（自动部署）</a>
+            <a href="/p/how-to-build-a-personal-blog-with-hugo-and-github-pages/">使用 Hugo &#43; GitHub 搭建个人博客（自动部署）</a>
         </h2>
     
         
