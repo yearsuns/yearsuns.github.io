@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="前言\n在当今的 web 开发中，身份验证是非常关键的，而 JWT（JSON Web Token）作为一种简单、高效的身份验证方式，已经被广泛应用在许多前后端分离的项目中。本篇文章将带你从零开始理解 JWT，探讨它的优缺点，并介绍最佳实践。\n">
+<title>JWT的最佳实践</title>
+
+<link rel='canonical' href='https://blog.yearsuns.com/p/best-practices-of-jwt/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="JWT的最佳实践">
+<meta property='og:description' content="前言\n在当今的 web 开发中，身份验证是非常关键的，而 JWT（JSON Web Token）作为一种简单、高效的身份验证方式，已经被广泛应用在许多前后端分离的项目中。本篇文章将带你从零开始理解 JWT，探讨它的优缺点，并介绍最佳实践。\n">
+<meta property='og:url' content='https://blog.yearsuns.com/p/best-practices-of-jwt/'>
+<meta property='og:site_name' content='王离谱的小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='JWT' /><meta property='article:tag' content='教程' /><meta property='article:published_time' content='2025-02-07T20:25:56&#43;08:00'/><meta property='article:modified_time' content='2025-02-07T20:25:56&#43;08:00'/>
+<meta name="twitter:title" content="JWT的最佳实践">
+<meta name="twitter:description" content="前言\n在当今的 web 开发中，身份验证是非常关键的，而 JWT（JSON Web Token）作为一种简单、高效的身份验证方式，已经被广泛应用在许多前后端分离的项目中。本篇文章将带你从零开始理解 JWT，探讨它的优缺点，并介绍最佳实践。\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王离谱的小破站</a></h1>
+            <h2 class="site-description">破破烂烂</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>分类</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://tools.yearsuns.com' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>工具</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#什么是-jwt">什么是 JWT？</a></li>
+        <li><a href="#jwt-的生成和验证原理">JWT 的生成和验证原理</a></li>
+        <li><a href="#jwt-的优点">JWT 的优点</a></li>
+        <li><a href="#jwt-的缺点">JWT 的缺点</a></li>
+        <li><a href="#jwt-的使用场景">JWT 的使用场景</a></li>
+        <li><a href="#jwt-的最佳实践">JWT 的最佳实践</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/best-practices-of-jwt/">JWT的最佳实践</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025年02月07日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p><strong>前言</strong><br>
+在当今的 web 开发中，身份验证是非常关键的，而 JWT（JSON Web Token）作为一种简单、高效的身份验证方式，已经被广泛应用在许多前后端分离的项目中。本篇文章将带你从零开始理解 JWT，探讨它的优缺点，并介绍最佳实践。</p>
+<hr>
+<h3 id="什么是-jwt">什么是 JWT？
+</h3><p>JWT 是一种开放标准（RFC 7519），用于在不同系统之间安全地传递信息。简单来说，JWT 主要用于认证和信息交换，常见的应用场景就是用户登录验证。JWT 通常在用户登录后生成，并随后的请求中带着它来进行身份认证。</p>
+<h4 id="jwt-结构">JWT 结构
+</h4><p>JWT 的结构非常简单，它由三部分组成：</p>
+<ol>
+<li>
+<p><strong>头部（Header）</strong><br>
+头部通常包含两部分内容：令牌类型（JWT）和签名算法（如 HMAC SHA256 或 RSA）。</p>
+</li>
+<li>
+<p><strong>载荷（Payload）</strong><br>
+载荷是 JWT 的“正文”部分，存储了你希望传递的数据（比如用户 ID 或权限）。这里面包含了 &ldquo;Claims&rdquo;（声明），有三种类型：</p>
+<ul>
+<li><strong>注册声明</strong>：如 <code>sub</code>（主题）、<code>exp</code>（过期时间）、<code>iat</code>（签发时间）等。</li>
+<li><strong>公共声明</strong>：可以自定义的数据，但需要避免冲突。</li>
+<li><strong>私有声明</strong>：你自己定义的声明。</li>
+</ul>
+</li>
+<li>
+<p><strong>签名（Signature）</strong><br>
+签名部分用于验证信息的完整性，确保数据没有被篡改。生成签名的方式是：用头部和载荷，通过密钥（对于对称加密是一个密钥，非对称加密是私钥）生成。</p>
+</li>
+</ol>
+<hr>
+<h3 id="jwt-的生成和验证原理">JWT 的生成和验证原理
+</h3><h4 id="jwt-的生成过程">JWT 的生成过程
+</h4><ol>
+<li>
+<p><strong>用户登录</strong>：<br>
+用户输入用户名和密码，通过认证系统登录。</p>
+</li>
+<li>
+<p><strong>服务器生成 JWT</strong>：<br>
+认证成功后，服务器会使用一个密钥（对称加密）或者私钥（非对称加密）生成一个 JWT。生成过程包括：</p>
+<ul>
+<li>将头部和载荷（即数据）部分通过 Base64 编码。</li>
+<li>用密钥对这两部分进行签名，生成签名部分。</li>
+</ul>
+<p>生成后的 JWT 看起来像这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>header.payload.signature
+</span></span></code></pre></div><p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+</span></span></code></pre></div><p><img src="/p/best-practices-of-jwt/jwt.png"
+	width="1222"
+	height="901"
+	srcset="/p/best-practices-of-jwt/jwt_hu_96e6486fee1b5af3.png 480w, /p/best-practices-of-jwt/jwt_hu_7fcaf8bf5bb0946f.png 1024w"
+	loading="lazy"
+	
+		alt="jwt构成"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="135"
+		data-flex-basis="325px"
+	
+></p>
+</li>
+<li>
+<p><strong>返回 JWT 给客户端</strong>：<br>
+服务器把生成的 JWT 返回给客户端，通常客户端会将其存储在本地（如 LocalStorage 或 Cookie）中。</p>
+</li>
+</ol>
+<h4 id="jwt-的验证过程">JWT 的验证过程
+</h4><ol>
+<li>
+<p><strong>客户端发起请求</strong>：<br>
+客户端每次请求时，会将 JWT 添加到请求的 Authorization 头部中（例如：<code>Authorization: Bearer &lt;JWT&gt;</code>）。</p>
+</li>
+<li>
+<p><strong>服务器验证 JWT</strong>：<br>
+服务器拿到 JWT 后，通过以下步骤来验证：</p>
+<ul>
+<li>解析 JWT 的头部、载荷和签名。</li>
+<li>使用密钥（对于对称加密）或公钥（对于非对称加密）对签名部分进行验证，看是否与头部和载荷部分匹配。</li>
+</ul>
+<p>如果验证通过，说明 JWT 的数据未被篡改，服务器就会继续处理请求。如果验证失败，说明 JWT 被篡改，服务器会返回错误信息。</p>
+</li>
+</ol>
+<hr>
+<h3 id="jwt-的优点">JWT 的优点
+</h3><ol>
+<li>
+<p><strong>无状态（Stateless）</strong><br>
+JWT 是无状态的，意味着服务器不需要存储用户会话数据。每次请求都包含 JWT，服务器可以根据 JWT 里的信息来进行认证。这样减少了服务器的负担，提升了系统的扩展性。</p>
+</li>
+<li>
+<p><strong>跨域支持</strong><br>
+由于 JWT 是由客户端传递，它非常适合前后端分离的项目，可以跨域进行身份验证，避免了传统 Cookie 的同源限制。</p>
+</li>
+<li>
+<p><strong>轻量级</strong><br>
+JWT 的大小较小，通常在几十到一百多个字节之间，非常适合频繁的 HTTP 请求，传输效率高。</p>
+</li>
+<li>
+<p><strong>适合微服务架构</strong><br>
+JWT 可以在多个服务之间传递身份信息，非常适合分布式架构，尤其是微服务架构中的身份认证。</p>
+</li>
+</ol>
+<hr>
+<h3 id="jwt-的缺点">JWT 的缺点
+</h3><ol>
+<li>
+<p><strong>无法撤销</strong><br>
+一旦 JWT 被发放出去，它就无法撤销。如果 JWT 泄露，攻击者可以在有效期内反复使用。这比传统的 Session 认证要危险，后者可以在服务器端主动注销会话。</p>
+</li>
+<li>
+<p><strong>存储和安全问题</strong><br>
+JWT 如果存储不当（如保存在 LocalStorage 或 Cookie 中），可能会受到 XSS 攻击。如果攻击者能够获取到 JWT，就能伪造合法请求。</p>
+</li>
+<li>
+<p><strong>过期问题</strong><br>
+JWT 通常设定有过期时间，一旦过期，就不能再使用。为了避免频繁登录，可以使用刷新令牌（Refresh Token）。不过如果过期时间设置不合理，可能会影响用户体验。</p>
+</li>
+<li>
+<p><strong>载荷不加密</strong><br>
+JWT 的载荷部分是 Base64 编码的，不是加密的。任何人都可以解码并看到其中的内容。因此，切勿将敏感信息（如密码）存储在 JWT 中。</p>
+</li>
+<li>
+<p><strong>密钥泄漏的风险</strong><br>
+JWT 的安全性依赖于密钥的保密性。如果密钥泄露，攻击者可以伪造有效的 JWT。因此，保护好密钥非常重要。</p>
+</li>
+</ol>
+<hr>
+<h3 id="jwt-的使用场景">JWT 的使用场景
+</h3><ol>
+<li>
+<p><strong>单点登录（SSO）</strong><br>
+JWT 非常适合实现跨应用的单点登录（SSO）。只需生成一次 JWT，就可以在多个系统之间共享。</p>
+</li>
+<li>
+<p><strong>移动应用身份认证</strong><br>
+在移动应用中，JWT 常常用来进行身份验证。客户端存储 JWT，并在每次请求中发送。</p>
+</li>
+<li>
+<p><strong>前后端分离的应用</strong><br>
+在前后端分离的架构中，前端和后端可以独立进行身份验证，使用 JWT 作为认证工具，避免了传统 Cookie 的问题。</p>
+</li>
+</ol>
+<hr>
+<h3 id="jwt-的最佳实践">JWT 的最佳实践
+</h3><ol>
+<li>
+<p><strong>不要在 JWT 中存储敏感信息</strong><br>
+由于 JWT 的载荷部分是可以解码的，敏感信息（如密码、银行卡信息）绝对不能存储在 JWT 中。你可以把这些信息存储在服务器端，JWT 只传递一个标识符。</p>
+</li>
+<li>
+<p><strong>使用 HTTPS</strong><br>
+无论是生成 JWT 还是传输 JWT，都应使用 HTTPS 协议，确保数据在传输过程中不会被窃听或篡改。</p>
+</li>
+<li>
+<p><strong>设置合理的过期时间</strong><br>
+JWT 的过期时间要设置合理。过短可能影响用户体验，过长则可能存在安全隐患。通常，访问令牌的过期时间可以设置为 15 分钟到 1 小时，刷新令牌可以设置较长时间。</p>
+</li>
+<li>
+<p><strong>使用刷新令牌</strong><br>
+结合使用访问令牌（Access Token）和刷新令牌（Refresh Token）。当访问令牌过期时，客户端可以使用刷新令牌获取新的访问令牌。</p>
+</li>
+<li>
+<p><strong>存储 JWT 的安全性</strong><br>
+如果你把 JWT 存储在浏览器中，推荐使用 HttpOnly 和 Secure 标志的 Cookie，以避免 XSS 攻击的风险。避免将 JWT 存储在 LocalStorage 中，因为它更容易受到 XSS 攻击。</p>
+</li>
+<li>
+<p><strong>签名算法选择</strong><br>
+在选择签名算法时，推荐使用非对称加密的算法（如 RS256 或 ES256），而不是对称加密的算法（如 HS256），这样可以提高安全性，避免密钥泄露风险。</p>
+</li>
+<li>
+<p><strong>密钥管理</strong><br>
+密钥是 JWT 安全的关键。无论是对称加密还是非对称加密，都应该采取安全措施保护密钥。避免将密钥硬编码在代码中，可以通过环境变量或专门的密钥管理工具来管理密钥。</p>
+</li>
+</ol>
+<hr>
+<h3 id="总结">总结
+</h3><p>JWT 是一种非常流行的身份验证方式，它简单、轻量、无状态，非常适合现代 web 应用，尤其是前后端分离的项目。但它也有一些缺点，尤其是在密钥泄漏和无法撤销的场景下。因此，使用 JWT 时需要特别注意密钥的管理和安全配置，合理设置过期时间，避免将敏感信息存储在 JWT 中。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/jwt/">JWT</a>
+        
+            <a href="/tags/%E6%95%99%E7%A8%8B/">教程</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/3-spells-to-tame-the-wild-ai/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">别让AI把你当傻子！3个咒语驯服野生AI，打工效率直接芜湖起飞🛫</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/how-to-build-a-personal-blog-with-hugo-and-github-pages/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">使用 Hugo &#43; GitHub 搭建个人博客（自动部署）</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'zh-CN',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 王离谱
+    </section>
+    
+    <section class="powerby">
+        
+            <a href="https://beian.miit.gov.cn/">粤ICP备2022043168号</a> <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>JWT on 王离谱的小破站</title>
+        <link>https://blog.yearsuns.com/tags/jwt/</link>
+        <description>Recent content in JWT on 王离谱的小破站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>王离谱</copyright>
+        <lastBuildDate>Fri, 07 Feb 2025 20:25:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/tags/jwt/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>JWT的最佳实践</title>
+        <link>https://blog.yearsuns.com/p/best-practices-of-jwt/</link>
+        <pubDate>Fri, 07 Feb 2025 20:25:56 +0800</pubDate>
+        
+        <guid>https://blog.yearsuns.com/p/best-practices-of-jwt/</guid>
+        <description>&lt;p&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;br&gt;
+在当今的 web 开发中，身份验证是非常关键的，而 JWT（JSON Web Token）作为一种简单、高效的身份验证方式，已经被广泛应用在许多前后端分离的项目中。本篇文章将带你从零开始理解 JWT，探讨它的优缺点，并介绍最佳实践。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;什么是-jwt&#34;&gt;什么是 JWT？
+&lt;/h3&gt;&lt;p&gt;JWT 是一种开放标准（RFC 7519），用于在不同系统之间安全地传递信息。简单来说，JWT 主要用于认证和信息交换，常见的应用场景就是用户登录验证。JWT 通常在用户登录后生成，并随后的请求中带着它来进行身份认证。&lt;/p&gt;
+&lt;h4 id=&#34;jwt-结构&#34;&gt;JWT 结构
+&lt;/h4&gt;&lt;p&gt;JWT 的结构非常简单，它由三部分组成：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;头部（Header）&lt;/strong&gt;&lt;br&gt;
+头部通常包含两部分内容：令牌类型（JWT）和签名算法（如 HMAC SHA256 或 RSA）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;载荷（Payload）&lt;/strong&gt;&lt;br&gt;
+载荷是 JWT 的“正文”部分，存储了你希望传递的数据（比如用户 ID 或权限）。这里面包含了 &amp;ldquo;Claims&amp;rdquo;（声明），有三种类型：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;注册声明&lt;/strong&gt;：如 &lt;code&gt;sub&lt;/code&gt;（主题）、&lt;code&gt;exp&lt;/code&gt;（过期时间）、&lt;code&gt;iat&lt;/code&gt;（签发时间）等。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;公共声明&lt;/strong&gt;：可以自定义的数据，但需要避免冲突。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;私有声明&lt;/strong&gt;：你自己定义的声明。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;签名（Signature）&lt;/strong&gt;&lt;br&gt;
+签名部分用于验证信息的完整性，确保数据没有被篡改。生成签名的方式是：用头部和载荷，通过密钥（对于对称加密是一个密钥，非对称加密是私钥）生成。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;jwt-的生成和验证原理&#34;&gt;JWT 的生成和验证原理
+&lt;/h3&gt;&lt;h4 id=&#34;jwt-的生成过程&#34;&gt;JWT 的生成过程
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;用户登录&lt;/strong&gt;：&lt;br&gt;
+用户输入用户名和密码，通过认证系统登录。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;服务器生成 JWT&lt;/strong&gt;：&lt;br&gt;
+认证成功后，服务器会使用一个密钥（对称加密）或者私钥（非对称加密）生成一个 JWT。生成过程包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;将头部和载荷（即数据）部分通过 Base64 编码。&lt;/li&gt;
+&lt;li&gt;用密钥对这两部分进行签名，生成签名部分。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;生成后的 JWT 看起来像这样：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;header.payload.signature
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;例如：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-of-jwt/jwt.png&#34;
+	width=&#34;1222&#34;
+	height=&#34;901&#34;
+	srcset=&#34;https://blog.yearsuns.com/p/best-practices-of-jwt/jwt_hu_96e6486fee1b5af3.png 480w, https://blog.yearsuns.com/p/best-practices-of-jwt/jwt_hu_7fcaf8bf5bb0946f.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;jwt构成&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;135&#34;
+		data-flex-basis=&#34;325px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;返回 JWT 给客户端&lt;/strong&gt;：&lt;br&gt;
+服务器把生成的 JWT 返回给客户端，通常客户端会将其存储在本地（如 LocalStorage 或 Cookie）中。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;jwt-的验证过程&#34;&gt;JWT 的验证过程
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;客户端发起请求&lt;/strong&gt;：&lt;br&gt;
+客户端每次请求时，会将 JWT 添加到请求的 Authorization 头部中（例如：&lt;code&gt;Authorization: Bearer &amp;lt;JWT&amp;gt;&lt;/code&gt;）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;服务器验证 JWT&lt;/strong&gt;：&lt;br&gt;
+服务器拿到 JWT 后，通过以下步骤来验证：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;解析 JWT 的头部、载荷和签名。&lt;/li&gt;
+&lt;li&gt;使用密钥（对于对称加密）或公钥（对于非对称加密）对签名部分进行验证，看是否与头部和载荷部分匹配。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果验证通过，说明 JWT 的数据未被篡改，服务器就会继续处理请求。如果验证失败，说明 JWT 被篡改，服务器会返回错误信息。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;jwt-的优点&#34;&gt;JWT 的优点
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;无状态（Stateless）&lt;/strong&gt;&lt;br&gt;
+JWT 是无状态的，意味着服务器不需要存储用户会话数据。每次请求都包含 JWT，服务器可以根据 JWT 里的信息来进行认证。这样减少了服务器的负担，提升了系统的扩展性。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;跨域支持&lt;/strong&gt;&lt;br&gt;
+由于 JWT 是由客户端传递，它非常适合前后端分离的项目，可以跨域进行身份验证，避免了传统 Cookie 的同源限制。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;轻量级&lt;/strong&gt;&lt;br&gt;
+JWT 的大小较小，通常在几十到一百多个字节之间，非常适合频繁的 HTTP 请求，传输效率高。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;适合微服务架构&lt;/strong&gt;&lt;br&gt;
+JWT 可以在多个服务之间传递身份信息，非常适合分布式架构，尤其是微服务架构中的身份认证。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;jwt-的缺点&#34;&gt;JWT 的缺点
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;无法撤销&lt;/strong&gt;&lt;br&gt;
+一旦 JWT 被发放出去，它就无法撤销。如果 JWT 泄露，攻击者可以在有效期内反复使用。这比传统的 Session 认证要危险，后者可以在服务器端主动注销会话。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;存储和安全问题&lt;/strong&gt;&lt;br&gt;
+JWT 如果存储不当（如保存在 LocalStorage 或 Cookie 中），可能会受到 XSS 攻击。如果攻击者能够获取到 JWT，就能伪造合法请求。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;过期问题&lt;/strong&gt;&lt;br&gt;
+JWT 通常设定有过期时间，一旦过期，就不能再使用。为了避免频繁登录，可以使用刷新令牌（Refresh Token）。不过如果过期时间设置不合理，可能会影响用户体验。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;载荷不加密&lt;/strong&gt;&lt;br&gt;
+JWT 的载荷部分是 Base64 编码的，不是加密的。任何人都可以解码并看到其中的内容。因此，切勿将敏感信息（如密码）存储在 JWT 中。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;密钥泄漏的风险&lt;/strong&gt;&lt;br&gt;
+JWT 的安全性依赖于密钥的保密性。如果密钥泄露，攻击者可以伪造有效的 JWT。因此，保护好密钥非常重要。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;jwt-的使用场景&#34;&gt;JWT 的使用场景
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;单点登录（SSO）&lt;/strong&gt;&lt;br&gt;
+JWT 非常适合实现跨应用的单点登录（SSO）。只需生成一次 JWT，就可以在多个系统之间共享。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;移动应用身份认证&lt;/strong&gt;&lt;br&gt;
+在移动应用中，JWT 常常用来进行身份验证。客户端存储 JWT，并在每次请求中发送。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;前后端分离的应用&lt;/strong&gt;&lt;br&gt;
+在前后端分离的架构中，前端和后端可以独立进行身份验证，使用 JWT 作为认证工具，避免了传统 Cookie 的问题。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;jwt-的最佳实践&#34;&gt;JWT 的最佳实践
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;不要在 JWT 中存储敏感信息&lt;/strong&gt;&lt;br&gt;
+由于 JWT 的载荷部分是可以解码的，敏感信息（如密码、银行卡信息）绝对不能存储在 JWT 中。你可以把这些信息存储在服务器端，JWT 只传递一个标识符。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;使用 HTTPS&lt;/strong&gt;&lt;br&gt;
+无论是生成 JWT 还是传输 JWT，都应使用 HTTPS 协议，确保数据在传输过程中不会被窃听或篡改。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;设置合理的过期时间&lt;/strong&gt;&lt;br&gt;
+JWT 的过期时间要设置合理。过短可能影响用户体验，过长则可能存在安全隐患。通常，访问令牌的过期时间可以设置为 15 分钟到 1 小时，刷新令牌可以设置较长时间。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;使用刷新令牌&lt;/strong&gt;&lt;br&gt;
+结合使用访问令牌（Access Token）和刷新令牌（Refresh Token）。当访问令牌过期时，客户端可以使用刷新令牌获取新的访问令牌。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;存储 JWT 的安全性&lt;/strong&gt;&lt;br&gt;
+如果你把 JWT 存储在浏览器中，推荐使用 HttpOnly 和 Secure 标志的 Cookie，以避免 XSS 攻击的风险。避免将 JWT 存储在 LocalStorage 中，因为它更容易受到 XSS 攻击。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;签名算法选择&lt;/strong&gt;&lt;br&gt;
+在选择签名算法时，推荐使用非对称加密的算法（如 RS256 或 ES256），而不是对称加密的算法（如 HS256），这样可以提高安全性，避免密钥泄露风险。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;密钥管理&lt;/strong&gt;&lt;br&gt;
+密钥是 JWT 安全的关键。无论是对称加密还是非对称加密，都应该采取安全措施保护密钥。避免将密钥硬编码在代码中，可以通过环境变量或专门的密钥管理工具来管理密钥。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;总结&#34;&gt;总结
+&lt;/h3&gt;&lt;p&gt;JWT 是一种非常流行的身份验证方式，它简单、轻量、无状态，非常适合现代 web 应用，尤其是前后端分离的项目。但它也有一些缺点，尤其是在密钥泄漏和无法撤销的场景下。因此，使用 JWT 时需要特别注意密钥的管理和安全配置，合理设置过期时间，避免将敏感信息存储在 JWT 中。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
