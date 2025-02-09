@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>高情商 on 王离谱的小破站</title>
+        <link>https://blog.yearsuns.com/tags/%E9%AB%98%E6%83%85%E5%95%86/</link>
+        <description>Recent content in 高情商 on 王离谱的小破站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>王离谱</copyright>
+        <lastBuildDate>Sun, 09 Feb 2025 20:43:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/tags/%E9%AB%98%E6%83%85%E5%95%86/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>程序员的自救指南：如何精准描述你的技术问题，让大佬想帮你</title>
+        <link>https://blog.yearsuns.com/p/tips-for-explaining-tech-issues/</link>
+        <pubDate>Sun, 09 Feb 2025 20:43:56 +0800</pubDate>
+        
+        <guid>https://blog.yearsuns.com/p/tips-for-explaining-tech-issues/</guid>
+        <description>&lt;p&gt;有时候，程序员的日子就像《荒野求生》，&lt;strong&gt;问题&lt;/strong&gt;就是那条饿着肚子追你的鳄鱼，你呢？跪着发帖：“大佬们救救孩子吧，代码写崩了！”&lt;/p&gt;
+&lt;p&gt;结果呢？没人回。&lt;/p&gt;
+&lt;p&gt;为什么？&lt;br&gt;
+因为你发的帖就像“妈丫，肚子疼！”却忘了告诉医生是&lt;strong&gt;吃撑了、饿坏了、还是中午猛喝了五碗麻辣烫&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;今天，我来教你如何精准描述你的技术问题，让你瞬间从 &lt;strong&gt;“救救孩子”&lt;/strong&gt; 进化到 &lt;strong&gt;“这哥们值得救”&lt;/strong&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-1说清楚你在干啥别藏着掖着&#34;&gt;Step 1：说清楚你在干啥，别藏着掖着
+&lt;/h3&gt;&lt;p&gt;想让别人帮你？&lt;strong&gt;背景交代到位，别怕麻烦！&lt;/strong&gt;&lt;br&gt;
+大佬们不懂你家后院代码都咋跑的。来一段上下文，简洁明了！&lt;/p&gt;
+&lt;p&gt;比如，你发帖别写：“Redis 锁续期有问题，快点来！”&lt;br&gt;
+改成这样：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我正在用 Spring Boot + Redisson 实现分布式锁，Spring Boot 版本 3.0.0，Redisson 用的是最新的 3.20.0。问题出在本地单元测试时锁续期失效。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;大佬看到这，立刻有谱：&lt;strong&gt;哦，这哥们用的是主流技术栈，问题不难搞！&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-2问题描述要具体别用感叹号骗大佬注意力&#34;&gt;Step 2：问题描述要具体，别用感叹号骗大佬注意力
+&lt;/h3&gt;&lt;p&gt;很多人喜欢放大自己的“惨状”：“完了，炸了，全崩了！”&lt;/p&gt;
+&lt;p&gt;可是你连个报错信息都不贴上，难道指望大佬靠读心术帮你？&lt;/p&gt;
+&lt;p&gt;错误信息一定要说清楚，关键内容圈出来，别整篇贴，显得像年终总结。比如：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;当我运行 &lt;code&gt;lock.lock(60, TimeUnit.SECONDS)&lt;/code&gt; 时，日志显示：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;java.lang.IllegalStateException: Lock expired while executing task
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;错误出在锁续期失效，导致任务中途被抢锁。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;看！这样既具体，又不会让人头疼。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-3问题复现三板斧连小白也能操作&#34;&gt;Step 3：问题复现三板斧，连小白也能操作
+&lt;/h3&gt;&lt;p&gt;技术问题要让别人有地方下手，就像&lt;strong&gt;解锁游戏副本的攻略&lt;/strong&gt;。没法复现的问题，等于在地里找针。&lt;/p&gt;
+&lt;p&gt;来个实例：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;错误复现步骤&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;启动 Redis 服务器，开启 Redisson 配置。&lt;/li&gt;
+&lt;li&gt;运行测试类 &lt;code&gt;LockTest.java&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;等待 30 秒后，问题出现。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;清清楚楚三步走，大佬立刻知道咋搞。再加上你的配置文件、核心代码，&lt;strong&gt;人家手里有锤子，就能敲问题！&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-4预期-vs-实际问题得有个对比&#34;&gt;Step 4：预期 vs 实际，问题得有个对比
+&lt;/h3&gt;&lt;p&gt;人类（包括程序员）特别爱“对比法”，这会让大佬迅速明白你的痛点在哪里。&lt;/p&gt;
+&lt;p&gt;比如这样写：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;预期&lt;/strong&gt;：分布式锁应自动续期，确保任务完整执行。&lt;br&gt;
+&lt;strong&gt;实际&lt;/strong&gt;：锁未续期，任务执行到一半时锁被释放，导致数据不一致。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;逻辑一目了然！&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-5展示你的努力赢得大佬尊重&#34;&gt;Step 5：展示你的努力，赢得大佬尊重
+&lt;/h3&gt;&lt;p&gt;大佬们愿意帮有诚意的人。问题描述时，提一提你做过的尝试：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;尝试过的解决方法&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;检查了 Redis 是否正常启动，结果运行良好。&lt;/li&gt;
+&lt;li&gt;调试了 Redisson 配置，&lt;code&gt;useSingleServer&lt;/code&gt; 设置正确。&lt;/li&gt;
+&lt;li&gt;改用 &lt;code&gt;tryLock()&lt;/code&gt; 测试，问题依然存在。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这样一来，大佬心里一暖：“这哥们不是等着躺平，他是真心要解决问题！”&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;6-加点小细节补充大佬的弹药库&#34;&gt;6. 加点小细节，补充大佬的“弹药库”
+&lt;/h3&gt;&lt;p&gt;最后再补上必要信息，比如操作系统、开发环境、核心代码片段。别一来就上百行代码，关键的几行就行了。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;环境&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;操作系统：MacOS 12.3&lt;/li&gt;
+&lt;li&gt;JDK：17&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;核心代码&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;RLock lock &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; redissonClient.&lt;span style=&#34;color:#a6e22e&#34;&gt;getLock&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;testLock&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lock.&lt;span style=&#34;color:#a6e22e&#34;&gt;lock&lt;/span&gt;(60, TimeUnit.&lt;span style=&#34;color:#a6e22e&#34;&gt;SECONDS&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// 问题出现在这里&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;完美示例把大佬整哭了的求助帖&#34;&gt;&lt;strong&gt;完美示例：把大佬整哭了的求助帖&lt;/strong&gt;
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;背景&lt;/strong&gt;：&lt;br&gt;
+我正在用 Spring Boot + Redisson 实现分布式锁，版本如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Spring Boot：3.0.0&lt;/li&gt;
+&lt;li&gt;Redisson：3.20.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;问题&lt;/strong&gt;：&lt;br&gt;
+单元测试中，锁无法自动续期，导致任务中途锁被释放。日志错误如下：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;java.lang.IllegalStateException: Lock expired while executing task
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;复现步骤&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;启动 Redis 服务器，使用默认配置。&lt;/li&gt;
+&lt;li&gt;运行测试类 &lt;code&gt;LockTest.java&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;等待超过 30 秒的锁超时时间，问题复现。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;预期 vs 实际&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;预期：分布式锁自动续期，任务顺利完成。&lt;/li&gt;
+&lt;li&gt;实际：锁未续期，导致任务执行到一半被中断。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;尝试过的解决方法&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;检查 Redis 是否正常运行，结果正常。&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;tryLock()&lt;/code&gt; 方法测试，问题依然存在。&lt;/li&gt;
+&lt;li&gt;增加日志查看续期机制，发现续期任务未触发。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;补充信息&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;操作系统：MacOS 12.3&lt;/li&gt;
+&lt;li&gt;JDK：17&lt;/li&gt;
+&lt;li&gt;Redisson 配置：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Config config &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Config();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;config.&lt;span style=&#34;color:#a6e22e&#34;&gt;useSingleServer&lt;/span&gt;().&lt;span style=&#34;color:#a6e22e&#34;&gt;setAddress&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;redis://127.0.0.1:6379&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;结语&#34;&gt;结语
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;程序员求助的秘诀&lt;/strong&gt;，在于精准、简洁和条理清晰。&lt;br&gt;
+记住，这不仅仅是给别人看的，也是在训练自己的问题分析能力。&lt;/p&gt;
+&lt;p&gt;当你学会准确描述问题的那天，你离解决问题已经不远了！&lt;/p&gt;
+&lt;p&gt;最后，祝大家都能成为被大佬们“抢着帮”的技术王者～&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
