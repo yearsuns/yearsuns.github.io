@@ -2,15 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://blog.yearsuns.com/post/</loc>
+    <lastmod>2025-02-10T11:43:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://blog.yearsuns.com/</loc>
+    <lastmod>2025-02-10T11:43:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
     <loc>https://blog.yearsuns.com/categories/</loc>
     <lastmod>2025-02-09T20:43:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
     <loc>https://blog.yearsuns.com/categories/it/</loc>
-    <lastmod>2025-02-09T20:43:56+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://blog.yearsuns.com/post/</loc>
     <lastmod>2025-02-09T20:43:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
@@ -23,10 +27,6 @@
     <changefreq>weekly</changefreq>
   </url><url>
     <loc>https://blog.yearsuns.com/tags/%E6%83%85%E5%95%86/</loc>
-    <lastmod>2025-02-09T20:43:56+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://blog.yearsuns.com/</loc>
     <lastmod>2025-02-09T20:43:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
