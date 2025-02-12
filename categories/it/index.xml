@@ -7,7 +7,537 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>王离谱</copyright>
-        <lastBuildDate>Mon, 10 Feb 2025 11:43:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/categories/it/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 12 Feb 2025 01:13:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/categories/it/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>REST API的最佳实践</title>
+        <link>https://blog.yearsuns.com/p/best-practices-for-rest-api/</link>
+        <pubDate>Wed, 12 Feb 2025 01:13:56 +0800</pubDate>
+        
+        <guid>https://blog.yearsuns.com/p/best-practices-for-rest-api/</guid>
+        <description>&lt;h2 id=&#34;我们将从这篇文章中学到什么&#34;&gt;我们将从这篇文章中学到什么
+&lt;/h2&gt;&lt;h3 id=&#34;-rest-api-的基本原则&#34;&gt;👉 REST API 的基本原则
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;RESTful架构的核心概念&lt;/li&gt;
+&lt;li&gt;关键 HTTP 方法及其适当用途&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;-api-设计的最佳实践&#34;&gt;👉 API 设计的最佳实践
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;如何设计有意义且高效的面向资源的 URL。&lt;/li&gt;
+&lt;li&gt;正确使用标准 HTTP 状态代码的重要性。&lt;/li&gt;
+&lt;li&gt;实现过滤、排序和分页的技术。&lt;/li&gt;
+&lt;li&gt;需要清晰、一致的 API 文档和工具来帮助实现这一点。&lt;/li&gt;
+&lt;li&gt;有效的 API 版本控制策略，以确保向后兼容性。&lt;/li&gt;
+&lt;li&gt;保护 API 安全的最佳实践，包括身份验证和 HTTPS。&lt;/li&gt;
+&lt;li&gt;如何以用户友好且信息丰富的方式处理错误。&lt;/li&gt;
+&lt;li&gt;维护 RESTful 原则和避免常见错误的实用技巧。&lt;/li&gt;
+&lt;li&gt;对设计可扩展且直观的 API 的见解。&lt;/li&gt;
+&lt;li&gt;API 设计中的常见陷阱以及如何避免它们。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;-实用的注意事项&#34;&gt;👉 实用的注意事项
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;维护 RESTful 原则和避免常见错误的实用技巧。&lt;/li&gt;
+&lt;li&gt;对设计可扩展且直观的 API 的见解。&lt;/li&gt;
+&lt;li&gt;API 设计中的常见陷阱以及如何避免它们。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;什么是-api&#34;&gt;什么是 API？
+&lt;/h2&gt;&lt;p&gt;应用程序编程接口 (API) 是用于集成应用软件和服务的一组工具、定义和协议。它可以让您的产品和服务与其他产品和服务进行通信，而无需不断构建新的连接基础设施。&lt;/p&gt;
+&lt;p&gt;API 可以是私有的（仅供内部使用）、合作的（与特定合作伙伴共享以提供额外的收入来源）或公开的（允许第三方开发与您的 API 交互的应用程序以促进创新）。&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.redhat.com/en/topics/api/what-is-a-rest-api&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.redhat.com/en/topics/api/what-is-a-rest-api&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;什么是-rest-api&#34;&gt;什么是 REST API？
+&lt;/h2&gt;&lt;p&gt;REST API（也称为 RESTful API）是一种符合 REST 架构风格约束并允许与 RESTful Web 服务交互的应用程序编程接口（API 或 Web API）。REST 代表表述性状态转移，由计算机科学家 Roy Fielding 创建。&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.redhat.com/en/topics/api/what-is-a-rest-api&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.redhat.com/en/topics/api/what-is-a-rest-api&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;rest-api-架构约束&#34;&gt;REST API 架构约束
+&lt;/h2&gt;&lt;p&gt;REST 是一组架构约束，而不是协议或标准。以下是理想 RESTful API 的约束：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;客户端-服务器架构&lt;/strong&gt;：由客户端、服务器和资源组成的客户端-服务器架构，请求通过 HTTP 进行管理。只要服务器和客户端之间的接口不变，它们也可以被替换和独立开发（也可以使用不同的编程语言）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;无状态&lt;/strong&gt;：在客户端-服务器通信中，在处理请求传输期间，服务器上不应存储任何数据。这意味着请求之间不会存储任何客户端信息，并且每个请求都是独立且无关联的。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;可缓存&lt;/strong&gt;：客户端应该能够将响应存储在缓存中。这极大地提高了 API 的性能。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;分层系统&lt;/strong&gt;：服务器可以有多个层级来实现。这种分层架构有助于通过实现负载平衡来提高可扩展性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;按需代码&lt;/strong&gt;：此约束是可选的。此约束表示可以通过允许从服务器下载代码并执行代码来在运行时扩展客户端应用程序的功能。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;统一接口&lt;/strong&gt;：统一接口约束是任何 RESTful 系统设计的基础。它简化并解耦了架构，使每个部分能够独立发展。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这个统一接口的四个约束是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;请求中的资源标识&lt;/strong&gt;：使用 URI 在请求中标识单个资源。资源本身在概念上与返回给客户端的表示形式是分开的。例如，服务器可以将数据库中的数据以 HTML、XML 或 JSON 的形式发送，而这些都不是服务器的内部表示形式。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;通过表示来操作资源&lt;/strong&gt;：当客户端持有资源的表示（包括附加的任何元数据）时，它有足够的信息来修改或删除资源的状态。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;自描述消息&lt;/strong&gt;：每条消息都包含足够的信息来描述如何处理该消息。例如，可以通过媒体类型指定要调用哪个解析器。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;超媒体作为应用程序状态引擎 (HATEOAS)&lt;/strong&gt; — 访问 REST 应用程序的初始 URI 后（类似于人类 Web 用户访问网站主页），REST 客户端应该能够动态使用服务器提供的链接来发现所需的所有可用资源。随着访问的进行，服务器将使用包含指向当前可用的其他资源的超链接的文本进行响应。客户端无需使用有关服务器结构的信息进行硬编码。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;来源：&lt;a class=&#34;link&#34; href=&#34;https://en.wikipedia.org/wiki/REST#Uniform_interface&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://en.wikipedia.org/wiki/REST#Uniform_interface&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;什么是资源&#34;&gt;什么是资源？
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;REST中信息的关键抽象是资源。任何可以命名的信息都可以是资源：文档或图像、时间服务（例如“洛杉矶今日天气”）、其他资源的集合（例如“今日畅销产品”，即产品资源的集合）、非虚拟对象（例如人）等等。&lt;/p&gt;
+&lt;p&gt;— &lt;a class=&#34;link&#34; href=&#34;http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm#sec_5_2_1_1&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Roy Fielding 的论文&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;单例和集合资源&#34;&gt;单例和集合资源
+&lt;/h3&gt;&lt;p&gt;资源可以是单例，也可以是集合。&lt;/p&gt;
+&lt;p&gt;例如，&amp;ldquo;customers&amp;rdquo; 是一个集合资源，&amp;ldquo;customer&amp;rdquo; 是一个单例资源。&lt;/p&gt;
+&lt;p&gt;我们可以使用 URI 来识别 &amp;ldquo;customers&amp;rdquo; 集合资源。我们可以使用 URI 来&lt;code&gt;/customers&lt;/code&gt;识别单个 &amp;ldquo;customer&amp;rdquo; 资源&lt;code&gt;/customers/{customerId}&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/customers // 是一个集合资源
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/customers/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; // 是一个单例资源
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;集合和子集资源&#34;&gt;集合和子集资源
+&lt;/h3&gt;&lt;p&gt;资源也可能包含子集资源。&lt;/p&gt;
+&lt;p&gt;例如，可以使用以下方式识别特定 &amp;ldquo;customers&amp;rdquo; 的子集资源 &amp;ldquo;account&amp;rdquo; &lt;code&gt;/customers/{customerId}/accounts&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;类似地，可以识别子集合资源 &amp;ldquo;accounts&amp;rdquo; 内的单例资源 &amp;ldquo;account&amp;rdquo; &lt;code&gt;/customers/{customerId}/accounts/{accountId}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;/customers //是一个集合资源&lt;/p&gt;
+&lt;p&gt;/customers/{ id }/accounts //是一个子集合资源（客户的帐户）&lt;/p&gt;
+&lt;p&gt;/customers/{customerId}/accounts/{accountId} //是一个单例资源（客户的特定帐户）&lt;/p&gt;
+&lt;h2 id=&#34;uri统一资源标识符&#34;&gt;URI（统一资源标识符）
+&lt;/h2&gt;&lt;p&gt;URI 代表&lt;a class=&#34;link&#34; href=&#34;https://en.wikipedia.org/wiki/Uniform_Resource_Identifier&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;统一资源标识符&lt;/a&gt;(URI)。它标识网络上的逻辑或物理资源。URL 和 URN 是 URI 的子类型。URL 定位资源，而 URN 命名资源。&lt;/p&gt;
+&lt;p&gt;REST API 使用 URI 来定位资源。REST API 设计人员应创建 URI，以便将 REST API 的资源模型传达给 API 的潜在客户。如果资源命名得当，API 就会直观且易于使用。如果命名不当，同一个 API 的使用和理解就会变得困难。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri.webp&#34;
+	width=&#34;720&#34;
+	height=&#34;177&#34;
+	srcset=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri_hu_fba245286d270c77.webp 480w, https://blog.yearsuns.com/p/best-practices-for-rest-api/uri_hu_179c012895a3cc30.webp 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;URI&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;406&#34;
+		data-flex-basis=&#34;976px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri-vs-url.webp&#34;
+	width=&#34;720&#34;
+	height=&#34;271&#34;
+	srcset=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri-vs-url_hu_efb5016e88ace6ee.webp 480w, https://blog.yearsuns.com/p/best-practices-for-rest-api/uri-vs-url_hu_8039dcaf63480cdb.webp 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;URI 与 URL 之间的区别（来源：https://refine.dev/blog/uri-vs-url/#introduction）&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;265&#34;
+		data-flex-basis=&#34;637px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;最佳实践应该做的和不应该做的&#34;&gt;最佳实践：应该做的和不应该做的
+&lt;/h2&gt;&lt;h3 id=&#34;1-使用适当的-http-方法动词定义-api-操作&#34;&gt;1. 使用适当的 HTTP 方法（动词）定义 API 操作
+&lt;/h3&gt;&lt;p&gt;HTTP协议定义了许多为请求赋予语义的方法。大多数 RESTful Web API 使用的常见 HTTP 方法包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;GET&lt;/strong&gt;在指定的 URI 处检索资源的表述，响应消息的主体包含所请求资源的详细信息。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;POST&lt;/strong&gt;在指定的 URI 处创建新资源，请求消息的主体提供了新资源的详细信息。注意：POST还可用于触发不实际创建资源的操作。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;PUT&lt;/strong&gt;在指定的 URI 处创建或替换资源，请求消息的主体指定要创建或更新的资源。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;PATCH&lt;/strong&gt;对资源执行部分更新，请求主体指定要应用于资源的一组更改。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;DELETE&lt;/strong&gt;删除指定 URI 处的资源。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;特定请求的效果应取决于资源是集合还是单个项目。下表使用电子商务示例总结了大多数 RESTful 实现所采用的通用约定。&lt;/p&gt;
+&lt;p&gt;注意：并非所有这些请求都可能被实现——这取决于具体情况。&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Resource&lt;/th&gt;
+          &lt;th&gt;POST&lt;/th&gt;
+          &lt;th&gt;GET&lt;/th&gt;
+          &lt;th&gt;PUT&lt;/th&gt;
+          &lt;th&gt;DELETE&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;/customers&lt;/td&gt;
+          &lt;td&gt;Create a new customer&lt;/td&gt;
+          &lt;td&gt;Retrieve all customers&lt;/td&gt;
+          &lt;td&gt;Bulk update of customers&lt;/td&gt;
+          &lt;td&gt;Remove all customers&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;/customers/1&lt;/td&gt;
+          &lt;td&gt;Error&lt;/td&gt;
+          &lt;td&gt;Retrieve the details for customer 1&lt;/td&gt;
+          &lt;td&gt;Update the details of customer 1 if it exists&lt;/td&gt;
+          &lt;td&gt;Remove customer 1&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;/customers/1/orders&lt;/td&gt;
+          &lt;td&gt;Create a new order for customer 1&lt;/td&gt;
+          &lt;td&gt;Retrieve all orders for customer 1&lt;/td&gt;
+          &lt;td&gt;Bulk update of orders for customer 1&lt;/td&gt;
+          &lt;td&gt;Remove all orders for customer 1&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;POST&lt;/strong&gt;、&lt;strong&gt;PUT&lt;/strong&gt;和&lt;strong&gt;PATCH&lt;/strong&gt;之间的区别可能会令人困惑。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;POST请求创建资源并将其添加到资源集合中。然后向客户端返回新创建的资源 URI。POST请求还可用于向现有资源提交数据以供处理，而无需创建任何新资源。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;PUT请求会创建资源或更新现有资源。请求正文包含资源的完整表述。如果具有此 URI 的资源已存在，则将其替换。否则，如果服务器支持，则创建新资源。PUT请求最常应用于作为单个项目（例如特定客户）的资源，而不是集合。服务器可能支持更新但不支持通过 PUT 创建。是否支持通过 PUT 创建取决于客户端是否可以在资源存在之前有意义地为其分配URI。如果不能，则使用POST创建资源，使用PUT或PATCH进行更新。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;PATCH请求对现有资源执行部分更新。请求正文指定要应用于资源的一组更改。这比使用PUT更高效，因为客户端仅发送更改，而不是资源的整个表示。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;PUT请求必须是幂等的。如果客户端多次提交相同的PUT请求，则结果应该始终相同（将使用相同的值修改相同的资源）。POST和PATCH请求不保证是幂等的。&lt;/p&gt;
+&lt;h3 id=&#34;2-使用名词复数名词表示资源&#34;&gt;2. 使用名词（复数名词）表示资源
+&lt;/h3&gt;&lt;p&gt;RESTful URI 应该引用作为事物（名词）的资源，而不是引用动作（动词），因为名词具有动词所不具备的属性 — 同样，资源也具有属性。以下是一些资源示例：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户(user)&lt;/li&gt;
+&lt;li&gt;帐户(account)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其资源URI可以设计如下：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;HTTP Method&lt;/th&gt;
+          &lt;th&gt;Endpoint&lt;/th&gt;
+          &lt;th&gt;Description&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/accounts&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Returns a list of accounts&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/accounts/{accountNumber}&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Returns the account with account number &lt;code&gt;{accountNumber}&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/users&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Returns a list of users&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/users/{id}&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Returns the user with ID &lt;code&gt;{id}&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/orders&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;strong&gt;Good&lt;/strong&gt; - Returns a list of orders&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/create-order&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;strong&gt;Avoid&lt;/strong&gt; - verb or action-based names&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/students&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;strong&gt;Good&lt;/strong&gt; - Returns a list of students&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/student&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;strong&gt;Avoid&lt;/strong&gt; - singular names&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;3使用子资源建立关系&#34;&gt;3.使用子资源建立关系
+&lt;/h3&gt;&lt;p&gt;使用一致的资源命名约定和 URI 格式，以最大程度地减少歧义并实现最大的可读性和可维护性。实施以下设计提示可实现一致性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在 REST 中，关系通常由子资源建模。对子资源使用以下模式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;HTTP Method&lt;/th&gt;
+          &lt;th&gt;Endpoint&lt;/th&gt;
+          &lt;th&gt;Description&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/{resource}/{resource-id}/{sub-resource}&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Retrieves a list of sub-resources&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/{resource}/{resource-id}/{sub-resource}/{sub-resource-id}&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Retrieves a specific sub-resource&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;POST&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/{resource}/{resource-id}/{sub-resource}&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Creates a new sub-resource&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/post/{post-id}/comments&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Retrieves a list of comments for a post&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/post/{post-id}/comments/{comment-id}&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Retrieves a specific comment for a post&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;POST&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/post/{post-id}/comments&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Creates a new comment for a post&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/cars/711/drivers/&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Returns a list of drivers for car 711&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;GET&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/cars/711/drivers/4&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;Returns driver #4 for car 711&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;4注重可读性和一致性&#34;&gt;4.注重可读性和一致性
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;不要在 URI 中使用尾部斜杠 (/)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /device-management/managed-devices/ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /device-management/managed-devices /*✅这是一个更好的版本*/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;使用连字符 (-) 和短横线命名 ( some-var-name) 来提高 URI 的可读性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /devicemanagement/manageddevices/ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /device-management/managed-devices /*✅这是一个更好的版本* / 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /m y -folder/ my -doc // ✅ 推荐
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /MY-FOLDER/ my -doc // ❌ 避免
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /My-Folder/ my -doc // ❌ 避免
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;避免使用下划线 ( _ ) 和驼峰式命名 ( someVarName) 蛇形命名 ( some_var_name) 帕萨尔式命名 ( SomeVarName)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /managed-entities/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; id &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/install-script-location // ✅ 更易读
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /managed_entities/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; id &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/install_Script_Location // ❌ 蛇形命名法- 易读但不常规
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /managedEntities/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; id &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/installScriptLocation // ❌ 驼峰命名法- 可读性较差
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;不要使用文件扩展名&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/device-management/managed-devices.xml /*❌请勿使用它*/ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/device-management/managed-devices /*✅这是正确的 URI*/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;切勿在 URI 中使用CRUD函数名称&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/* ❌ 避免 */
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;HTTP GET / get -managed-devices      
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;HTTP POST /create-managed-devices 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/* ✅ 推荐 */
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;HTTP GET /managed-devices          // 获取所有设备
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;HTTP POST /managed-devices          // 创建新设备
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;HTTP GET /managed-devices/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;     // 获取给定 Id 的设备
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;HTTP PUT /managed-devices/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;     // 更新给定 Id 的设备
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;HTTP DELETE /managed-devices/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;     // 删除给定 Id 的设备
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;不要在 URI 中使用动词&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /scripts/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/execute    // ❌ 不要这样做！- 这是 RPC，而不是 REST
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;POST /scripts               // ✅ 推荐：使用 POST 操作创建脚本
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /scripts/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/status    // 检查执行状态
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;5使用http响应状态码&#34;&gt;5.使用HTTP响应状态码
+&lt;/h3&gt;&lt;p&gt;始终使用常规 HTTP 状态码来响应对 API 发出的请求。这将帮助用户了解发生了什么 — 请求是否成功，是否失败，或者其他情况。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/http-status-codes.png&#34;
+	width=&#34;1224&#34;
+	height=&#34;1710&#34;
+	srcset=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/http-status-codes_hu_f882e7cc374d92cd.png 480w, https://blog.yearsuns.com/p/best-practices-for-rest-api/http-status-codes_hu_e1355992283e7479.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;HTTP状态码&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;71&#34;
+		data-flex-basis=&#34;171px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;6使用过滤排序和分页来检索请求的数据&#34;&gt;6.使用过滤、排序和分页来检索请求的数据
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Feature&lt;/th&gt;
+          &lt;th&gt;Description&lt;/th&gt;
+          &lt;th&gt;Example Usage&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Sorting&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Allows sorting of the dataset based on specified parameters.&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/companies?sort=rank_asc&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Filtering&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Filters the dataset based on given criteria in query parameters.&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/companies?category=banking&amp;amp;location=india&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Searching&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Searches for specific terms within the dataset.&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/companies?search=Digital&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Pagination&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Divides the dataset into smaller chunks for easier handling and improved performance.&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;/companies?page=23&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;7-使用-hateoas-实现到相关资源的导航&#34;&gt;7. 使用 HATEOAS 实现到相关资源的导航
+&lt;/h3&gt;&lt;p&gt;HATEOAS（超文本作为应用程序状态引擎）是 REST 的一个原则，允许客户端仅通过响应中提供的超链接来浏览资源并发现可用的操作。这意味着客户端不需要事先了解 URI；相反，每个 HTTP GET 请求都会返回必要的信息和相关资源的链接，从而实现对 API 的动态探索。&lt;/p&gt;
+&lt;p&gt;在示例响应中，&lt;code&gt;/books/1&lt;/code&gt;分享可导航的链接，例如&lt;code&gt;/authors/1&lt;/code&gt; &lt;code&gt;/books/1/reviews&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;“books” ： [ &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    { 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;“id” ： 1 ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;“title” ： “了不起的盖茨比” ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;“author” ： “F·斯科特·菲茨杰拉德” ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;“links” ： { &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;“self” ： “/books/1” ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;“author” ： “/authors/1” ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;“reviews” ： “/books/1/reviews” &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      } 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    } &lt;span style=&#34;color:#ae81ff&#34;&gt;，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    { 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;“id” ： 2 ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;“title” ： “杀死一只知更鸟” ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;“author” ： “哈珀·李” ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;“links” ： { &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;“self” ： “/books/2” ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;“author” ： “/authors/2” ，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;“reviews” ： “/books/2/reviews” &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      } 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    } 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  ] 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;8-使用-ssl-确保安全&#34;&gt;8. 使用 SSL 确保安全
+&lt;/h3&gt;&lt;p&gt;SSL（安全套接字层）对于保护 REST API 免受恶意攻击至关重要。它确保服务器和客户端之间的通信是私密的，并且用户只能访问他们有权查看的数据。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;https://&lt;/code&gt; 我们可以通过查看URL来判断 REST API 是否受 SSL 保护。例如，&lt;code&gt;https://mysite.com/posts&lt;/code&gt; 受 SSL 保护，而 &lt;code&gt;http://mysite.com/posts&lt;/code&gt; 不受 SSL 保护。&lt;/p&gt;
+&lt;h3 id=&#34;9提供准确的api文档&#34;&gt;9.提供准确的API文档
+&lt;/h3&gt;&lt;p&gt;良好的 API 文档可帮助开发人员正确使用我们的 API。它可以让更多人想要使用我们的 API 并更好地使用它。一个流行的 API &lt;a class=&#34;link&#34; href=&#34;https://www.openapis.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;文档工具是OpenAPI ( Swagger )&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;10-restful-web-api-版本控制&#34;&gt;10. RESTful Web API 版本控制
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Versioning Method&lt;/th&gt;
+          &lt;th&gt;Description&lt;/th&gt;
+          &lt;th&gt;Example Usage&lt;/th&gt;
+          &lt;th&gt;Real-World Examples&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;URI Path&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Includes the version number directly in the API path.&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://www.example.com/api/v1/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://www.example.com/api/v2/products&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;- &lt;a class=&#34;link&#34; href=&#34;https://developer.twitter.com/en/docs/twitter-api/versioning&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Twitter&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;- &lt;a class=&#34;link&#34; href=&#34;https://developer.paypal.com/docs/api/overview/#get-credentials&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;PayPal&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;- &lt;a class=&#34;link&#34; href=&#34;https://cloud.google.com/translate/docs/reference/rest&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Google Translate&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Query Parameters&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Specifies the version number as a query parameter in the URL.&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://www.example.com/api/products?version=1&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://www.example.com/api/products?version=2&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;- &lt;a class=&#34;link&#34; href=&#34;https://cloud.google.com/translate/docs/reference/rest&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Google Translation APIs&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Custom Headers&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Uses custom headers to specify the API version.&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;X-API-VERSION=1&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;X-API-VERSION=2&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;-&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Content Negotiation&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Uses the &lt;code&gt;Accept&lt;/code&gt; header to specify the version of the API.&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v1+json&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v2+json&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;- &lt;a class=&#34;link&#34; href=&#34;https://docs.github.com/en/rest/overview/resources-in-the-rest-api&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;GitHub&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;11-api-安全和访问控制&#34;&gt;11. API 安全和访问控制
+&lt;/h3&gt;&lt;p&gt;确保 API 安全并控制谁可以使用它是制作优质 RESTful API 的关键部分。以下是一些实现此目的的方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;设置 &lt;a class=&#34;link&#34; href=&#34;https://oauth.net/2/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;OAuth 2.0&lt;/a&gt; 或 &lt;a class=&#34;link&#34; href=&#34;https://en.wikipedia.org/wiki/JSON_Web_Token&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;JSON Web Tokens (JWT)&lt;/a&gt;，以便未经身份验证的用户无法访问&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;API 密钥显示谁在使用。API速率限制可阻止人们过度使用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;实现基于角色的访问控制（RBAC）等。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;12-不要忘记-api-性能&#34;&gt;12. 不要忘记 API 性能
+&lt;/h3&gt;&lt;p&gt;让我们的 API 更好地发挥作用是让用户满意、降低成本和更轻松地发展的关键。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;有效缓存&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;数据压缩方法&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;异步处理&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;处理批处理操作&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;测量 API 性能并分析 API 使用情况&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;监控 API 健康和正常运行时间&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;测试 RESTful API（单元测试、集成测试、负载测试、安全测试）等。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;结论&#34;&gt;结论
+&lt;/h2&gt;&lt;p&gt;优秀的 REST API 是通过遵循关键规则和最佳实践来构建的。&lt;/p&gt;
+&lt;p&gt;通过遵守这些规则，我们将构建易于使用、可靠且面向未来的 API。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注：本文译自 &lt;a class=&#34;link&#34; href=&#34;https://medium.com/@syedabdullahrahman/mastering-rest-api-design-essential-best-practices-dos-and-don-ts-for-2024-dd41a2c59133&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://medium.com/@syedabdullahrahman/mastering-rest-api-design-essential-best-practices-dos-and-don-ts-for-2024-dd41a2c59133&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        <item>
         <title>如何向技术大佬请教问题且不泄露敏感信息</title>
         <link>https://blog.yearsuns.com/p/protecting-sensitive-data-while-seeking-help/</link>
         <pubDate>Mon, 10 Feb 2025 11:43:56 +0800</pubDate>
