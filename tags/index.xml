@@ -7,7 +7,31 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>王离谱</copyright>
-        <lastBuildDate>Thu, 13 Feb 2025 20:38:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 13 Feb 2025 21:13:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>AI</title>
+        <link>https://blog.yearsuns.com/tags/ai/</link>
+        <pubDate>Thu, 13 Feb 2025 21:13:56 +0800</pubDate>
+        
+        <guid>https://blog.yearsuns.com/tags/ai/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Cursor</title>
+        <link>https://blog.yearsuns.com/tags/cursor/</link>
+        <pubDate>Thu, 13 Feb 2025 21:13:56 +0800</pubDate>
+        
+        <guid>https://blog.yearsuns.com/tags/cursor/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>教程</title>
+        <link>https://blog.yearsuns.com/tags/%E6%95%99%E7%A8%8B/</link>
+        <pubDate>Thu, 13 Feb 2025 21:13:56 +0800</pubDate>
+        
+        <guid>https://blog.yearsuns.com/tags/%E6%95%99%E7%A8%8B/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>沟通技巧</title>
         <link>https://blog.yearsuns.com/tags/%E6%B2%9F%E9%80%9A%E6%8A%80%E5%B7%A7/</link>
         <pubDate>Thu, 13 Feb 2025 20:38:56 +0800</pubDate>
@@ -34,7 +58,7 @@
         <item>
         <title>REST API</title>
         <link>https://blog.yearsuns.com/tags/rest-api/</link>
-        <pubDate>Wed, 12 Feb 2025 01:13:56 +0800</pubDate>
+        <pubDate>Wed, 12 Feb 2025 12:13:56 +0800</pubDate>
         
         <guid>https://blog.yearsuns.com/tags/rest-api/</guid>
         <description></description>
@@ -42,17 +66,9 @@
         <item>
         <title>RESTful</title>
         <link>https://blog.yearsuns.com/tags/restful/</link>
-        <pubDate>Wed, 12 Feb 2025 01:13:56 +0800</pubDate>
+        <pubDate>Wed, 12 Feb 2025 12:13:56 +0800</pubDate>
         
         <guid>https://blog.yearsuns.com/tags/restful/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>教程</title>
-        <link>https://blog.yearsuns.com/tags/%E6%95%99%E7%A8%8B/</link>
-        <pubDate>Wed, 12 Feb 2025 01:13:56 +0800</pubDate>
-        
-        <guid>https://blog.yearsuns.com/tags/%E6%95%99%E7%A8%8B/</guid>
         <description></description>
         </item>
         <item>
@@ -101,14 +117,6 @@
         <pubDate>Fri, 07 Feb 2025 20:25:56 +0800</pubDate>
         
         <guid>https://blog.yearsuns.com/tags/jwt/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>AI</title>
-        <link>https://blog.yearsuns.com/tags/ai/</link>
-        <pubDate>Tue, 04 Feb 2025 12:25:56 +0800</pubDate>
-        
-        <guid>https://blog.yearsuns.com/tags/ai/</guid>
         <description></description>
         </item>
         <item>
