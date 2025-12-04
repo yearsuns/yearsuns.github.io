@@ -2,35 +2,35 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Pages on 王离谱的小破站</title>
-        <link>https://blog.yearsuns.com/page/</link>
+        <link>https://yearsuns-github-io.vercel.app/page/</link>
         <description>Recent content in Pages on 王离谱的小破站</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <copyright>王离谱</copyright><atom:link href="https://blog.yearsuns.com/page/index.xml" rel="self" type="application/rss+xml" /><item>
+        <language>zh-CN</language>
+        <copyright>王离谱</copyright><atom:link href="https://yearsuns-github-io.vercel.app/page/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Archives</title>
-        <link>https://blog.yearsuns.com/archives/</link>
+        <link>https://yearsuns-github-io.vercel.app/archives/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://blog.yearsuns.com/archives/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/archives/</guid>
         <description></description>
         </item>
         <item>
         <title>Search</title>
-        <link>https://blog.yearsuns.com/search/</link>
+        <link>https://yearsuns-github-io.vercel.app/search/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://blog.yearsuns.com/search/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/search/</guid>
         <description></description>
         </item>
         <item>
         <title>关于站长</title>
-        <link>https://blog.yearsuns.com/about/</link>
+        <link>https://yearsuns-github-io.vercel.app/about/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://blog.yearsuns.com/about/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/about/</guid>
         <description>&lt;h3 id=&#34;站长是谁&#34;&gt;站长是谁？
 &lt;/h3&gt;&lt;p&gt;江湖人称王离谱，IT界的气氛组，离谱界的扛把子，沙雕界的主心骨。&lt;br&gt;
-曾是全职二手码农，因&lt;strong&gt;不善加班&lt;/strong&gt;（拒绝ICU套餐），投身自由职业，活比牛马多，活得比牛马累。&lt;/p&gt;
+曾是全职二手码农，因&lt;strong&gt;不善加班&lt;/strong&gt;，拒绝ICU套餐，失足落入自由职业，活比牛马多，活得比牛马累。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;荣誉头衔&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;2006年美国时代周刊年度风云人物&lt;/li&gt;
@@ -63,10 +63,10 @@
 &lt;/h3&gt;&lt;p&gt;睁眼观世界，闭眼世界观。&lt;/p&gt;
 &lt;h3 id=&#34;请站长喝杯咖啡&#34;&gt;请站长喝杯咖啡
 &lt;/h3&gt;&lt;p&gt;☕ 要么让咖啡燃起我的灵感，👻要么让香火点燃我的灵堂！&lt;br&gt;
-&lt;img src=&#34;https://blog.yearsuns.com/about/wechat_payment.png&#34;
+&lt;img src=&#34;https://yearsuns-github-io.vercel.app/about/wechat_payment.png&#34;
 	width=&#34;261&#34;
 	height=&#34;256&#34;
-	srcset=&#34;https://blog.yearsuns.com/about/wechat_payment_hu_7110ac74c750e57.png 480w, https://blog.yearsuns.com/about/wechat_payment_hu_2b8d77efea6a55db.png 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/about/wechat_payment_hu_7110ac74c750e57.png 480w, https://yearsuns-github-io.vercel.app/about/wechat_payment_hu_2b8d77efea6a55db.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;微信扫码&#34;
@@ -79,10 +79,10 @@
 &gt;&lt;/p&gt;
 &lt;h3 id=&#34;联系站长&#34;&gt;联系站长
 &lt;/h3&gt;&lt;p&gt;请老爷用大大的红包🧧来羞辱我吧！&lt;br&gt;
-&lt;img src=&#34;https://blog.yearsuns.com/about/wechat_qr_code.png&#34;
+&lt;img src=&#34;https://yearsuns-github-io.vercel.app/about/wechat_qr_code.png&#34;
 	width=&#34;256&#34;
 	height=&#34;256&#34;
-	srcset=&#34;https://blog.yearsuns.com/about/wechat_qr_code_hu_22b9b81a6e95acf2.png 480w, https://blog.yearsuns.com/about/wechat_qr_code_hu_73fe7de4344e69f.png 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/about/wechat_qr_code_hu_22b9b81a6e95acf2.png 480w, https://yearsuns-github-io.vercel.app/about/wechat_qr_code_hu_73fe7de4344e69f.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;微信扫码&#34;

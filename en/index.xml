@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Ryan&#39;s Janky Website</title>
+        <link>https://yearsuns-github-io.vercel.app/en/</link>
+        <description>Recent content on Ryan&#39;s Janky Website</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-US</language>
+        <copyright>Yearsuns</copyright><atom:link href="https://yearsuns-github-io.vercel.app/en/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Archives</title>
+        <link>https://yearsuns-github-io.vercel.app/en/archives/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/archives/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Search</title>
+        <link>https://yearsuns-github-io.vercel.app/en/search/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/search/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>关于站长</title>
+        <link>https://yearsuns-github-io.vercel.app/en/about/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/about/</guid>
+        <description>&lt;h3 id=&#34;站长是谁&#34;&gt;站长是谁？
+&lt;/h3&gt;&lt;p&gt;江湖人称王离谱，IT界的气氛组，离谱界的扛把子，沙雕界的主心骨。&lt;br&gt;
+曾是全职二手码农，因&lt;strong&gt;不善加班&lt;/strong&gt;，拒绝ICU套餐，失足落入自由职业，活比牛马多，活得比牛马累。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;荣誉头衔&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;2006年美国时代周刊年度风云人物&lt;/li&gt;
+&lt;li&gt;《感动中国》2008年度人物特别奖&lt;/li&gt;
+&lt;li&gt;联合国2019年度”地球卫士“联合获奖人&lt;/li&gt;
+&lt;li&gt;2022年奥林匹克杯获得者&lt;/li&gt;
+&lt;li&gt;诺贝尔文学奖读者&lt;/li&gt;
+&lt;li&gt;清华大学所在国学生&lt;/li&gt;
+&lt;li&gt;世界500强企业简历投递者&lt;/li&gt;
+&lt;li&gt;共和国马后炮炮手荣誉勋章获得者&lt;/li&gt;
+&lt;li&gt;国家沙雕艺术非物质文化传承人&lt;/li&gt;
+&lt;li&gt;国家特级退堂鼓表演艺术家&lt;/li&gt;
+&lt;li&gt;国家特级唱反调表演艺术家&lt;/li&gt;
+&lt;li&gt;国家一级抬杠运动员&lt;/li&gt;
+&lt;li&gt;国家一级擦边球教练&lt;/li&gt;
+&lt;li&gt;国家一级奶茶品鉴师&lt;/li&gt;
+&lt;li&gt;临时抱佛脚协会会长&lt;/li&gt;
+&lt;li&gt;中国驰名双标工程总负责人&lt;/li&gt;
+&lt;li&gt;白日梦全球总冠军&lt;/li&gt;
+&lt;li&gt;美图秀秀特约造型师&lt;/li&gt;
+&lt;li&gt;闭门羹特级烹饪师&lt;/li&gt;
+&lt;li&gt;墙头草栽培专家&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;建站的初衷&#34;&gt;建站的初衷
+&lt;/h3&gt;&lt;p&gt;这个小破站的使命有三：&lt;strong&gt;分享知识、分享见解、分享生活&lt;/strong&gt;。&lt;br&gt;
+信奉“助人者，人恒助之”，希望这个地方不仅能帮到别人，也能遇见更多志同道合的朋友，一起搞钱、共同逐梦，让梦想照进现实，而不是继续躺在购物车里。&lt;/p&gt;
+&lt;h3 id=&#34;未来的计划&#34;&gt;未来的计划
+&lt;/h3&gt;&lt;p&gt;紧跟AI浪潮，&lt;strong&gt;搞更多的钱，帮更多的人，装更多的X&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;一句想说的话&#34;&gt;一句想说的话
+&lt;/h3&gt;&lt;p&gt;睁眼观世界，闭眼世界观。&lt;/p&gt;
+&lt;h3 id=&#34;请站长喝杯咖啡&#34;&gt;请站长喝杯咖啡
+&lt;/h3&gt;&lt;p&gt;☕ 要么让咖啡燃起我的灵感，👻要么让香火点燃我的灵堂！&lt;br&gt;
+&lt;img src=&#34;https://yearsuns-github-io.vercel.app/about/wechat_payment.png&#34;
+	width=&#34;261&#34;
+	height=&#34;256&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/about/wechat_payment_hu_7110ac74c750e57.png 480w, https://yearsuns-github-io.vercel.app/about/wechat_payment_hu_2b8d77efea6a55db.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;微信扫码&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;101&#34;
+		data-flex-basis=&#34;244px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;联系站长&#34;&gt;联系站长
+&lt;/h3&gt;&lt;p&gt;请老爷用大大的红包🧧来羞辱我吧！&lt;br&gt;
+&lt;img src=&#34;https://yearsuns-github-io.vercel.app/about/wechat_qr_code.png&#34;
+	width=&#34;256&#34;
+	height=&#34;256&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/about/wechat_qr_code_hu_22b9b81a6e95acf2.png 480w, https://yearsuns-github-io.vercel.app/about/wechat_qr_code_hu_73fe7de4344e69f.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;微信扫码&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;100&#34;
+		data-flex-basis=&#34;240px&#34;
+	
+&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="软件开发中，版本控制是最重要的基础工具之一。它能帮你记录代码修改历史、团队协作，以及在出现错误时快速回退。 对初学者来说，Git 有时显得命令多、名词多，但本质并不复杂。本教程的目标是：用最小的概念，建立一套可立即上手的 Git 心智模型。\n">
+<meta name="keywords" content="Git, 版本控制"><title>Git 入门教程：从原理到实践的最小知识体系</title>
+
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/p/a-beginner-friendly-git-guide-clear-concepts-and-practical-steps-for-new-developers/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="Git 入门教程：从原理到实践的最小知识体系">
+<meta property='og:description' content="软件开发中，版本控制是最重要的基础工具之一。它能帮你记录代码修改历史、团队协作，以及在出现错误时快速回退。 对初学者来说，Git 有时显得命令多、名词多，但本质并不复杂。本教程的目标是：用最小的概念，建立一套可立即上手的 Git 心智模型。\n">
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/p/a-beginner-friendly-git-guide-clear-concepts-and-practical-steps-for-new-developers/'>
+<meta property='og:site_name' content='王离谱的小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Git' /><meta property='article:tag' content='版本控制' /><meta property='article:tag' content='教程' /><meta property='article:published_time' content='2025-03-30T11:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-03-30T11:59:56&#43;08:00'/>
+<meta name="twitter:title" content="Git 入门教程：从原理到实践的最小知识体系">
+<meta name="twitter:description" content="软件开发中，版本控制是最重要的基础工具之一。它能帮你记录代码修改历史、团队协作，以及在出现错误时快速回退。 对初学者来说，Git 有时显得命令多、名词多，但本质并不复杂。本教程的目标是：用最小的概念，建立一套可立即上手的 Git 心智模型。\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王离谱的小破站</a></h1>
+            <h2 class="site-description">破破烂烂</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>分类</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://tools.yearsuns.com' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>工具</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" selected>中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span></span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title"></h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#一git-是什么一句话足够"><strong>一、Git 是什么？一句话足够</strong></a></li>
+    <li><a href="#二安装与初始配置上手的第一步"><strong>二、安装与初始配置：上手的第一步</strong></a></li>
+    <li><a href="#三你的第一个仓库让-git-开始观察你的项目"><strong>三、你的第一个仓库：让 Git 开始“观察”你的项目</strong></a></li>
+    <li><a href="#四git-的核心思想三大区域模型"><strong>四、Git 的核心思想：三大区域模型</strong></a></li>
+    <li><a href="#五最常用的-git-命令够用版"><strong>五、最常用的 Git 命令（够用版）</strong></a>
+      <ul>
+        <li><a href="#1-查看当前状态"><strong>1. 查看当前状态</strong></a></li>
+        <li><a href="#2-把文件加入到暂存区"><strong>2. 把文件加入到暂存区</strong></a></li>
+        <li><a href="#3-创建一次提交"><strong>3. 创建一次提交</strong></a></li>
+        <li><a href="#4-查看提交历史"><strong>4. 查看提交历史</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#六如何撤销不要怕-gitgit-最擅长救你"><strong>六、如何撤销？不要怕 Git，Git 最擅长救你</strong></a>
+      <ul>
+        <li><a href="#1-撤回工作区修改"><strong>1. 撤回工作区修改</strong></a></li>
+        <li><a href="#2-撤回暂存区变化"><strong>2. 撤回暂存区变化</strong></a></li>
+        <li><a href="#3-撤销提交但保留修改"><strong>3. 撤销提交（但保留修改）</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#七分支git-最有价值的能力"><strong>七、分支：Git 最有价值的能力</strong></a>
+      <ul>
+        <li><a href="#分支为什么重要"><strong>分支为什么重要？</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#八合并把你的成果合回主线"><strong>八、合并：把你的成果合回主线</strong></a></li>
+    <li><a href="#九解决冲突协作开发不可避免的一刻"><strong>九、解决冲突：协作开发不可避免的一刻</strong></a></li>
+    <li><a href="#十远程仓库开始真正的协作"><strong>十、远程仓库：开始真正的协作</strong></a></li>
+    <li><a href="#十一初学者最常见的三个疑问"><strong>十一、初学者最常见的三个疑问</strong></a>
+      <ul>
+        <li><a href="#1-为什么我-push-不上去"><strong>1. 为什么我 push 不上去？</strong></a></li>
+        <li><a href="#2-我改乱了能回去吗"><strong>2. 我改乱了能回去吗？</strong></a></li>
+        <li><a href="#3-我需要记住所有命令吗"><strong>3. 我需要记住所有命令吗？</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#十二总结用最小的知识体系开始真正使用-git"><strong>十二、总结：用最小的知识体系开始真正使用 Git</strong></a></li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/a-beginner-friendly-git-guide-clear-concepts-and-practical-steps-for-new-developers/">Git 入门教程：从原理到实践的最小知识体系</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025年03月30日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>软件开发中，版本控制是最重要的基础工具之一。它能帮你记录代码修改历史、团队协作，以及在出现错误时快速回退。
+对初学者来说，Git 有时显得命令多、名词多，但本质并不复杂。本教程的目标是：<strong>用最小的概念，建立一套可立即上手的 Git 心智模型</strong>。</p>
+<h2 id="一git-是什么一句话足够"><strong>一、Git 是什么？一句话足够</strong>
+</h2><blockquote>
+<p><strong>Git 是一个用于记录项目每次变化的工具，让你可以随时查看历史、切换版本、协同工作。</strong></p>
+</blockquote>
+<p>它不像网盘那样保存一堆文件，而是保存“每次修改的快照”，这就是它高效的原因。</p>
+<p>如果你理解不了所有命令，不要紧：<strong>只要理解 Git 在管理一条时间线，你就是在使用它的核心能力</strong>。</p>
+<h2 id="二安装与初始配置上手的第一步"><strong>二、安装与初始配置：上手的第一步</strong>
+</h2><p>安装完成后，你必须告诉 Git 你是谁：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git config --global user.name <span style="color:#e6db74">&#34;你的名字&#34;</span>
+</span></span><span style="display:flex;"><span>git config --global user.email <span style="color:#e6db74">&#34;你的邮箱&#34;</span>
+</span></span></code></pre></div><p>这些信息会写入每一次提交记录中，是协作的基础。</p>
+<hr>
+<h2 id="三你的第一个仓库让-git-开始观察你的项目"><strong>三、你的第一个仓库：让 Git 开始“观察”你的项目</strong>
+</h2><p>进入你的项目目录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git init
+</span></span></code></pre></div><p>这个命令会创建一个隐藏目录 <code>.git</code>，里面保存了所有版本信息。从此以后，Git 就开始“跟踪”这个项目。</p>
+<h2 id="四git-的核心思想三大区域模型"><strong>四、Git 的核心思想：三大区域模型</strong>
+</h2><p>理解这张图，你就理解了 Git 的 80%：</p>
+<pre tabindex="0"><code>工作区（Working Directory）
+        ↓ git add
+暂存区（Stage / Index）
+        ↓ git commit
+本地仓库（Repository）
+</code></pre><p>解释：</p>
+<ul>
+<li><strong>工作区</strong>：你正在编辑的文件。</li>
+<li><strong>暂存区</strong>：告诉 Git“这些是我准备提交的文件”。</li>
+<li><strong>仓库区</strong>：文件永久记录到版本历史。</li>
+</ul>
+<p>一个提交（commit）就是从暂存区保存到仓库区的快照。</p>
+<h2 id="五最常用的-git-命令够用版"><strong>五、最常用的 Git 命令（够用版）</strong>
+</h2><h3 id="1-查看当前状态"><strong>1. 查看当前状态</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git status
+</span></span></code></pre></div><p>新手要常用，它会告诉你哪些文件改变了、哪些被跟踪、哪些准备提交。</p>
+<h3 id="2-把文件加入到暂存区"><strong>2. 把文件加入到暂存区</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git add 文件名
+</span></span><span style="display:flex;"><span>git add .   <span style="color:#75715e"># 全部文件</span>
+</span></span></code></pre></div><p>可以把它理解为：“把这些修改放进购物车”。</p>
+<h3 id="3-创建一次提交"><strong>3. 创建一次提交</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;描述此次修改的内容&#34;</span>
+</span></span></code></pre></div><p>提交就是保存历史快照，是 Git 的核心价值。
+建议写清楚本次做了什么，而不是“修改了一些东西”。</p>
+<h3 id="4-查看提交历史"><strong>4. 查看提交历史</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log
+</span></span></code></pre></div><p>如果你看到很多提交，这是正常的：版本控制就是不断记录这些变化。</p>
+<h2 id="六如何撤销不要怕-gitgit-最擅长救你"><strong>六、如何撤销？不要怕 Git，Git 最擅长救你</strong>
+</h2><h3 id="1-撤回工作区修改"><strong>1. 撤回工作区修改</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git checkout -- 文件名
+</span></span></code></pre></div><p>让文件回到最近一次提交的状态。</p>
+<h3 id="2-撤回暂存区变化"><strong>2. 撤回暂存区变化</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git reset 文件名
+</span></span></code></pre></div><p>把文件从暂存区拿回工作区。</p>
+<h3 id="3-撤销提交但保留修改"><strong>3. 撤销提交（但保留修改）</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git reset --soft HEAD~1
+</span></span></code></pre></div><p>这相当于“删掉最新的提交，但把代码留着”。</p>
+<h2 id="七分支git-最有价值的能力"><strong>七、分支：Git 最有价值的能力</strong>
+</h2><p>在 Git 中，分支很轻量，创建和切换分支几乎没有成本。</p>
+<p>创建分支：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git branch dev
+</span></span></code></pre></div><p>切换分支：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git checkout dev
+</span></span></code></pre></div><p>“主分支负责发布，开发分支负责开发”——这是最常见的工作方式。</p>
+<h3 id="分支为什么重要"><strong>分支为什么重要？</strong>
+</h3><p>因为你可以：</p>
+<ul>
+<li>在新分支上尝试新功能</li>
+<li>不破坏主分支</li>
+<li>随时删掉失败的尝试</li>
+</ul>
+<p>这让 Git 成为一个鼓励实验的工具。</p>
+<h2 id="八合并把你的成果合回主线"><strong>八、合并：把你的成果合回主线</strong>
+</h2><p>完成开发后，你需要把分支的工作合并到主分支：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git checkout main
+</span></span><span style="display:flex;"><span>git merge dev
+</span></span></code></pre></div><p>如果没有冲突，它会自动完成。</p>
+<h2 id="九解决冲突协作开发不可避免的一刻"><strong>九、解决冲突：协作开发不可避免的一刻</strong>
+</h2><p>两个开发者修改同一行代码，就会产生冲突。
+Git 会在文件里标记冲突内容：</p>
+<pre tabindex="0"><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+你的修改
+=======
+同事的修改
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev
+</code></pre><p>你只需手动编辑成想要的结果，再提交即可。</p>
+<p>冲突不是错误，而是协作的自然产物。</p>
+<h2 id="十远程仓库开始真正的协作"><strong>十、远程仓库：开始真正的协作</strong>
+</h2><p>把本地仓库和 GitHub（或 GitLab）绑定：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git remote add origin 仓库地址
+</span></span></code></pre></div><p>推送：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git push -u origin main
+</span></span></code></pre></div><p>拉取别人提交：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git pull
+</span></span></code></pre></div><p>这是团队协作最核心的两步：“推给别人”和“拉取别人”。</p>
+<h2 id="十一初学者最常见的三个疑问"><strong>十一、初学者最常见的三个疑问</strong>
+</h2><h3 id="1-为什么我-push-不上去"><strong>1. 为什么我 push 不上去？</strong>
+</h3><p>答案通常是：远程库有新的提交，你本地没有。
+解决办法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git pull --rebase
+</span></span><span style="display:flex;"><span>git push
+</span></span></code></pre></div><h3 id="2-我改乱了能回去吗"><strong>2. 我改乱了能回去吗？</strong>
+</h3><p>几乎都能。Git 就是为了防止“改乱了”而存在的。</p>
+<h3 id="3-我需要记住所有命令吗"><strong>3. 我需要记住所有命令吗？</strong>
+</h3><p>不需要。
+最核心的就这些：</p>
+<pre tabindex="0"><code>git add
+git commit
+git status
+git log
+git checkout
+git branch
+git merge
+git push
+git pull
+</code></pre><p>熟练它们，你已经是合格的 Git 用户。</p>
+<h2 id="十二总结用最小的知识体系开始真正使用-git"><strong>十二、总结：用最小的知识体系开始真正使用 Git</strong>
+</h2><p>你可以把 Git 想成一个“会计本”，它记录了代码的变化账单：</p>
+<ul>
+<li><strong>init</strong>：开账本</li>
+<li><strong>add</strong>：把修改列入账单</li>
+<li><strong>commit</strong>：保存账单</li>
+<li><strong>branch</strong>：给同一项目开多个账本副本</li>
+<li><strong>merge</strong>：把账单合在一起</li>
+<li><strong>push/pull</strong>：账本在多人之间同步</li>
+</ul>
+<p>理解这套模型后，命令不过是操作方式的不同表达。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/git/">Git</a>
+        
+            <a href="/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/">版本控制</a>
+        
+            <a href="/tags/%E6%95%99%E7%A8%8B/">教程</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title"></h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/the-ultimate-guide-to-development-with-cursor/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cursor开发终极指南</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/best-practices-for-rest-api/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">REST API的最佳实践</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/best-practices-of-jwt/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">JWT的最佳实践</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/3-spells-to-tame-the-wild-ai/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">别让AI把你当傻子！3个咒语驯服野生AI，打工效率直接芜湖起飞🛫</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/how-to-build-a-personal-blog-with-hugo-and-github-pages/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">使用 Hugo &#43; GitHub 搭建个人博客（自动部署）</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'zh-CN',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 王离谱
+    </section>
+    
+    <section class="powerby">
+        
+            <a href="https://beian.miit.gov.cn/">粤ICP备2022043168号</a> <br/>
+         <br />
+        
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

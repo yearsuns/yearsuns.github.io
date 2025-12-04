@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>敏感信息 on 王离谱的小破站</title>
-        <link>https://blog.yearsuns.com/tags/%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF/</link>
+        <link>https://yearsuns-github-io.vercel.app/tags/%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF/</link>
         <description>Recent content in 敏感信息 on 王离谱的小破站</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
+        <language>zh-CN</language>
         <copyright>王离谱</copyright>
-        <lastBuildDate>Mon, 10 Feb 2025 11:43:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/tags/%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 10 Feb 2025 11:43:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>如何向技术大佬请教问题且不泄露敏感信息</title>
-        <link>https://blog.yearsuns.com/p/protecting-sensitive-data-while-seeking-help/</link>
+        <link>https://yearsuns-github-io.vercel.app/p/protecting-sensitive-data-while-seeking-help/</link>
         <pubDate>Mon, 10 Feb 2025 11:43:56 +0800</pubDate>
         
-        <guid>https://blog.yearsuns.com/p/protecting-sensitive-data-while-seeking-help/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/protecting-sensitive-data-while-seeking-help/</guid>
         <description>&lt;p&gt;在技术圈中，请教问题是提升技能的重要途径。但有时候，我们的问题可能涉及敏感信息，比如项目代码、业务逻辑、客户数据等。如果不注意，很可能因为无意的泄露造成不必要的风险。那么，如何在请教问题时保护敏感信息？本文将从识别敏感信息、避免泄露以及高效沟通三个方面详细阐述。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;什么是敏感信息如何识别&#34;&gt;什么是敏感信息？如何识别？

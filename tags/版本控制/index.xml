@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>版本控制 on 王离谱的小破站</title>
+        <link>https://yearsuns-github-io.vercel.app/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/</link>
+        <description>Recent content in 版本控制 on 王离谱的小破站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <copyright>王离谱</copyright>
+        <lastBuildDate>Sun, 30 Mar 2025 11:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Git 入门教程：从原理到实践的最小知识体系</title>
+        <link>https://yearsuns-github-io.vercel.app/p/a-beginner-friendly-git-guide-clear-concepts-and-practical-steps-for-new-developers/</link>
+        <pubDate>Sun, 30 Mar 2025 11:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/a-beginner-friendly-git-guide-clear-concepts-and-practical-steps-for-new-developers/</guid>
+        <description>&lt;p&gt;软件开发中，版本控制是最重要的基础工具之一。它能帮你记录代码修改历史、团队协作，以及在出现错误时快速回退。
+对初学者来说，Git 有时显得命令多、名词多，但本质并不复杂。本教程的目标是：&lt;strong&gt;用最小的概念，建立一套可立即上手的 Git 心智模型&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;一git-是什么一句话足够&#34;&gt;&lt;strong&gt;一、Git 是什么？一句话足够&lt;/strong&gt;
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Git 是一个用于记录项目每次变化的工具，让你可以随时查看历史、切换版本、协同工作。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;它不像网盘那样保存一堆文件，而是保存“每次修改的快照”，这就是它高效的原因。&lt;/p&gt;
+&lt;p&gt;如果你理解不了所有命令，不要紧：&lt;strong&gt;只要理解 Git 在管理一条时间线，你就是在使用它的核心能力&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;二安装与初始配置上手的第一步&#34;&gt;&lt;strong&gt;二、安装与初始配置：上手的第一步&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;安装完成后，你必须告诉 Git 你是谁：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git config --global user.name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;你的名字&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git config --global user.email &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;你的邮箱&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这些信息会写入每一次提交记录中，是协作的基础。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;三你的第一个仓库让-git-开始观察你的项目&#34;&gt;&lt;strong&gt;三、你的第一个仓库：让 Git 开始“观察”你的项目&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;进入你的项目目录：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git init
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个命令会创建一个隐藏目录 &lt;code&gt;.git&lt;/code&gt;，里面保存了所有版本信息。从此以后，Git 就开始“跟踪”这个项目。&lt;/p&gt;
+&lt;h2 id=&#34;四git-的核心思想三大区域模型&#34;&gt;&lt;strong&gt;四、Git 的核心思想：三大区域模型&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;理解这张图，你就理解了 Git 的 80%：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;工作区（Working Directory）
+        ↓ git add
+暂存区（Stage / Index）
+        ↓ git commit
+本地仓库（Repository）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;解释：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;工作区&lt;/strong&gt;：你正在编辑的文件。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;暂存区&lt;/strong&gt;：告诉 Git“这些是我准备提交的文件”。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;仓库区&lt;/strong&gt;：文件永久记录到版本历史。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一个提交（commit）就是从暂存区保存到仓库区的快照。&lt;/p&gt;
+&lt;h2 id=&#34;五最常用的-git-命令够用版&#34;&gt;&lt;strong&gt;五、最常用的 Git 命令（够用版）&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-查看当前状态&#34;&gt;&lt;strong&gt;1. 查看当前状态&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git status
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;新手要常用，它会告诉你哪些文件改变了、哪些被跟踪、哪些准备提交。&lt;/p&gt;
+&lt;h3 id=&#34;2-把文件加入到暂存区&#34;&gt;&lt;strong&gt;2. 把文件加入到暂存区&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add 文件名
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add .   &lt;span style=&#34;color:#75715e&#34;&gt;# 全部文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以把它理解为：“把这些修改放进购物车”。&lt;/p&gt;
+&lt;h3 id=&#34;3-创建一次提交&#34;&gt;&lt;strong&gt;3. 创建一次提交&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;描述此次修改的内容&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;提交就是保存历史快照，是 Git 的核心价值。
+建议写清楚本次做了什么，而不是“修改了一些东西”。&lt;/p&gt;
+&lt;h3 id=&#34;4-查看提交历史&#34;&gt;&lt;strong&gt;4. 查看提交历史&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果你看到很多提交，这是正常的：版本控制就是不断记录这些变化。&lt;/p&gt;
+&lt;h2 id=&#34;六如何撤销不要怕-gitgit-最擅长救你&#34;&gt;&lt;strong&gt;六、如何撤销？不要怕 Git，Git 最擅长救你&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-撤回工作区修改&#34;&gt;&lt;strong&gt;1. 撤回工作区修改&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout -- 文件名
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;让文件回到最近一次提交的状态。&lt;/p&gt;
+&lt;h3 id=&#34;2-撤回暂存区变化&#34;&gt;&lt;strong&gt;2. 撤回暂存区变化&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reset 文件名
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;把文件从暂存区拿回工作区。&lt;/p&gt;
+&lt;h3 id=&#34;3-撤销提交但保留修改&#34;&gt;&lt;strong&gt;3. 撤销提交（但保留修改）&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reset --soft HEAD~1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这相当于“删掉最新的提交，但把代码留着”。&lt;/p&gt;
+&lt;h2 id=&#34;七分支git-最有价值的能力&#34;&gt;&lt;strong&gt;七、分支：Git 最有价值的能力&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;在 Git 中，分支很轻量，创建和切换分支几乎没有成本。&lt;/p&gt;
+&lt;p&gt;创建分支：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git branch dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;切换分支：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;“主分支负责发布，开发分支负责开发”——这是最常见的工作方式。&lt;/p&gt;
+&lt;h3 id=&#34;分支为什么重要&#34;&gt;&lt;strong&gt;分支为什么重要？&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;因为你可以：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在新分支上尝试新功能&lt;/li&gt;
+&lt;li&gt;不破坏主分支&lt;/li&gt;
+&lt;li&gt;随时删掉失败的尝试&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这让 Git 成为一个鼓励实验的工具。&lt;/p&gt;
+&lt;h2 id=&#34;八合并把你的成果合回主线&#34;&gt;&lt;strong&gt;八、合并：把你的成果合回主线&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;完成开发后，你需要把分支的工作合并到主分支：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout main
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git merge dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果没有冲突，它会自动完成。&lt;/p&gt;
+&lt;h2 id=&#34;九解决冲突协作开发不可避免的一刻&#34;&gt;&lt;strong&gt;九、解决冲突：协作开发不可避免的一刻&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;两个开发者修改同一行代码，就会产生冲突。
+Git 会在文件里标记冲突内容：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD
+你的修改
+=======
+同事的修改
+&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; dev
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;你只需手动编辑成想要的结果，再提交即可。&lt;/p&gt;
+&lt;p&gt;冲突不是错误，而是协作的自然产物。&lt;/p&gt;
+&lt;h2 id=&#34;十远程仓库开始真正的协作&#34;&gt;&lt;strong&gt;十、远程仓库：开始真正的协作&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;把本地仓库和 GitHub（或 GitLab）绑定：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git remote add origin 仓库地址
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;推送：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push -u origin main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;拉取别人提交：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git pull
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这是团队协作最核心的两步：“推给别人”和“拉取别人”。&lt;/p&gt;
+&lt;h2 id=&#34;十一初学者最常见的三个疑问&#34;&gt;&lt;strong&gt;十一、初学者最常见的三个疑问&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-为什么我-push-不上去&#34;&gt;&lt;strong&gt;1. 为什么我 push 不上去？&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;答案通常是：远程库有新的提交，你本地没有。
+解决办法：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git pull --rebase
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;2-我改乱了能回去吗&#34;&gt;&lt;strong&gt;2. 我改乱了能回去吗？&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;几乎都能。Git 就是为了防止“改乱了”而存在的。&lt;/p&gt;
+&lt;h3 id=&#34;3-我需要记住所有命令吗&#34;&gt;&lt;strong&gt;3. 我需要记住所有命令吗？&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;不需要。
+最核心的就这些：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;git add
+git commit
+git status
+git log
+git checkout
+git branch
+git merge
+git push
+git pull
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;熟练它们，你已经是合格的 Git 用户。&lt;/p&gt;
+&lt;h2 id=&#34;十二总结用最小的知识体系开始真正使用-git&#34;&gt;&lt;strong&gt;十二、总结：用最小的知识体系开始真正使用 Git&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;你可以把 Git 想成一个“会计本”，它记录了代码的变化账单：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;init&lt;/strong&gt;：开账本&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;add&lt;/strong&gt;：把修改列入账单&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;commit&lt;/strong&gt;：保存账单&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;branch&lt;/strong&gt;：给同一项目开多个账本副本&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;merge&lt;/strong&gt;：把账单合在一起&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;push/pull&lt;/strong&gt;：账本在多人之间同步&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;理解这套模型后，命令不过是操作方式的不同表达。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

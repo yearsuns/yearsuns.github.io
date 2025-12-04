@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh-cn" dir="ltr">
+<html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="我们将从这篇文章中学到什么 👉 REST API 的基本原则 RESTful架构的核心概念 关键 HTTP 方法及其适当用途 👉 API 设计的最佳实践 如何设计有意义且高效的面向资源的 URL。 正确使用标准 HTTP 状态代码的重要性。 实现过滤、排序和分页的技术。 需要清晰、一致的 API 文档和工具来帮助实现这一点。 有效的 API 版本控制策略，以确保向后兼容性。 保护 API 安全的最佳实践，包括身份验证和 HTTPS。 如何以用户友好且信息丰富的方式处理错误。 维护 RESTful 原则和避免常见错误的实用技巧。 对设计可扩展且直观的 API 的见解。 API 设计中的常见陷阱以及如何避免它们。 👉 实用的注意事项 维护 RESTful 原则和避免常见错误的实用技巧。 对设计可扩展且直观的 API 的见解。 API 设计中的常见陷阱以及如何避免它们。 什么是 API？ 应用程序编程接口 (API) 是用于集成应用软件和服务的一组工具、定义和协议。它可以让您的产品和服务与其他产品和服务进行通信，而无需不断构建新的连接基础设施。\n">
 <meta name="keywords" content="RESTful, REST API, 教程"><title>REST API的最佳实践</title>
 
-<link rel='canonical' href='https://blog.yearsuns.com/p/best-practices-for-rest-api/'>
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/'>
 
 <link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="REST API的最佳实践">
 <meta property='og:description' content="我们将从这篇文章中学到什么 👉 REST API 的基本原则 RESTful架构的核心概念 关键 HTTP 方法及其适当用途 👉 API 设计的最佳实践 如何设计有意义且高效的面向资源的 URL。 正确使用标准 HTTP 状态代码的重要性。 实现过滤、排序和分页的技术。 需要清晰、一致的 API 文档和工具来帮助实现这一点。 有效的 API 版本控制策略，以确保向后兼容性。 保护 API 安全的最佳实践，包括身份验证和 HTTPS。 如何以用户友好且信息丰富的方式处理错误。 维护 RESTful 原则和避免常见错误的实用技巧。 对设计可扩展且直观的 API 的见解。 API 设计中的常见陷阱以及如何避免它们。 👉 实用的注意事项 维护 RESTful 原则和避免常见错误的实用技巧。 对设计可扩展且直观的 API 的见解。 API 设计中的常见陷阱以及如何避免它们。 什么是 API？ 应用程序编程接口 (API) 是用于集成应用软件和服务的一组工具、定义和协议。它可以让您的产品和服务与其他产品和服务进行通信，而无需不断构建新的连接基础设施。\n">
-<meta property='og:url' content='https://blog.yearsuns.com/p/best-practices-for-rest-api/'>
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/'>
 <meta property='og:site_name' content='王离谱的小破站'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='RESTful' /><meta property='article:tag' content='REST API' /><meta property='article:tag' content='教程' /><meta property='article:published_time' content='2025-02-12T12:13:56&#43;08:00'/><meta property='article:modified_time' content='2025-02-12T12:13:56&#43;08:00'/>
 <meta name="twitter:title" content="REST API的最佳实践">
@@ -42,7 +42,7 @@
     })();
 </script>
 <div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="">
         <span class="hamburger-box">
             <span class="hamburger-inner"></span>
         </span>
@@ -207,6 +207,29 @@
         
         <li class="menu-bottom-section">
             <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" selected>中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
 
                 
                     <li id="dark-mode-toggle">
@@ -226,7 +249,7 @@
 
 
 
-                        <span>暗色模式</span>
+                        <span></span>
                     </li>
                 
             </ol>
@@ -251,7 +274,7 @@
 
 
         </div>
-        <h2 class="widget-title section-title">目录</h2>
+        <h2 class="widget-title section-title"></h2>
         
         <div class="widget--toc">
             <nav id="TableOfContents">
@@ -354,7 +377,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 10 分钟
+                    
                 </time>
             </div>
         
@@ -816,29 +839,29 @@
       <tr>
           <td><strong>URI Path</strong></td>
           <td>Includes the version number directly in the API path.</td>
-          <td><code>http://www.example.com/api/v1/products</code><!-- raw HTML omitted --><code>http://www.example.com/api/v2/products</code></td>
+          <td><code>http://www.example.com/api/v1/products</code><br><code>http://www.example.com/api/v2/products</code></td>
           <td>- <a class="link" href="https://developer.twitter.com/en/docs/twitter-api/versioning"  target="_blank" rel="noopener"
-    >Twitter</a><!-- raw HTML omitted -->- <a class="link" href="https://developer.paypal.com/docs/api/overview/#get-credentials"  target="_blank" rel="noopener"
-    >PayPal</a><!-- raw HTML omitted -->- <a class="link" href="https://cloud.google.com/translate/docs/reference/rest"  target="_blank" rel="noopener"
+    >Twitter</a><br>- <a class="link" href="https://developer.paypal.com/docs/api/overview/#get-credentials"  target="_blank" rel="noopener"
+    >PayPal</a><br>- <a class="link" href="https://cloud.google.com/translate/docs/reference/rest"  target="_blank" rel="noopener"
     >Google Translate</a></td>
       </tr>
       <tr>
           <td><strong>Query Parameters</strong></td>
           <td>Specifies the version number as a query parameter in the URL.</td>
-          <td><code>http://www.example.com/api/products?version=1</code><!-- raw HTML omitted --><code>http://www.example.com/api/products?version=2</code></td>
+          <td><code>http://www.example.com/api/products?version=1</code><br><code>http://www.example.com/api/products?version=2</code></td>
           <td>- <a class="link" href="https://cloud.google.com/translate/docs/reference/rest"  target="_blank" rel="noopener"
     >Google Translation APIs</a></td>
       </tr>
       <tr>
           <td><strong>Custom Headers</strong></td>
           <td>Uses custom headers to specify the API version.</td>
-          <td><code>http://localhost:8080/api/products</code><!-- raw HTML omitted -->Headers: <code>X-API-VERSION=1</code><!-- raw HTML omitted --><code>http://localhost:8080/api/products</code><!-- raw HTML omitted -->Headers: <code>X-API-VERSION=2</code></td>
+          <td><code>http://localhost:8080/api/products</code><br>Headers: <code>X-API-VERSION=1</code><br><code>http://localhost:8080/api/products</code><br>Headers: <code>X-API-VERSION=2</code></td>
           <td>-</td>
       </tr>
       <tr>
           <td><strong>Content Negotiation</strong></td>
           <td>Uses the <code>Accept</code> header to specify the version of the API.</td>
-          <td><code>http://localhost:8080/api/products</code><!-- raw HTML omitted -->Headers: <code>Accept=application/vnd.javaguides-v1+json</code><!-- raw HTML omitted --><code>http://localhost:8080/api/products</code><!-- raw HTML omitted -->Headers: <code>Accept=application/vnd.javaguides-v2+json</code></td>
+          <td><code>http://localhost:8080/api/products</code><br>Headers: <code>Accept=application/vnd.javaguides-v1+json</code><br><code>http://localhost:8080/api/products</code><br>Headers: <code>Accept=application/vnd.javaguides-v2+json</code></td>
           <td>- <a class="link" href="https://docs.github.com/en/rest/overview/resources-in-the-rest-api"  target="_blank" rel="noopener"
     >GitHub</a></td>
       </tr>
@@ -931,7 +954,7 @@
     
 
 <aside class="related-content--wrapper">
-    <h2 class="section-title">相关文章</h2>
+    <h2 class="section-title"></h2>
     <div class="related-content">
         <div class="flex article-list--tile">
             
@@ -1038,8 +1061,8 @@
     <section class="powerby">
         
             <a href="https://beian.miit.gov.cn/">粤ICP备2022043168号</a> <br/>
-        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
-        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+         <br />
+        
     </section>
 </footer>
 

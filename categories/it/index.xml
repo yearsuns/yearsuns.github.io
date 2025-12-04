@@ -2,17 +2,152 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>IT on 王离谱的小破站</title>
-        <link>https://blog.yearsuns.com/categories/it/</link>
+        <link>https://yearsuns-github-io.vercel.app/categories/it/</link>
         <description>Recent content in IT on 王离谱的小破站</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
+        <language>zh-CN</language>
         <copyright>王离谱</copyright>
-        <lastBuildDate>Thu, 13 Feb 2025 21:13:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/categories/it/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 30 Mar 2025 11:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/categories/it/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Git 入门教程：从原理到实践的最小知识体系</title>
+        <link>https://yearsuns-github-io.vercel.app/p/a-beginner-friendly-git-guide-clear-concepts-and-practical-steps-for-new-developers/</link>
+        <pubDate>Sun, 30 Mar 2025 11:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/a-beginner-friendly-git-guide-clear-concepts-and-practical-steps-for-new-developers/</guid>
+        <description>&lt;p&gt;软件开发中，版本控制是最重要的基础工具之一。它能帮你记录代码修改历史、团队协作，以及在出现错误时快速回退。
+对初学者来说，Git 有时显得命令多、名词多，但本质并不复杂。本教程的目标是：&lt;strong&gt;用最小的概念，建立一套可立即上手的 Git 心智模型&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;一git-是什么一句话足够&#34;&gt;&lt;strong&gt;一、Git 是什么？一句话足够&lt;/strong&gt;
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Git 是一个用于记录项目每次变化的工具，让你可以随时查看历史、切换版本、协同工作。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;它不像网盘那样保存一堆文件，而是保存“每次修改的快照”，这就是它高效的原因。&lt;/p&gt;
+&lt;p&gt;如果你理解不了所有命令，不要紧：&lt;strong&gt;只要理解 Git 在管理一条时间线，你就是在使用它的核心能力&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;二安装与初始配置上手的第一步&#34;&gt;&lt;strong&gt;二、安装与初始配置：上手的第一步&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;安装完成后，你必须告诉 Git 你是谁：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git config --global user.name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;你的名字&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git config --global user.email &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;你的邮箱&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这些信息会写入每一次提交记录中，是协作的基础。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;三你的第一个仓库让-git-开始观察你的项目&#34;&gt;&lt;strong&gt;三、你的第一个仓库：让 Git 开始“观察”你的项目&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;进入你的项目目录：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git init
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个命令会创建一个隐藏目录 &lt;code&gt;.git&lt;/code&gt;，里面保存了所有版本信息。从此以后，Git 就开始“跟踪”这个项目。&lt;/p&gt;
+&lt;h2 id=&#34;四git-的核心思想三大区域模型&#34;&gt;&lt;strong&gt;四、Git 的核心思想：三大区域模型&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;理解这张图，你就理解了 Git 的 80%：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;工作区（Working Directory）
+        ↓ git add
+暂存区（Stage / Index）
+        ↓ git commit
+本地仓库（Repository）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;解释：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;工作区&lt;/strong&gt;：你正在编辑的文件。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;暂存区&lt;/strong&gt;：告诉 Git“这些是我准备提交的文件”。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;仓库区&lt;/strong&gt;：文件永久记录到版本历史。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一个提交（commit）就是从暂存区保存到仓库区的快照。&lt;/p&gt;
+&lt;h2 id=&#34;五最常用的-git-命令够用版&#34;&gt;&lt;strong&gt;五、最常用的 Git 命令（够用版）&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-查看当前状态&#34;&gt;&lt;strong&gt;1. 查看当前状态&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git status
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;新手要常用，它会告诉你哪些文件改变了、哪些被跟踪、哪些准备提交。&lt;/p&gt;
+&lt;h3 id=&#34;2-把文件加入到暂存区&#34;&gt;&lt;strong&gt;2. 把文件加入到暂存区&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add 文件名
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add .   &lt;span style=&#34;color:#75715e&#34;&gt;# 全部文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以把它理解为：“把这些修改放进购物车”。&lt;/p&gt;
+&lt;h3 id=&#34;3-创建一次提交&#34;&gt;&lt;strong&gt;3. 创建一次提交&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;描述此次修改的内容&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;提交就是保存历史快照，是 Git 的核心价值。
+建议写清楚本次做了什么，而不是“修改了一些东西”。&lt;/p&gt;
+&lt;h3 id=&#34;4-查看提交历史&#34;&gt;&lt;strong&gt;4. 查看提交历史&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果你看到很多提交，这是正常的：版本控制就是不断记录这些变化。&lt;/p&gt;
+&lt;h2 id=&#34;六如何撤销不要怕-gitgit-最擅长救你&#34;&gt;&lt;strong&gt;六、如何撤销？不要怕 Git，Git 最擅长救你&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-撤回工作区修改&#34;&gt;&lt;strong&gt;1. 撤回工作区修改&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout -- 文件名
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;让文件回到最近一次提交的状态。&lt;/p&gt;
+&lt;h3 id=&#34;2-撤回暂存区变化&#34;&gt;&lt;strong&gt;2. 撤回暂存区变化&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reset 文件名
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;把文件从暂存区拿回工作区。&lt;/p&gt;
+&lt;h3 id=&#34;3-撤销提交但保留修改&#34;&gt;&lt;strong&gt;3. 撤销提交（但保留修改）&lt;/strong&gt;
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reset --soft HEAD~1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这相当于“删掉最新的提交，但把代码留着”。&lt;/p&gt;
+&lt;h2 id=&#34;七分支git-最有价值的能力&#34;&gt;&lt;strong&gt;七、分支：Git 最有价值的能力&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;在 Git 中，分支很轻量，创建和切换分支几乎没有成本。&lt;/p&gt;
+&lt;p&gt;创建分支：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git branch dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;切换分支：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;“主分支负责发布，开发分支负责开发”——这是最常见的工作方式。&lt;/p&gt;
+&lt;h3 id=&#34;分支为什么重要&#34;&gt;&lt;strong&gt;分支为什么重要？&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;因为你可以：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在新分支上尝试新功能&lt;/li&gt;
+&lt;li&gt;不破坏主分支&lt;/li&gt;
+&lt;li&gt;随时删掉失败的尝试&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这让 Git 成为一个鼓励实验的工具。&lt;/p&gt;
+&lt;h2 id=&#34;八合并把你的成果合回主线&#34;&gt;&lt;strong&gt;八、合并：把你的成果合回主线&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;完成开发后，你需要把分支的工作合并到主分支：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout main
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git merge dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果没有冲突，它会自动完成。&lt;/p&gt;
+&lt;h2 id=&#34;九解决冲突协作开发不可避免的一刻&#34;&gt;&lt;strong&gt;九、解决冲突：协作开发不可避免的一刻&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;两个开发者修改同一行代码，就会产生冲突。
+Git 会在文件里标记冲突内容：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD
+你的修改
+=======
+同事的修改
+&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; dev
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;你只需手动编辑成想要的结果，再提交即可。&lt;/p&gt;
+&lt;p&gt;冲突不是错误，而是协作的自然产物。&lt;/p&gt;
+&lt;h2 id=&#34;十远程仓库开始真正的协作&#34;&gt;&lt;strong&gt;十、远程仓库：开始真正的协作&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;把本地仓库和 GitHub（或 GitLab）绑定：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git remote add origin 仓库地址
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;推送：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push -u origin main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;拉取别人提交：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git pull
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这是团队协作最核心的两步：“推给别人”和“拉取别人”。&lt;/p&gt;
+&lt;h2 id=&#34;十一初学者最常见的三个疑问&#34;&gt;&lt;strong&gt;十一、初学者最常见的三个疑问&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-为什么我-push-不上去&#34;&gt;&lt;strong&gt;1. 为什么我 push 不上去？&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;答案通常是：远程库有新的提交，你本地没有。
+解决办法：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git pull --rebase
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;2-我改乱了能回去吗&#34;&gt;&lt;strong&gt;2. 我改乱了能回去吗？&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;几乎都能。Git 就是为了防止“改乱了”而存在的。&lt;/p&gt;
+&lt;h3 id=&#34;3-我需要记住所有命令吗&#34;&gt;&lt;strong&gt;3. 我需要记住所有命令吗？&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;不需要。
+最核心的就这些：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;git add
+git commit
+git status
+git log
+git checkout
+git branch
+git merge
+git push
+git pull
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;熟练它们，你已经是合格的 Git 用户。&lt;/p&gt;
+&lt;h2 id=&#34;十二总结用最小的知识体系开始真正使用-git&#34;&gt;&lt;strong&gt;十二、总结：用最小的知识体系开始真正使用 Git&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;你可以把 Git 想成一个“会计本”，它记录了代码的变化账单：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;init&lt;/strong&gt;：开账本&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;add&lt;/strong&gt;：把修改列入账单&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;commit&lt;/strong&gt;：保存账单&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;branch&lt;/strong&gt;：给同一项目开多个账本副本&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;merge&lt;/strong&gt;：把账单合在一起&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;push/pull&lt;/strong&gt;：账本在多人之间同步&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;理解这套模型后，命令不过是操作方式的不同表达。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Cursor开发终极指南</title>
-        <link>https://blog.yearsuns.com/p/the-ultimate-guide-to-development-with-cursor/</link>
+        <link>https://yearsuns-github-io.vercel.app/p/the-ultimate-guide-to-development-with-cursor/</link>
         <pubDate>Thu, 13 Feb 2025 21:13:56 +0800</pubDate>
         
-        <guid>https://blog.yearsuns.com/p/the-ultimate-guide-to-development-with-cursor/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/the-ultimate-guide-to-development-with-cursor/</guid>
         <description>&lt;p&gt;如果您正在阅读本文，那么您可能已经尝试过 AI 驱动的开发，并且认为“这会产生比代码更多的错误！”相信我，我有过这种经历。&lt;/p&gt;
 &lt;p&gt;经过几个月对 Cursor 的反复试验，我发现秘诀不在于 AI 的能力，而在于我们如何指导它。让我向您展示如何将 Cursor 从有缺陷的代码生成器转变为您最可靠的配对程序员。&lt;/p&gt;
 &lt;h2 id=&#34;关于人工智能发展的残酷事实&#34;&gt;关于人工智能发展的残酷事实
@@ -141,10 +276,10 @@ style B fill:#bbf,stroke:#333,stroke-width:2px
 style C fill:#bbf,stroke:#333,stroke-width:2px
 style D fill:#bbf,stroke:#333,stroke-width:2px
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面的代码如下所示
-&lt;img src=&#34;https://blog.yearsuns.com/p/the-ultimate-guide-to-development-with-cursor/mermaid.webp&#34;
+&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/the-ultimate-guide-to-development-with-cursor/mermaid.webp&#34;
 	width=&#34;720&#34;
 	height=&#34;478&#34;
-	srcset=&#34;https://blog.yearsuns.com/p/the-ultimate-guide-to-development-with-cursor/mermaid_hu_dfe11ceb5703835f.webp 480w, https://blog.yearsuns.com/p/the-ultimate-guide-to-development-with-cursor/mermaid_hu_3a205933c2df7c81.webp 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/the-ultimate-guide-to-development-with-cursor/mermaid_hu_dfe11ceb5703835f.webp 480w, https://yearsuns-github-io.vercel.app/p/the-ultimate-guide-to-development-with-cursor/mermaid_hu_3a205933c2df7c81.webp 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;mermaid&#34;
@@ -778,10 +913,10 @@ style D fill:#bbf,stroke:#333,stroke-width:2px
         </item>
         <item>
         <title>REST API的最佳实践</title>
-        <link>https://blog.yearsuns.com/p/best-practices-for-rest-api/</link>
+        <link>https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/</link>
         <pubDate>Wed, 12 Feb 2025 12:13:56 +0800</pubDate>
         
-        <guid>https://blog.yearsuns.com/p/best-practices-for-rest-api/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/</guid>
         <description>&lt;h2 id=&#34;我们将从这篇文章中学到什么&#34;&gt;我们将从这篇文章中学到什么
 &lt;/h2&gt;&lt;h3 id=&#34;-rest-api-的基本原则&#34;&gt;👉 REST API 的基本原则
 &lt;/h3&gt;&lt;ul&gt;
@@ -869,10 +1004,10 @@ style D fill:#bbf,stroke:#333,stroke-width:2px
 &lt;/h2&gt;&lt;p&gt;URI 代表&lt;a class=&#34;link&#34; href=&#34;https://en.wikipedia.org/wiki/Uniform_Resource_Identifier&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;统一资源标识符&lt;/a&gt;(URI)。它标识网络上的逻辑或物理资源。URL 和 URN 是 URI 的子类型。URL 定位资源，而 URN 命名资源。&lt;/p&gt;
 &lt;p&gt;REST API 使用 URI 来定位资源。REST API 设计人员应创建 URI，以便将 REST API 的资源模型传达给 API 的潜在客户。如果资源命名得当，API 就会直观且易于使用。如果命名不当，同一个 API 的使用和理解就会变得困难。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri.webp&#34;
+&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri.webp&#34;
 	width=&#34;720&#34;
 	height=&#34;177&#34;
-	srcset=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri_hu_fba245286d270c77.webp 480w, https://blog.yearsuns.com/p/best-practices-for-rest-api/uri_hu_179c012895a3cc30.webp 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri_hu_fba245286d270c77.webp 480w, https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri_hu_179c012895a3cc30.webp 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;URI&#34;
@@ -883,10 +1018,10 @@ style D fill:#bbf,stroke:#333,stroke-width:2px
 		data-flex-basis=&#34;976px&#34;
 	
 &gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri-vs-url.webp&#34;
+&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri-vs-url.webp&#34;
 	width=&#34;720&#34;
 	height=&#34;271&#34;
-	srcset=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri-vs-url_hu_efb5016e88ace6ee.webp 480w, https://blog.yearsuns.com/p/best-practices-for-rest-api/uri-vs-url_hu_8039dcaf63480cdb.webp 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri-vs-url_hu_efb5016e88ace6ee.webp 480w, https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri-vs-url_hu_8039dcaf63480cdb.webp 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;URI 与 URL 之间的区别（来源：https://refine.dev/blog/uri-vs-url/#introduction）&#34;
@@ -1136,10 +1271,10 @@ style D fill:#bbf,stroke:#333,stroke-width:2px
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /scripts/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/status    // 检查执行状态
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;5使用http响应状态码&#34;&gt;5.使用HTTP响应状态码
 &lt;/h3&gt;&lt;p&gt;始终使用常规 HTTP 状态码来响应对 API 发出的请求。这将帮助用户了解发生了什么 — 请求是否成功，是否失败，或者其他情况。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/http-status-codes.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/http-status-codes.png&#34;
 	width=&#34;1224&#34;
 	height=&#34;1710&#34;
-	srcset=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/http-status-codes_hu_f882e7cc374d92cd.png 480w, https://blog.yearsuns.com/p/best-practices-for-rest-api/http-status-codes_hu_e1355992283e7479.png 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/http-status-codes_hu_f882e7cc374d92cd.png 480w, https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/http-status-codes_hu_e1355992283e7479.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;HTTP状态码&#34;
@@ -1229,29 +1364,29 @@ style D fill:#bbf,stroke:#333,stroke-width:2px
       &lt;tr&gt;
           &lt;td&gt;&lt;strong&gt;URI Path&lt;/strong&gt;&lt;/td&gt;
           &lt;td&gt;Includes the version number directly in the API path.&lt;/td&gt;
-          &lt;td&gt;&lt;code&gt;http://www.example.com/api/v1/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://www.example.com/api/v2/products&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://www.example.com/api/v1/products&lt;/code&gt;&lt;br&gt;&lt;code&gt;http://www.example.com/api/v2/products&lt;/code&gt;&lt;/td&gt;
           &lt;td&gt;- &lt;a class=&#34;link&#34; href=&#34;https://developer.twitter.com/en/docs/twitter-api/versioning&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;Twitter&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;- &lt;a class=&#34;link&#34; href=&#34;https://developer.paypal.com/docs/api/overview/#get-credentials&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;PayPal&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;- &lt;a class=&#34;link&#34; href=&#34;https://cloud.google.com/translate/docs/reference/rest&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Twitter&lt;/a&gt;&lt;br&gt;- &lt;a class=&#34;link&#34; href=&#34;https://developer.paypal.com/docs/api/overview/#get-credentials&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;PayPal&lt;/a&gt;&lt;br&gt;- &lt;a class=&#34;link&#34; href=&#34;https://cloud.google.com/translate/docs/reference/rest&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Google Translate&lt;/a&gt;&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;&lt;strong&gt;Query Parameters&lt;/strong&gt;&lt;/td&gt;
           &lt;td&gt;Specifies the version number as a query parameter in the URL.&lt;/td&gt;
-          &lt;td&gt;&lt;code&gt;http://www.example.com/api/products?version=1&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://www.example.com/api/products?version=2&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://www.example.com/api/products?version=1&lt;/code&gt;&lt;br&gt;&lt;code&gt;http://www.example.com/api/products?version=2&lt;/code&gt;&lt;/td&gt;
           &lt;td&gt;- &lt;a class=&#34;link&#34; href=&#34;https://cloud.google.com/translate/docs/reference/rest&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Google Translation APIs&lt;/a&gt;&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;&lt;strong&gt;Custom Headers&lt;/strong&gt;&lt;/td&gt;
           &lt;td&gt;Uses custom headers to specify the API version.&lt;/td&gt;
-          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;X-API-VERSION=1&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;X-API-VERSION=2&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;br&gt;Headers: &lt;code&gt;X-API-VERSION=1&lt;/code&gt;&lt;br&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;br&gt;Headers: &lt;code&gt;X-API-VERSION=2&lt;/code&gt;&lt;/td&gt;
           &lt;td&gt;-&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;&lt;strong&gt;Content Negotiation&lt;/strong&gt;&lt;/td&gt;
           &lt;td&gt;Uses the &lt;code&gt;Accept&lt;/code&gt; header to specify the version of the API.&lt;/td&gt;
-          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v1+json&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v2+json&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;br&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v1+json&lt;/code&gt;&lt;br&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;br&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v2+json&lt;/code&gt;&lt;/td&gt;
           &lt;td&gt;- &lt;a class=&#34;link&#34; href=&#34;https://docs.github.com/en/rest/overview/resources-in-the-rest-api&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;GitHub&lt;/a&gt;&lt;/td&gt;
       &lt;/tr&gt;
@@ -1308,10 +1443,10 @@ style D fill:#bbf,stroke:#333,stroke-width:2px
         </item>
         <item>
         <title>如何向技术大佬请教问题且不泄露敏感信息</title>
-        <link>https://blog.yearsuns.com/p/protecting-sensitive-data-while-seeking-help/</link>
+        <link>https://yearsuns-github-io.vercel.app/p/protecting-sensitive-data-while-seeking-help/</link>
         <pubDate>Mon, 10 Feb 2025 11:43:56 +0800</pubDate>
         
-        <guid>https://blog.yearsuns.com/p/protecting-sensitive-data-while-seeking-help/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/protecting-sensitive-data-while-seeking-help/</guid>
         <description>&lt;p&gt;在技术圈中，请教问题是提升技能的重要途径。但有时候，我们的问题可能涉及敏感信息，比如项目代码、业务逻辑、客户数据等。如果不注意，很可能因为无意的泄露造成不必要的风险。那么，如何在请教问题时保护敏感信息？本文将从识别敏感信息、避免泄露以及高效沟通三个方面详细阐述。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;什么是敏感信息如何识别&#34;&gt;什么是敏感信息？如何识别？
@@ -1474,10 +1609,10 @@ style D fill:#bbf,stroke:#333,stroke-width:2px
         </item>
         <item>
         <title>程序员的自救指南：如何精准描述你的技术问题，让大佬想帮你</title>
-        <link>https://blog.yearsuns.com/p/tips-for-explaining-tech-issues/</link>
+        <link>https://yearsuns-github-io.vercel.app/p/tips-for-explaining-tech-issues/</link>
         <pubDate>Sun, 09 Feb 2025 20:43:56 +0800</pubDate>
         
-        <guid>https://blog.yearsuns.com/p/tips-for-explaining-tech-issues/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/tips-for-explaining-tech-issues/</guid>
         <description>&lt;p&gt;有时候，程序员的日子就像《荒野求生》，&lt;strong&gt;问题&lt;/strong&gt;就是那条饿着肚子追你的鳄鱼，你呢？跪着发帖：“大佬们救救孩子吧，代码写崩了！”&lt;/p&gt;
 &lt;p&gt;结果呢？没人回。&lt;/p&gt;
 &lt;p&gt;为什么？&lt;br&gt;
@@ -1597,10 +1732,10 @@ style D fill:#bbf,stroke:#333,stroke-width:2px
         </item>
         <item>
         <title>JWT的最佳实践</title>
-        <link>https://blog.yearsuns.com/p/best-practices-of-jwt/</link>
+        <link>https://yearsuns-github-io.vercel.app/p/best-practices-of-jwt/</link>
         <pubDate>Fri, 07 Feb 2025 20:25:56 +0800</pubDate>
         
-        <guid>https://blog.yearsuns.com/p/best-practices-of-jwt/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/best-practices-of-jwt/</guid>
         <description>&lt;p&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;br&gt;
 在当今的 web 开发中，身份验证是非常关键的，而 JWT（JSON Web Token）作为一种简单、高效的身份验证方式，已经被广泛应用在许多前后端分离的项目中。本篇文章将带你从零开始理解 JWT，探讨它的优缺点，并介绍最佳实践。&lt;/p&gt;
 &lt;hr&gt;
@@ -1646,10 +1781,10 @@ style D fill:#bbf,stroke:#333,stroke-width:2px
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;header.payload.signature
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;例如：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-of-jwt/jwt.png&#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-of-jwt/jwt.png&#34;
 	width=&#34;1222&#34;
 	height=&#34;901&#34;
-	srcset=&#34;https://blog.yearsuns.com/p/best-practices-of-jwt/jwt_hu_96e6486fee1b5af3.png 480w, https://blog.yearsuns.com/p/best-practices-of-jwt/jwt_hu_7fcaf8bf5bb0946f.png 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-of-jwt/jwt_hu_96e6486fee1b5af3.png 480w, https://yearsuns-github-io.vercel.app/p/best-practices-of-jwt/jwt_hu_7fcaf8bf5bb0946f.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;jwt构成&#34;
@@ -1781,10 +1916,10 @@ JWT 的过期时间要设置合理。过短可能影响用户体验，过长则�
         </item>
         <item>
         <title>使用 Hugo &#43; GitHub 搭建个人博客（自动部署）</title>
-        <link>https://blog.yearsuns.com/p/how-to-build-a-personal-blog-with-hugo-and-github-pages/</link>
+        <link>https://yearsuns-github-io.vercel.app/p/how-to-build-a-personal-blog-with-hugo-and-github-pages/</link>
         <pubDate>Thu, 30 Jan 2025 14:59:56 +0800</pubDate>
         
-        <guid>https://blog.yearsuns.com/p/how-to-build-a-personal-blog-with-hugo-and-github-pages/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/how-to-build-a-personal-blog-with-hugo-and-github-pages/</guid>
         <description>&lt;p&gt;想要一个自己的博客，省心又免费？&lt;/p&gt;
 &lt;p&gt;试试 &lt;strong&gt;Hugo + GitHub Pages&lt;/strong&gt;！只需几个步骤，就能搭建一个 &lt;strong&gt;高速、免费、可自动部署&lt;/strong&gt; 的个人博客网站。&lt;/p&gt;
 &lt;h2 id=&#34;1-安装-hugo&#34;&gt;&lt;strong&gt;1. 安装 Hugo&lt;/strong&gt;

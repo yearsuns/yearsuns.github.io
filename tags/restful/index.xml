@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>RESTful on 王离谱的小破站</title>
-        <link>https://blog.yearsuns.com/tags/restful/</link>
+        <link>https://yearsuns-github-io.vercel.app/tags/restful/</link>
         <description>Recent content in RESTful on 王离谱的小破站</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
+        <language>zh-CN</language>
         <copyright>王离谱</copyright>
-        <lastBuildDate>Wed, 12 Feb 2025 12:13:56 +0800</lastBuildDate><atom:link href="https://blog.yearsuns.com/tags/restful/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 12 Feb 2025 12:13:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/restful/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>REST API的最佳实践</title>
-        <link>https://blog.yearsuns.com/p/best-practices-for-rest-api/</link>
+        <link>https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/</link>
         <pubDate>Wed, 12 Feb 2025 12:13:56 +0800</pubDate>
         
-        <guid>https://blog.yearsuns.com/p/best-practices-for-rest-api/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/</guid>
         <description>&lt;h2 id=&#34;我们将从这篇文章中学到什么&#34;&gt;我们将从这篇文章中学到什么
 &lt;/h2&gt;&lt;h3 id=&#34;-rest-api-的基本原则&#34;&gt;👉 REST API 的基本原则
 &lt;/h3&gt;&lt;ul&gt;
@@ -100,10 +100,10 @@
 &lt;/h2&gt;&lt;p&gt;URI 代表&lt;a class=&#34;link&#34; href=&#34;https://en.wikipedia.org/wiki/Uniform_Resource_Identifier&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;统一资源标识符&lt;/a&gt;(URI)。它标识网络上的逻辑或物理资源。URL 和 URN 是 URI 的子类型。URL 定位资源，而 URN 命名资源。&lt;/p&gt;
 &lt;p&gt;REST API 使用 URI 来定位资源。REST API 设计人员应创建 URI，以便将 REST API 的资源模型传达给 API 的潜在客户。如果资源命名得当，API 就会直观且易于使用。如果命名不当，同一个 API 的使用和理解就会变得困难。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri.webp&#34;
+&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri.webp&#34;
 	width=&#34;720&#34;
 	height=&#34;177&#34;
-	srcset=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri_hu_fba245286d270c77.webp 480w, https://blog.yearsuns.com/p/best-practices-for-rest-api/uri_hu_179c012895a3cc30.webp 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri_hu_fba245286d270c77.webp 480w, https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri_hu_179c012895a3cc30.webp 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;URI&#34;
@@ -114,10 +114,10 @@
 		data-flex-basis=&#34;976px&#34;
 	
 &gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri-vs-url.webp&#34;
+&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri-vs-url.webp&#34;
 	width=&#34;720&#34;
 	height=&#34;271&#34;
-	srcset=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/uri-vs-url_hu_efb5016e88ace6ee.webp 480w, https://blog.yearsuns.com/p/best-practices-for-rest-api/uri-vs-url_hu_8039dcaf63480cdb.webp 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri-vs-url_hu_efb5016e88ace6ee.webp 480w, https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/uri-vs-url_hu_8039dcaf63480cdb.webp 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;URI 与 URL 之间的区别（来源：https://refine.dev/blog/uri-vs-url/#introduction）&#34;
@@ -367,10 +367,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET /scripts/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/status    // 检查执行状态
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;5使用http响应状态码&#34;&gt;5.使用HTTP响应状态码
 &lt;/h3&gt;&lt;p&gt;始终使用常规 HTTP 状态码来响应对 API 发出的请求。这将帮助用户了解发生了什么 — 请求是否成功，是否失败，或者其他情况。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/http-status-codes.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/http-status-codes.png&#34;
 	width=&#34;1224&#34;
 	height=&#34;1710&#34;
-	srcset=&#34;https://blog.yearsuns.com/p/best-practices-for-rest-api/http-status-codes_hu_f882e7cc374d92cd.png 480w, https://blog.yearsuns.com/p/best-practices-for-rest-api/http-status-codes_hu_e1355992283e7479.png 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/http-status-codes_hu_f882e7cc374d92cd.png 480w, https://yearsuns-github-io.vercel.app/p/best-practices-for-rest-api/http-status-codes_hu_e1355992283e7479.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;HTTP状态码&#34;
@@ -460,29 +460,29 @@
       &lt;tr&gt;
           &lt;td&gt;&lt;strong&gt;URI Path&lt;/strong&gt;&lt;/td&gt;
           &lt;td&gt;Includes the version number directly in the API path.&lt;/td&gt;
-          &lt;td&gt;&lt;code&gt;http://www.example.com/api/v1/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://www.example.com/api/v2/products&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://www.example.com/api/v1/products&lt;/code&gt;&lt;br&gt;&lt;code&gt;http://www.example.com/api/v2/products&lt;/code&gt;&lt;/td&gt;
           &lt;td&gt;- &lt;a class=&#34;link&#34; href=&#34;https://developer.twitter.com/en/docs/twitter-api/versioning&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;Twitter&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;- &lt;a class=&#34;link&#34; href=&#34;https://developer.paypal.com/docs/api/overview/#get-credentials&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;PayPal&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;- &lt;a class=&#34;link&#34; href=&#34;https://cloud.google.com/translate/docs/reference/rest&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Twitter&lt;/a&gt;&lt;br&gt;- &lt;a class=&#34;link&#34; href=&#34;https://developer.paypal.com/docs/api/overview/#get-credentials&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;PayPal&lt;/a&gt;&lt;br&gt;- &lt;a class=&#34;link&#34; href=&#34;https://cloud.google.com/translate/docs/reference/rest&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Google Translate&lt;/a&gt;&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;&lt;strong&gt;Query Parameters&lt;/strong&gt;&lt;/td&gt;
           &lt;td&gt;Specifies the version number as a query parameter in the URL.&lt;/td&gt;
-          &lt;td&gt;&lt;code&gt;http://www.example.com/api/products?version=1&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://www.example.com/api/products?version=2&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://www.example.com/api/products?version=1&lt;/code&gt;&lt;br&gt;&lt;code&gt;http://www.example.com/api/products?version=2&lt;/code&gt;&lt;/td&gt;
           &lt;td&gt;- &lt;a class=&#34;link&#34; href=&#34;https://cloud.google.com/translate/docs/reference/rest&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Google Translation APIs&lt;/a&gt;&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;&lt;strong&gt;Custom Headers&lt;/strong&gt;&lt;/td&gt;
           &lt;td&gt;Uses custom headers to specify the API version.&lt;/td&gt;
-          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;X-API-VERSION=1&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;X-API-VERSION=2&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;br&gt;Headers: &lt;code&gt;X-API-VERSION=1&lt;/code&gt;&lt;br&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;br&gt;Headers: &lt;code&gt;X-API-VERSION=2&lt;/code&gt;&lt;/td&gt;
           &lt;td&gt;-&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;&lt;strong&gt;Content Negotiation&lt;/strong&gt;&lt;/td&gt;
           &lt;td&gt;Uses the &lt;code&gt;Accept&lt;/code&gt; header to specify the version of the API.&lt;/td&gt;
-          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v1+json&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;!-- raw HTML omitted --&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v2+json&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;br&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v1+json&lt;/code&gt;&lt;br&gt;&lt;code&gt;http://localhost:8080/api/products&lt;/code&gt;&lt;br&gt;Headers: &lt;code&gt;Accept=application/vnd.javaguides-v2+json&lt;/code&gt;&lt;/td&gt;
           &lt;td&gt;- &lt;a class=&#34;link&#34; href=&#34;https://docs.github.com/en/rest/overview/resources-in-the-rest-api&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;GitHub&lt;/a&gt;&lt;/td&gt;
       &lt;/tr&gt;
