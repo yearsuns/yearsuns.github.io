@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>运维 on 王离谱的小破站</title>
+        <link>https://yearsuns-github-io.vercel.app/tags/%E8%BF%90%E7%BB%B4/</link>
+        <description>Recent content in 运维 on 王离谱的小破站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <copyright>王离谱</copyright>
+        <lastBuildDate>Sun, 18 May 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Ubuntu服务器运维安全最佳实践</title>
+        <link>https://yearsuns-github-io.vercel.app/p/ubuntu-server-operations-security-best-practices/</link>
+        <pubDate>Sun, 18 May 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/ubuntu-server-operations-security-best-practices/</guid>
+        <description>&lt;blockquote&gt;
+&lt;p&gt;本文面向使用 Ubuntu Server 24 LTS 进行生产环境部署的团队。
+目标是帮助你建立系统化、可执行、可审计的服务器安全策略，让入侵更难发生，让故障更容易排查。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;目录&#34;&gt;&lt;strong&gt;目录&lt;/strong&gt;
+&lt;/h1&gt;&lt;ol&gt;
+&lt;li&gt;安全原则概述&lt;/li&gt;
+&lt;li&gt;基础系统安全&lt;/li&gt;
+&lt;li&gt;SSH 访问与账户安全&lt;/li&gt;
+&lt;li&gt;网络访问控制（UFW / Fail2ban）&lt;/li&gt;
+&lt;li&gt;服务与进程安全&lt;/li&gt;
+&lt;li&gt;跳板机：运维安全的统一入口&lt;/li&gt;
+&lt;li&gt;应用与数据安全&lt;/li&gt;
+&lt;li&gt;日志监控与告警&lt;/li&gt;
+&lt;li&gt;备份与恢复策略&lt;/li&gt;
+&lt;li&gt;一页安全核对清单（Checklist）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;一安全原则概述&#34;&gt;&lt;strong&gt;一、安全原则概述&lt;/strong&gt;
+&lt;/h1&gt;&lt;p&gt;在开始具体操作前，需要先理解安全的三大原则：&lt;/p&gt;
+&lt;h2 id=&#34;1-最小权限原则least-privilege&#34;&gt;&lt;strong&gt;1. 最小权限原则（Least Privilege）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;用户与服务只应该拥有完成任务所需的最小权限。&lt;/p&gt;
+&lt;h2 id=&#34;2-减少暴露面reduce-attack-surface&#34;&gt;&lt;strong&gt;2. 减少暴露面（Reduce Attack Surface）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;关闭不需要的端口、服务和账户。攻击面越小，风险越小。&lt;/p&gt;
+&lt;h2 id=&#34;3-全量审计traceability&#34;&gt;&lt;strong&gt;3. 全量审计（Traceability）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;操作可回溯、日志可查询，才能在事故时快速定位问题。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;服务器安全不是堆命令，而是一个“最小暴露 + 可控访问 + 可追踪行为”的体系。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;二基础系统安全&#34;&gt;&lt;strong&gt;二、基础系统安全&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-保持系统更新最高优先级&#34;&gt;&lt;strong&gt;1. 保持系统更新（最高优先级）&lt;/strong&gt;
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt upgrade -y
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;开启自动安全更新：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt install unattended-upgrades
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo dpkg-reconfigure unattended-upgrades
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;2-禁用不必要的软件与服务&#34;&gt;&lt;strong&gt;2. 禁用不必要的软件与服务&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;列出已启用服务：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;systemctl list-unit-files --type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;关闭：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl disable --now servicename
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-使用-lts-版本与官方软件仓库&#34;&gt;&lt;strong&gt;3. 使用 LTS 版本与官方软件仓库&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;避免第三方未知源：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo add-apt-repository --remove ppa:xxx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;第三方源越多，安全风险越大。&lt;/p&gt;
+&lt;h1 id=&#34;三ssh-访问与账户安全&#34;&gt;&lt;strong&gt;三、SSH 访问与账户安全&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-禁止-root-直接登录&#34;&gt;&lt;strong&gt;1. 禁止 root 直接登录&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;编辑 SSH 配置：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo nano /etc/ssh/sshd_config
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;设置：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PermitRootLogin no
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;2-禁用密码登录强烈建议&#34;&gt;&lt;strong&gt;2. 禁用密码登录（强烈建议）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;SSH 改为密钥认证：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PasswordAuthentication no
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成密钥：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ssh-keygen -t ed25519
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上传密钥：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ssh-copy-id user@server
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-管控服务器用户&#34;&gt;&lt;strong&gt;3. 管控服务器用户&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;查看所有用户：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cut -d: -f1 /etc/passwd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;删除不再需要的用户：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo deluser username
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;4-sudo-权限最小化&#34;&gt;&lt;strong&gt;4. sudo 权限最小化&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;创建普通用户，再赋予 sudo 权限：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo usermod -aG sudo devuser
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;与此同时避免：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo su -
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这样的 root 长时间工作模式。&lt;/p&gt;
+&lt;h2 id=&#34;5-使用-ssh-登录速率限制&#34;&gt;&lt;strong&gt;5. 使用 SSH 登录速率限制&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;在 SSH 配置中加入：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;MaxAuthTries 3
+MaxSessions 5
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;四网络访问控制ufw--fail2ban&#34;&gt;&lt;strong&gt;四、网络访问控制（UFW / Fail2ban）&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-启用-ufw-防火墙&#34;&gt;&lt;strong&gt;1. 启用 UFW 防火墙&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;启用防火墙：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw enable
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;仅开放必要端口：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw allow 22/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw allow 80/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw allow 443/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;默认拒绝其他端口：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw default deny
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;查看状态：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw status numbered
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;2-防暴力破解fail2ban&#34;&gt;&lt;strong&gt;2. 防暴力破解：Fail2ban&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;安装：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt install fail2ban
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启用：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl enable --now fail2ban
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;查看封禁状态：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo fail2ban-client status
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Fail2ban 能阻止大量扫描和破解行为，是 SSH 最重要的保护措施之一。&lt;/p&gt;
+&lt;h1 id=&#34;五服务与进程安全&#34;&gt;&lt;strong&gt;五、服务与进程安全&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-不要让服务以-root-运行&#34;&gt;&lt;strong&gt;1. 不要让服务以 root 运行&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;为服务创建独立用户：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo adduser --system --no-create-home webuser
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在 systemd 中配置：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;User=webuser
+Group=webuser
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;2-限制服务权限文件与目录&#34;&gt;&lt;strong&gt;2. 限制服务权限（文件与目录）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;例如 Web 目录：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chmod -R &lt;span style=&#34;color:#ae81ff&#34;&gt;750&lt;/span&gt; /var/www/app
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chown -R www-data:www-data /var/www/app
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-使用-apparmor-控制服务行为&#34;&gt;&lt;strong&gt;3. 使用 AppArmor 控制服务行为&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;查看 AppArmor 状态：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo aa-status
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启用规则：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo aa-enforce /etc/apparmor.d/usr.sbin.nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;4-控制开放端口&#34;&gt;&lt;strong&gt;4. 控制开放端口&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;查看端口监听：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ss -tulnp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;关闭不必要端口能显著减少攻击面。&lt;/p&gt;
+&lt;h1 id=&#34;六跳板机堡垒机运维安全的统一入口&#34;&gt;&lt;strong&gt;六、跳板机/堡垒机：运维安全的统一入口&lt;/strong&gt;
+&lt;/h1&gt;&lt;p&gt;跳板机（Bastion Host / Jump Server）是企业安全体系中的标配。&lt;/p&gt;
+&lt;p&gt;它的作用包括：&lt;/p&gt;
+&lt;h3 id=&#34;1-统一入口减少暴露面&#34;&gt;&lt;strong&gt;1. 统一入口：减少暴露面&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;所有服务器 SSH 都关闭公网，只暴露跳板机。&lt;/p&gt;
+&lt;h3 id=&#34;2-强身份认证&#34;&gt;&lt;strong&gt;2. 强身份认证&lt;/strong&gt;
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;密钥登录&lt;/li&gt;
+&lt;li&gt;MFA&lt;/li&gt;
+&lt;li&gt;LDAP/AD 企业认证&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-权限精细化控制&#34;&gt;&lt;strong&gt;3. 权限精细化控制&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;谁能访问哪台机器，谁能执行哪些命令一目了然。&lt;/p&gt;
+&lt;h3 id=&#34;4-全量审计与录像&#34;&gt;&lt;strong&gt;4. 全量审计与录像&lt;/strong&gt;
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;每条命令&lt;/li&gt;
+&lt;li&gt;敏感操作告警&lt;/li&gt;
+&lt;li&gt;可回放运维全过程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;5-推荐方案&#34;&gt;&lt;strong&gt;5. 推荐方案&lt;/strong&gt;
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;开源：&lt;strong&gt;Jumpserver&lt;/strong&gt;（功能最完善的开源堡垒机）&lt;/li&gt;
+&lt;li&gt;云厂商自带堡垒机（省心，安全合规）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;跳板机不是可选项，而是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;安全访问控制体系的核心组件，应在中大型团队中强制使用。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;七应用与数据安全&#34;&gt;&lt;strong&gt;七、应用与数据安全&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-数据库不要暴露公网端口&#34;&gt;&lt;strong&gt;1. 数据库不要暴露公网端口&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;例如 MySQL 只监听本地：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;bind-address = 127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;2-使用-httpslets-encrypt&#34;&gt;&lt;strong&gt;2. 使用 HTTPS（Let’s Encrypt）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;自动颁发证书：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt install certbot python3-certbot-nginx
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo certbot --nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-严格控制配置与密钥&#34;&gt;&lt;strong&gt;3. 严格控制配置与密钥&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;密钥文件设置权限：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chmod &lt;span style=&#34;color:#ae81ff&#34;&gt;600&lt;/span&gt; id_rsa
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;私密配置（如 .env）不应向其他用户开放。&lt;/p&gt;
+&lt;h2 id=&#34;4-版本控制不要上传敏感文件&#34;&gt;&lt;strong&gt;4. 版本控制不要上传敏感文件&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;Git 忽略：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;.env
+*.pem
+*.key
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;八日志监控与告警&#34;&gt;&lt;strong&gt;八、日志监控与告警&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-查看系统日志systemd&#34;&gt;&lt;strong&gt;1. 查看系统日志（systemd）&lt;/strong&gt;
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;journalctl -xe
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;2-服务级日志&#34;&gt;&lt;strong&gt;2. 服务级日志&lt;/strong&gt;
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;journalctl -u nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-登录行为审计&#34;&gt;&lt;strong&gt;3. 登录行为审计&lt;/strong&gt;
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;last
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lastb
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;4-建立实时告警系统&#34;&gt;&lt;strong&gt;4. 建立实时告警系统&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;选择其一：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Netdata&lt;/li&gt;
+&lt;li&gt;Prometheus + Grafana&lt;/li&gt;
+&lt;li&gt;Zabbix&lt;/li&gt;
+&lt;li&gt;云监控告警&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;监控指标：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CPU 异常升高&lt;/li&gt;
+&lt;li&gt;磁盘将满&lt;/li&gt;
+&lt;li&gt;SSH 登录异常&lt;/li&gt;
+&lt;li&gt;服务 down 后自动告警&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;九备份与恢复策略&#34;&gt;&lt;strong&gt;九、备份与恢复策略&lt;/strong&gt;
+&lt;/h1&gt;&lt;p&gt;备份是安全的最后一道防线。&lt;/p&gt;
+&lt;h2 id=&#34;1-采用-3-2-1-原则&#34;&gt;&lt;strong&gt;1. 采用 3-2-1 原则&lt;/strong&gt;
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;3 份数据&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2 种不同介质&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1 份异地备份&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2-常用备份方案&#34;&gt;&lt;strong&gt;2. 常用备份方案&lt;/strong&gt;
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;rsync（简单高效）&lt;/li&gt;
+&lt;li&gt;BorgBackup / Restic（加密备份）&lt;/li&gt;
+&lt;li&gt;云盘快照（极高恢复速度）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;3-定期演练恢复&#34;&gt;&lt;strong&gt;3. 定期演练恢复&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;没有演练的备份 = 假备份。&lt;/p&gt;
+&lt;h1 id=&#34;十一页安全核对清单checklist&#34;&gt;&lt;strong&gt;十、一页安全核对清单（Checklist）&lt;/strong&gt;
+&lt;/h1&gt;&lt;p&gt;你可以用它快速检查服务器是否合规。&lt;/p&gt;
+&lt;h3 id=&#34;-系统已更新&#34;&gt;✔ 系统已更新
+&lt;/h3&gt;&lt;h3 id=&#34;-禁用-root-登录&#34;&gt;✔ 禁用 root 登录
+&lt;/h3&gt;&lt;h3 id=&#34;-ssh-密钥登录--mfa&#34;&gt;✔ SSH 密钥登录 + MFA
+&lt;/h3&gt;&lt;h3 id=&#34;-ufw-防火墙启用&#34;&gt;✔ UFW 防火墙启用
+&lt;/h3&gt;&lt;h3 id=&#34;-fail2ban-启动&#34;&gt;✔ Fail2ban 启动
+&lt;/h3&gt;&lt;h3 id=&#34;-不必要服务已关闭&#34;&gt;✔ 不必要服务已关闭
+&lt;/h3&gt;&lt;h3 id=&#34;-服务不以-root-运行&#34;&gt;✔ 服务不以 root 运行
+&lt;/h3&gt;&lt;h3 id=&#34;-数据库未暴露公网&#34;&gt;✔ 数据库未暴露公网
+&lt;/h3&gt;&lt;h3 id=&#34;-日志可追踪&#34;&gt;✔ 日志可追踪
+&lt;/h3&gt;&lt;h3 id=&#34;-使用跳板机集中管理运维&#34;&gt;✔ 使用跳板机集中管理运维
+&lt;/h3&gt;&lt;h3 id=&#34;-有自动备份与恢复演练&#34;&gt;✔ 有自动备份与恢复演练
+&lt;/h3&gt;</description>
+        </item>
+        
+    </channel>
+</rss>

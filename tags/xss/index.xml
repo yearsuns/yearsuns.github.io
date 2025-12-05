@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>XSS on 王离谱的小破站</title>
+        <link>https://yearsuns-github-io.vercel.app/tags/xss/</link>
+        <description>Recent content in XSS on 王离谱的小破站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <copyright>王离谱</copyright>
+        <lastBuildDate>Sat, 07 Jun 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/xss/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>程序员必须知道的十大网络安全风险</title>
+        <link>https://yearsuns-github-io.vercel.app/p/top-ten-cybersecurity-risks-every-programmer-must-know/</link>
+        <pubDate>Sat, 07 Jun 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/top-ten-cybersecurity-risks-every-programmer-must-know/</guid>
+        <description>&lt;p&gt;软件世界是建立在信任之上的：用户相信程序，程序相信数据，系统相信环境。
+然而，只要存在输入、网络、用户与攻击者，这种信任就随时可能被打破。&lt;/p&gt;
+&lt;p&gt;下面总结了程序员必须了解的 &lt;strong&gt;十大网络安全风险&lt;/strong&gt;。它们并不神秘，但都极其常见。一旦发生，会直接影响系统的可靠性、数据安全以及用户信任。&lt;/p&gt;
+&lt;h2 id=&#34;1-sql-注入sql-injection&#34;&gt;1. SQL 注入（SQL Injection）
+&lt;/h2&gt;&lt;p&gt;SQL 注入是最经典也最基础的安全问题。
+只要 SQL 是通过字符串拼接生成的，就可能被恶意修改逻辑。&lt;/p&gt;
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;query &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SELECT * FROM users WHERE name = &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;username&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当 &lt;code&gt;username&lt;/code&gt; 为：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;#39; OR 1=1 --
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;SQL 将变为：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; users &lt;span style=&#34;color:#66d9ef&#34;&gt;WHERE&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;OR&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;--&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;结果就是把整张表都查出来。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用参数化查询（Prepared Statement）&lt;/li&gt;
+&lt;li&gt;永远不要用字符串拼接构造 SQL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2-跨站脚本攻击xss&#34;&gt;2. 跨站脚本攻击（XSS）
+&lt;/h2&gt;&lt;p&gt;XSS 的本质是：&lt;strong&gt;用户输入的内容被当作脚本执行了&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;例子：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;{{ nickname }}&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果昵称是：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;alert&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XSS&amp;#39;&lt;/span&gt;)&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;页面就会执行这段代码。&lt;/p&gt;
+&lt;p&gt;后果可能是窃取 Cookie、篡改页面、发起恶意请求等。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;输出前进行 HTML 转义&lt;/li&gt;
+&lt;li&gt;使用默认防御 XSS 的模板引擎（React/Vue 等）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;3-跨站请求伪造csrf&#34;&gt;3. 跨站请求伪造（CSRF）
+&lt;/h2&gt;&lt;p&gt;CSRF 的特点是：用户在登录状态下，被诱导访问某个恶意页面，然后浏览器自动携带 Cookie，导致后台执行了用户并未授权的操作。&lt;/p&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;img src=&amp;#34;https://bank.com/transfer?to=hacker&amp;amp;amount=5000&amp;#34;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;只要用户登录过银行网站，这个请求就可能执行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用 CSRF Token&lt;/li&gt;
+&lt;li&gt;设置 Cookie 的 SameSite 属性&lt;/li&gt;
+&lt;li&gt;对敏感操作要求二次确认&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;4-弱密码与密码泄露&#34;&gt;4. 弱密码与密码泄露
+&lt;/h2&gt;&lt;p&gt;很多攻击并不依赖技术漏洞，而是依赖人类弱点。
+弱密码（如 &lt;code&gt;123456&lt;/code&gt;、&lt;code&gt;password&lt;/code&gt;）被暴力破解是十分常见的。&lt;/p&gt;
+&lt;p&gt;另一个问题是服务器端存储明文密码，一旦数据库泄露，就是灾难。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;要求使用复杂密码&lt;/li&gt;
+&lt;li&gt;存储密码时使用强哈希算法（bcrypt / argon2）&lt;/li&gt;
+&lt;li&gt;支持双因素认证（2FA）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;5-明文传输http&#34;&gt;5. 明文传输（HTTP）
+&lt;/h2&gt;&lt;p&gt;HTTP 是明文的，任何中间节点都可以看到所有内容，包括账号密码。
+在公共 WiFi 下尤为危险。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;全站使用 HTTPS&lt;/li&gt;
+&lt;li&gt;不要将敏感数据暴露在 URL 查询参数中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;6-未授权访问broken-access-control&#34;&gt;6. 未授权访问（Broken Access Control）
+&lt;/h2&gt;&lt;p&gt;这是后端最容易忽视的问题。
+比如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/admin/listUsers
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果后台只检查用户是否“已登录”，但不验证用户是否“管理员”，就会造成权限绕过。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;所有敏感接口都必须进行权限检查&lt;/li&gt;
+&lt;li&gt;不要依赖前端控制权限&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;7-文件上传漏洞&#34;&gt;7. 文件上传漏洞
+&lt;/h2&gt;&lt;p&gt;文件上传听起来很常见，但风险也极高。&lt;/p&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;攻击者上传一张看起来是 &lt;code&gt;.jpg&lt;/code&gt; 的文件，但实际上内部包含可执行代码&lt;/li&gt;
+&lt;li&gt;上传目录允许执行脚本文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一旦成功，攻击者可以直接控制服务器。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;校验文件的 MIME 类型而不是文件扩展名&lt;/li&gt;
+&lt;li&gt;上传后重新命名文件&lt;/li&gt;
+&lt;li&gt;将文件放在不可执行目录&lt;/li&gt;
+&lt;li&gt;对图片进行重新编码以确保其内容安全&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;8-暴露的管理接口&#34;&gt;8. 暴露的管理接口
+&lt;/h2&gt;&lt;p&gt;很多框架在开发模式下会暴露调试接口，例如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/debug
+/swagger-ui
+/actuator
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果在生产环境中忘记关闭，就会造成极大的安全风险。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;生产环境关闭不必要的管理端口&lt;/li&gt;
+&lt;li&gt;必须暴露的端点需要权限认证&lt;/li&gt;
+&lt;li&gt;不在页面上输出敏感系统信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;9-依赖与供应链攻击&#34;&gt;9. 依赖与供应链攻击
+&lt;/h2&gt;&lt;p&gt;现代开发高度依赖第三方库。
+如果依赖包本身含有恶意代码（或被入侵），攻击者就能“曲线入侵”你的系统。&lt;/p&gt;
+&lt;p&gt;典型方式包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;伪装成相似名字的库&lt;/li&gt;
+&lt;li&gt;在常见库中加入恶意更新&lt;/li&gt;
+&lt;li&gt;泄露依赖版本导致漏洞被利用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;定期更新和扫描依赖&lt;/li&gt;
+&lt;li&gt;锁定依赖版本&lt;/li&gt;
+&lt;li&gt;只使用可信来源的包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;10-日志与调试信息泄露&#34;&gt;10. 日志与调试信息泄露
+&lt;/h2&gt;&lt;p&gt;日志里常出现敏感数据，例如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Login failed: username=alice, password=secret
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;一旦日志泄露，相当于主动暴露系统内部状态。&lt;/p&gt;
+&lt;p&gt;数据泄露事件中，日志泄漏占比相当高。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不记录密码、Token、身份证号等敏感数据&lt;/li&gt;
+&lt;li&gt;控制日志访问权限&lt;/li&gt;
+&lt;li&gt;在生产环境关闭过度详细的调试信息（如 stack trace）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;总结&#34;&gt;总结
+&lt;/h1&gt;&lt;p&gt;安全风险的根源往往不是复杂的攻击，而是我们理所当然的假设。&lt;/p&gt;
+&lt;p&gt;一个稳健的系统应该具备：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;不信任任何输入&lt;/li&gt;
+&lt;li&gt;不依赖客户端安全&lt;/li&gt;
+&lt;li&gt;不暴露内部实现&lt;/li&gt;
+&lt;li&gt;对敏感数据尽量减少存储&lt;/li&gt;
+&lt;li&gt;始终假设攻击者存在&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;掌握这十大安全风险，可以帮助程序员在设计和构建系统时提前预判问题，减少代价高昂的“线上事故”。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

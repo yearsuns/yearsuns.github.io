@@ -7,7 +7,770 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
         <copyright>王离谱</copyright>
-        <lastBuildDate>Sun, 30 Mar 2025 11:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/categories/it/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 07 Jun 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/categories/it/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>程序员必须知道的十大网络安全风险</title>
+        <link>https://yearsuns-github-io.vercel.app/p/top-ten-cybersecurity-risks-every-programmer-must-know/</link>
+        <pubDate>Sat, 07 Jun 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/top-ten-cybersecurity-risks-every-programmer-must-know/</guid>
+        <description>&lt;p&gt;软件世界是建立在信任之上的：用户相信程序，程序相信数据，系统相信环境。
+然而，只要存在输入、网络、用户与攻击者，这种信任就随时可能被打破。&lt;/p&gt;
+&lt;p&gt;下面总结了程序员必须了解的 &lt;strong&gt;十大网络安全风险&lt;/strong&gt;。它们并不神秘，但都极其常见。一旦发生，会直接影响系统的可靠性、数据安全以及用户信任。&lt;/p&gt;
+&lt;h2 id=&#34;1-sql-注入sql-injection&#34;&gt;1. SQL 注入（SQL Injection）
+&lt;/h2&gt;&lt;p&gt;SQL 注入是最经典也最基础的安全问题。
+只要 SQL 是通过字符串拼接生成的，就可能被恶意修改逻辑。&lt;/p&gt;
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;query &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SELECT * FROM users WHERE name = &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;username&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当 &lt;code&gt;username&lt;/code&gt; 为：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;#39; OR 1=1 --
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;SQL 将变为：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; users &lt;span style=&#34;color:#66d9ef&#34;&gt;WHERE&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;OR&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;--&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;结果就是把整张表都查出来。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用参数化查询（Prepared Statement）&lt;/li&gt;
+&lt;li&gt;永远不要用字符串拼接构造 SQL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2-跨站脚本攻击xss&#34;&gt;2. 跨站脚本攻击（XSS）
+&lt;/h2&gt;&lt;p&gt;XSS 的本质是：&lt;strong&gt;用户输入的内容被当作脚本执行了&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;例子：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;{{ nickname }}&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果昵称是：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;alert&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XSS&amp;#39;&lt;/span&gt;)&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;页面就会执行这段代码。&lt;/p&gt;
+&lt;p&gt;后果可能是窃取 Cookie、篡改页面、发起恶意请求等。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;输出前进行 HTML 转义&lt;/li&gt;
+&lt;li&gt;使用默认防御 XSS 的模板引擎（React/Vue 等）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;3-跨站请求伪造csrf&#34;&gt;3. 跨站请求伪造（CSRF）
+&lt;/h2&gt;&lt;p&gt;CSRF 的特点是：用户在登录状态下，被诱导访问某个恶意页面，然后浏览器自动携带 Cookie，导致后台执行了用户并未授权的操作。&lt;/p&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;img src=&amp;#34;https://bank.com/transfer?to=hacker&amp;amp;amount=5000&amp;#34;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;只要用户登录过银行网站，这个请求就可能执行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用 CSRF Token&lt;/li&gt;
+&lt;li&gt;设置 Cookie 的 SameSite 属性&lt;/li&gt;
+&lt;li&gt;对敏感操作要求二次确认&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;4-弱密码与密码泄露&#34;&gt;4. 弱密码与密码泄露
+&lt;/h2&gt;&lt;p&gt;很多攻击并不依赖技术漏洞，而是依赖人类弱点。
+弱密码（如 &lt;code&gt;123456&lt;/code&gt;、&lt;code&gt;password&lt;/code&gt;）被暴力破解是十分常见的。&lt;/p&gt;
+&lt;p&gt;另一个问题是服务器端存储明文密码，一旦数据库泄露，就是灾难。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;要求使用复杂密码&lt;/li&gt;
+&lt;li&gt;存储密码时使用强哈希算法（bcrypt / argon2）&lt;/li&gt;
+&lt;li&gt;支持双因素认证（2FA）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;5-明文传输http&#34;&gt;5. 明文传输（HTTP）
+&lt;/h2&gt;&lt;p&gt;HTTP 是明文的，任何中间节点都可以看到所有内容，包括账号密码。
+在公共 WiFi 下尤为危险。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;全站使用 HTTPS&lt;/li&gt;
+&lt;li&gt;不要将敏感数据暴露在 URL 查询参数中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;6-未授权访问broken-access-control&#34;&gt;6. 未授权访问（Broken Access Control）
+&lt;/h2&gt;&lt;p&gt;这是后端最容易忽视的问题。
+比如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/admin/listUsers
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果后台只检查用户是否“已登录”，但不验证用户是否“管理员”，就会造成权限绕过。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;所有敏感接口都必须进行权限检查&lt;/li&gt;
+&lt;li&gt;不要依赖前端控制权限&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;7-文件上传漏洞&#34;&gt;7. 文件上传漏洞
+&lt;/h2&gt;&lt;p&gt;文件上传听起来很常见，但风险也极高。&lt;/p&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;攻击者上传一张看起来是 &lt;code&gt;.jpg&lt;/code&gt; 的文件，但实际上内部包含可执行代码&lt;/li&gt;
+&lt;li&gt;上传目录允许执行脚本文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一旦成功，攻击者可以直接控制服务器。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;校验文件的 MIME 类型而不是文件扩展名&lt;/li&gt;
+&lt;li&gt;上传后重新命名文件&lt;/li&gt;
+&lt;li&gt;将文件放在不可执行目录&lt;/li&gt;
+&lt;li&gt;对图片进行重新编码以确保其内容安全&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;8-暴露的管理接口&#34;&gt;8. 暴露的管理接口
+&lt;/h2&gt;&lt;p&gt;很多框架在开发模式下会暴露调试接口，例如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/debug
+/swagger-ui
+/actuator
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果在生产环境中忘记关闭，就会造成极大的安全风险。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;生产环境关闭不必要的管理端口&lt;/li&gt;
+&lt;li&gt;必须暴露的端点需要权限认证&lt;/li&gt;
+&lt;li&gt;不在页面上输出敏感系统信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;9-依赖与供应链攻击&#34;&gt;9. 依赖与供应链攻击
+&lt;/h2&gt;&lt;p&gt;现代开发高度依赖第三方库。
+如果依赖包本身含有恶意代码（或被入侵），攻击者就能“曲线入侵”你的系统。&lt;/p&gt;
+&lt;p&gt;典型方式包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;伪装成相似名字的库&lt;/li&gt;
+&lt;li&gt;在常见库中加入恶意更新&lt;/li&gt;
+&lt;li&gt;泄露依赖版本导致漏洞被利用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;定期更新和扫描依赖&lt;/li&gt;
+&lt;li&gt;锁定依赖版本&lt;/li&gt;
+&lt;li&gt;只使用可信来源的包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;10-日志与调试信息泄露&#34;&gt;10. 日志与调试信息泄露
+&lt;/h2&gt;&lt;p&gt;日志里常出现敏感数据，例如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Login failed: username=alice, password=secret
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;一旦日志泄露，相当于主动暴露系统内部状态。&lt;/p&gt;
+&lt;p&gt;数据泄露事件中，日志泄漏占比相当高。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;防御方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不记录密码、Token、身份证号等敏感数据&lt;/li&gt;
+&lt;li&gt;控制日志访问权限&lt;/li&gt;
+&lt;li&gt;在生产环境关闭过度详细的调试信息（如 stack trace）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;总结&#34;&gt;总结
+&lt;/h1&gt;&lt;p&gt;安全风险的根源往往不是复杂的攻击，而是我们理所当然的假设。&lt;/p&gt;
+&lt;p&gt;一个稳健的系统应该具备：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;不信任任何输入&lt;/li&gt;
+&lt;li&gt;不依赖客户端安全&lt;/li&gt;
+&lt;li&gt;不暴露内部实现&lt;/li&gt;
+&lt;li&gt;对敏感数据尽量减少存储&lt;/li&gt;
+&lt;li&gt;始终假设攻击者存在&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;掌握这十大安全风险，可以帮助程序员在设计和构建系统时提前预判问题，减少代价高昂的“线上事故”。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Ubuntu服务器运维安全最佳实践</title>
+        <link>https://yearsuns-github-io.vercel.app/p/ubuntu-server-operations-security-best-practices/</link>
+        <pubDate>Sun, 18 May 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/ubuntu-server-operations-security-best-practices/</guid>
+        <description>&lt;blockquote&gt;
+&lt;p&gt;本文面向使用 Ubuntu Server 24 LTS 进行生产环境部署的团队。
+目标是帮助你建立系统化、可执行、可审计的服务器安全策略，让入侵更难发生，让故障更容易排查。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;目录&#34;&gt;&lt;strong&gt;目录&lt;/strong&gt;
+&lt;/h1&gt;&lt;ol&gt;
+&lt;li&gt;安全原则概述&lt;/li&gt;
+&lt;li&gt;基础系统安全&lt;/li&gt;
+&lt;li&gt;SSH 访问与账户安全&lt;/li&gt;
+&lt;li&gt;网络访问控制（UFW / Fail2ban）&lt;/li&gt;
+&lt;li&gt;服务与进程安全&lt;/li&gt;
+&lt;li&gt;跳板机：运维安全的统一入口&lt;/li&gt;
+&lt;li&gt;应用与数据安全&lt;/li&gt;
+&lt;li&gt;日志监控与告警&lt;/li&gt;
+&lt;li&gt;备份与恢复策略&lt;/li&gt;
+&lt;li&gt;一页安全核对清单（Checklist）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;一安全原则概述&#34;&gt;&lt;strong&gt;一、安全原则概述&lt;/strong&gt;
+&lt;/h1&gt;&lt;p&gt;在开始具体操作前，需要先理解安全的三大原则：&lt;/p&gt;
+&lt;h2 id=&#34;1-最小权限原则least-privilege&#34;&gt;&lt;strong&gt;1. 最小权限原则（Least Privilege）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;用户与服务只应该拥有完成任务所需的最小权限。&lt;/p&gt;
+&lt;h2 id=&#34;2-减少暴露面reduce-attack-surface&#34;&gt;&lt;strong&gt;2. 减少暴露面（Reduce Attack Surface）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;关闭不需要的端口、服务和账户。攻击面越小，风险越小。&lt;/p&gt;
+&lt;h2 id=&#34;3-全量审计traceability&#34;&gt;&lt;strong&gt;3. 全量审计（Traceability）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;操作可回溯、日志可查询，才能在事故时快速定位问题。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;服务器安全不是堆命令，而是一个“最小暴露 + 可控访问 + 可追踪行为”的体系。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;二基础系统安全&#34;&gt;&lt;strong&gt;二、基础系统安全&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-保持系统更新最高优先级&#34;&gt;&lt;strong&gt;1. 保持系统更新（最高优先级）&lt;/strong&gt;
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt upgrade -y
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;开启自动安全更新：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt install unattended-upgrades
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo dpkg-reconfigure unattended-upgrades
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;2-禁用不必要的软件与服务&#34;&gt;&lt;strong&gt;2. 禁用不必要的软件与服务&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;列出已启用服务：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;systemctl list-unit-files --type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;关闭：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl disable --now servicename
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-使用-lts-版本与官方软件仓库&#34;&gt;&lt;strong&gt;3. 使用 LTS 版本与官方软件仓库&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;避免第三方未知源：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo add-apt-repository --remove ppa:xxx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;第三方源越多，安全风险越大。&lt;/p&gt;
+&lt;h1 id=&#34;三ssh-访问与账户安全&#34;&gt;&lt;strong&gt;三、SSH 访问与账户安全&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-禁止-root-直接登录&#34;&gt;&lt;strong&gt;1. 禁止 root 直接登录&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;编辑 SSH 配置：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo nano /etc/ssh/sshd_config
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;设置：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PermitRootLogin no
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;2-禁用密码登录强烈建议&#34;&gt;&lt;strong&gt;2. 禁用密码登录（强烈建议）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;SSH 改为密钥认证：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PasswordAuthentication no
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成密钥：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ssh-keygen -t ed25519
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上传密钥：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ssh-copy-id user@server
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-管控服务器用户&#34;&gt;&lt;strong&gt;3. 管控服务器用户&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;查看所有用户：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cut -d: -f1 /etc/passwd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;删除不再需要的用户：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo deluser username
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;4-sudo-权限最小化&#34;&gt;&lt;strong&gt;4. sudo 权限最小化&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;创建普通用户，再赋予 sudo 权限：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo usermod -aG sudo devuser
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;与此同时避免：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo su -
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这样的 root 长时间工作模式。&lt;/p&gt;
+&lt;h2 id=&#34;5-使用-ssh-登录速率限制&#34;&gt;&lt;strong&gt;5. 使用 SSH 登录速率限制&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;在 SSH 配置中加入：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;MaxAuthTries 3
+MaxSessions 5
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;四网络访问控制ufw--fail2ban&#34;&gt;&lt;strong&gt;四、网络访问控制（UFW / Fail2ban）&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-启用-ufw-防火墙&#34;&gt;&lt;strong&gt;1. 启用 UFW 防火墙&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;启用防火墙：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw enable
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;仅开放必要端口：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw allow 22/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw allow 80/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw allow 443/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;默认拒绝其他端口：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw default deny
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;查看状态：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ufw status numbered
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;2-防暴力破解fail2ban&#34;&gt;&lt;strong&gt;2. 防暴力破解：Fail2ban&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;安装：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt install fail2ban
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启用：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl enable --now fail2ban
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;查看封禁状态：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo fail2ban-client status
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Fail2ban 能阻止大量扫描和破解行为，是 SSH 最重要的保护措施之一。&lt;/p&gt;
+&lt;h1 id=&#34;五服务与进程安全&#34;&gt;&lt;strong&gt;五、服务与进程安全&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-不要让服务以-root-运行&#34;&gt;&lt;strong&gt;1. 不要让服务以 root 运行&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;为服务创建独立用户：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo adduser --system --no-create-home webuser
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在 systemd 中配置：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;User=webuser
+Group=webuser
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;2-限制服务权限文件与目录&#34;&gt;&lt;strong&gt;2. 限制服务权限（文件与目录）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;例如 Web 目录：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chmod -R &lt;span style=&#34;color:#ae81ff&#34;&gt;750&lt;/span&gt; /var/www/app
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chown -R www-data:www-data /var/www/app
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-使用-apparmor-控制服务行为&#34;&gt;&lt;strong&gt;3. 使用 AppArmor 控制服务行为&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;查看 AppArmor 状态：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo aa-status
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启用规则：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo aa-enforce /etc/apparmor.d/usr.sbin.nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;4-控制开放端口&#34;&gt;&lt;strong&gt;4. 控制开放端口&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;查看端口监听：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ss -tulnp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;关闭不必要端口能显著减少攻击面。&lt;/p&gt;
+&lt;h1 id=&#34;六跳板机堡垒机运维安全的统一入口&#34;&gt;&lt;strong&gt;六、跳板机/堡垒机：运维安全的统一入口&lt;/strong&gt;
+&lt;/h1&gt;&lt;p&gt;跳板机（Bastion Host / Jump Server）是企业安全体系中的标配。&lt;/p&gt;
+&lt;p&gt;它的作用包括：&lt;/p&gt;
+&lt;h3 id=&#34;1-统一入口减少暴露面&#34;&gt;&lt;strong&gt;1. 统一入口：减少暴露面&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;所有服务器 SSH 都关闭公网，只暴露跳板机。&lt;/p&gt;
+&lt;h3 id=&#34;2-强身份认证&#34;&gt;&lt;strong&gt;2. 强身份认证&lt;/strong&gt;
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;密钥登录&lt;/li&gt;
+&lt;li&gt;MFA&lt;/li&gt;
+&lt;li&gt;LDAP/AD 企业认证&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-权限精细化控制&#34;&gt;&lt;strong&gt;3. 权限精细化控制&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;谁能访问哪台机器，谁能执行哪些命令一目了然。&lt;/p&gt;
+&lt;h3 id=&#34;4-全量审计与录像&#34;&gt;&lt;strong&gt;4. 全量审计与录像&lt;/strong&gt;
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;每条命令&lt;/li&gt;
+&lt;li&gt;敏感操作告警&lt;/li&gt;
+&lt;li&gt;可回放运维全过程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;5-推荐方案&#34;&gt;&lt;strong&gt;5. 推荐方案&lt;/strong&gt;
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;开源：&lt;strong&gt;Jumpserver&lt;/strong&gt;（功能最完善的开源堡垒机）&lt;/li&gt;
+&lt;li&gt;云厂商自带堡垒机（省心，安全合规）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;跳板机不是可选项，而是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;安全访问控制体系的核心组件，应在中大型团队中强制使用。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;七应用与数据安全&#34;&gt;&lt;strong&gt;七、应用与数据安全&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-数据库不要暴露公网端口&#34;&gt;&lt;strong&gt;1. 数据库不要暴露公网端口&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;例如 MySQL 只监听本地：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;bind-address = 127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;2-使用-httpslets-encrypt&#34;&gt;&lt;strong&gt;2. 使用 HTTPS（Let’s Encrypt）&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;自动颁发证书：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt install certbot python3-certbot-nginx
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo certbot --nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-严格控制配置与密钥&#34;&gt;&lt;strong&gt;3. 严格控制配置与密钥&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;密钥文件设置权限：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chmod &lt;span style=&#34;color:#ae81ff&#34;&gt;600&lt;/span&gt; id_rsa
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;私密配置（如 .env）不应向其他用户开放。&lt;/p&gt;
+&lt;h2 id=&#34;4-版本控制不要上传敏感文件&#34;&gt;&lt;strong&gt;4. 版本控制不要上传敏感文件&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;Git 忽略：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;.env
+*.pem
+*.key
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;八日志监控与告警&#34;&gt;&lt;strong&gt;八、日志监控与告警&lt;/strong&gt;
+&lt;/h1&gt;&lt;h2 id=&#34;1-查看系统日志systemd&#34;&gt;&lt;strong&gt;1. 查看系统日志（systemd）&lt;/strong&gt;
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;journalctl -xe
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;2-服务级日志&#34;&gt;&lt;strong&gt;2. 服务级日志&lt;/strong&gt;
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;journalctl -u nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-登录行为审计&#34;&gt;&lt;strong&gt;3. 登录行为审计&lt;/strong&gt;
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;last
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lastb
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;4-建立实时告警系统&#34;&gt;&lt;strong&gt;4. 建立实时告警系统&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;选择其一：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Netdata&lt;/li&gt;
+&lt;li&gt;Prometheus + Grafana&lt;/li&gt;
+&lt;li&gt;Zabbix&lt;/li&gt;
+&lt;li&gt;云监控告警&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;监控指标：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CPU 异常升高&lt;/li&gt;
+&lt;li&gt;磁盘将满&lt;/li&gt;
+&lt;li&gt;SSH 登录异常&lt;/li&gt;
+&lt;li&gt;服务 down 后自动告警&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;九备份与恢复策略&#34;&gt;&lt;strong&gt;九、备份与恢复策略&lt;/strong&gt;
+&lt;/h1&gt;&lt;p&gt;备份是安全的最后一道防线。&lt;/p&gt;
+&lt;h2 id=&#34;1-采用-3-2-1-原则&#34;&gt;&lt;strong&gt;1. 采用 3-2-1 原则&lt;/strong&gt;
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;3 份数据&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2 种不同介质&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1 份异地备份&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2-常用备份方案&#34;&gt;&lt;strong&gt;2. 常用备份方案&lt;/strong&gt;
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;rsync（简单高效）&lt;/li&gt;
+&lt;li&gt;BorgBackup / Restic（加密备份）&lt;/li&gt;
+&lt;li&gt;云盘快照（极高恢复速度）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;3-定期演练恢复&#34;&gt;&lt;strong&gt;3. 定期演练恢复&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;没有演练的备份 = 假备份。&lt;/p&gt;
+&lt;h1 id=&#34;十一页安全核对清单checklist&#34;&gt;&lt;strong&gt;十、一页安全核对清单（Checklist）&lt;/strong&gt;
+&lt;/h1&gt;&lt;p&gt;你可以用它快速检查服务器是否合规。&lt;/p&gt;
+&lt;h3 id=&#34;-系统已更新&#34;&gt;✔ 系统已更新
+&lt;/h3&gt;&lt;h3 id=&#34;-禁用-root-登录&#34;&gt;✔ 禁用 root 登录
+&lt;/h3&gt;&lt;h3 id=&#34;-ssh-密钥登录--mfa&#34;&gt;✔ SSH 密钥登录 + MFA
+&lt;/h3&gt;&lt;h3 id=&#34;-ufw-防火墙启用&#34;&gt;✔ UFW 防火墙启用
+&lt;/h3&gt;&lt;h3 id=&#34;-fail2ban-启动&#34;&gt;✔ Fail2ban 启动
+&lt;/h3&gt;&lt;h3 id=&#34;-不必要服务已关闭&#34;&gt;✔ 不必要服务已关闭
+&lt;/h3&gt;&lt;h3 id=&#34;-服务不以-root-运行&#34;&gt;✔ 服务不以 root 运行
+&lt;/h3&gt;&lt;h3 id=&#34;-数据库未暴露公网&#34;&gt;✔ 数据库未暴露公网
+&lt;/h3&gt;&lt;h3 id=&#34;-日志可追踪&#34;&gt;✔ 日志可追踪
+&lt;/h3&gt;&lt;h3 id=&#34;-使用跳板机集中管理运维&#34;&gt;✔ 使用跳板机集中管理运维
+&lt;/h3&gt;&lt;h3 id=&#34;-有自动备份与恢复演练&#34;&gt;✔ 有自动备份与恢复演练
+&lt;/h3&gt;</description>
+        </item>
+        <item>
+        <title>Ubuntu24服务器入门教程</title>
+        <link>https://yearsuns-github-io.vercel.app/p/ubuntu-24-server-beginners-guide/</link>
+        <pubDate>Fri, 25 Apr 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/ubuntu-24-server-beginners-guide/</guid>
+        <description>&lt;h1 id=&#34;一为什么要选择-ubuntu-server&#34;&gt;一、为什么要选择 Ubuntu Server？
+&lt;/h1&gt;&lt;p&gt;CentOS 8 停止维护后，许多团队逐渐转向 Ubuntu。原因很简单：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;更新稳定 + 周期明确&lt;/strong&gt;：Ubuntu LTS（长期支持版）提供 5 年官方支持。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;软件生态更丰富&lt;/strong&gt;：apt 软件仓库巨大，新软件更新快。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;社区文档完善&lt;/strong&gt;：遇到问题基本都能找到解决方案。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;云原生友好&lt;/strong&gt;：Docker、Kubernetes 等官方支持都以 Ubuntu 为优先平台。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果你希望服务器省心、上手快，Ubuntu 是最佳选择之一。&lt;/p&gt;
+&lt;h1 id=&#34;二ubuntu-的基本原理它是如何工作的&#34;&gt;二、Ubuntu 的基本原理：它是如何工作的？
+&lt;/h1&gt;&lt;p&gt;理解 Linux 的运行原理，有助于你更好地排查问题。&lt;/p&gt;
+&lt;h2 id=&#34;1-linux--内核--用户空间&#34;&gt;1. Linux = 内核 + 用户空间
+&lt;/h2&gt;&lt;p&gt;一个 Linux 系统本质上由两部分组成：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;内核（Kernel）&lt;/strong&gt;：直接与硬件交互，负责调度、内存、文件系统、网络等。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;用户空间（User Space）&lt;/strong&gt;：各种应用程序、Shell、守护进程等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ubuntu Server 提供用户空间环境，让你用命令行操作内核能力。&lt;/p&gt;
+&lt;h2 id=&#34;2-文件系统结构fhs&#34;&gt;2. 文件系统结构（FHS）
+&lt;/h2&gt;&lt;p&gt;Linux 文件系统采用“树状结构”，&lt;strong&gt;所有内容都从根目录 &lt;code&gt;/&lt;/code&gt; 开始&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;常见目录解释：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;目录&lt;/th&gt;
+          &lt;th&gt;用途&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;/etc&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;系统配置文件&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;/var&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;日志、缓存、可变数据&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;/usr&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;系统级程序与库&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;/home&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;普通用户的家目录&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;/root&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;root 用户家目录&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;/tmp&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;临时文件&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;/opt&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;第三方软件（可选）&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;把它理解为一棵树，而不是 Windows 的 C: D: 驱动器。&lt;/p&gt;
+&lt;h2 id=&#34;3-软件管理apt&#34;&gt;3. 软件管理：APT
+&lt;/h2&gt;&lt;p&gt;Ubuntu 使用 &lt;strong&gt;APT（Advanced Package Tool）&lt;/strong&gt; 管理软件。&lt;/p&gt;
+&lt;p&gt;特点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;自动解决依赖&lt;/li&gt;
+&lt;li&gt;软件来源于官方仓库&lt;/li&gt;
+&lt;li&gt;一行命令即可安装/更新&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;后面会有详细示例。&lt;/p&gt;
+&lt;h2 id=&#34;4-服务管理systemd&#34;&gt;4. 服务管理：systemd
+&lt;/h2&gt;&lt;p&gt;Ubuntu 24 使用 &lt;strong&gt;systemd&lt;/strong&gt; 作为服务管理系统：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;开机启动&lt;/li&gt;
+&lt;li&gt;服务管理（start/stop/restart）&lt;/li&gt;
+&lt;li&gt;日志系统（journalctl）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这类命令你会非常常用。&lt;/p&gt;
+&lt;h1 id=&#34;三快速上手安装后必须做的初始化&#34;&gt;三、快速上手：安装后必须做的初始化
+&lt;/h1&gt;&lt;p&gt;假设你已经安装好 Ubuntu Server 24.x，以下步骤是上线前必须做的。&lt;/p&gt;
+&lt;h2 id=&#34;1-更新系统&#34;&gt;1. 更新系统
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt upgrade -y
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;2-创建新用户并加-sudo-权限&#34;&gt;2. 创建新用户并加 sudo 权限
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo adduser devuser
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo usermod -aG sudo devuser
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;尽量不要用 root 直接工作。&lt;/p&gt;
+&lt;h2 id=&#34;3-配置-ssh可选禁止密码登录&#34;&gt;3. 配置 SSH（可选：禁止密码登录）
+&lt;/h2&gt;&lt;p&gt;查看 SSH 配置文件：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo nano /etc/ssh/sshd_config
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;常见设置：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PasswordAuthentication no
+PermitRootLogin no
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;改完后重启 SSH：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl restart ssh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;4-安装常用工具&#34;&gt;4. 安装常用工具
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt install -y vim git curl unzip htop net-tools
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;四入门必学ubuntu-常用命令&#34;&gt;四、入门必学：Ubuntu 常用命令
+&lt;/h1&gt;&lt;p&gt;以下命令覆盖日常开发者 90% 的工作量。&lt;/p&gt;
+&lt;h2 id=&#34;1-文件与目录&#34;&gt;1. 文件与目录
+&lt;/h2&gt;&lt;h3 id=&#34;查看目录&#34;&gt;查看目录
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ls -l    &lt;span style=&#34;color:#75715e&#34;&gt;# 显示详细信息&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ls -a    &lt;span style=&#34;color:#75715e&#34;&gt;# 显示隐藏文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;切换目录&#34;&gt;切换目录
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd /etc
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd ~      &lt;span style=&#34;color:#75715e&#34;&gt;# 回到自己的 home 目录&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd -      &lt;span style=&#34;color:#75715e&#34;&gt;# 回到上一次目录&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;创建--删除&#34;&gt;创建 / 删除
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir logs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm -rf logs
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;2-文件处理&#34;&gt;2. 文件处理
+&lt;/h2&gt;&lt;h3 id=&#34;查看文件内容&#34;&gt;查看文件内容
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cat file.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;less file.txt   &lt;span style=&#34;color:#75715e&#34;&gt;# 支持翻页&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;head -n &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt; file.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tail -f /var/log/syslog    &lt;span style=&#34;color:#75715e&#34;&gt;# 实时查看日志&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;3-编辑文件nanovim&#34;&gt;3. 编辑文件（nano/vim）
+&lt;/h2&gt;&lt;p&gt;nano 简单直接：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nano config.ini
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;vim 强大但需要学习：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;vim config.ini
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;4-软件安装与管理apt&#34;&gt;4. 软件安装与管理（APT）
+&lt;/h2&gt;&lt;h3 id=&#34;安装软件&#34;&gt;安装软件
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt install nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;删除软件&#34;&gt;删除软件
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt remove nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;搜索软件包&#34;&gt;搜索软件包
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;apt search redis
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;更新整个系统&#34;&gt;更新整个系统
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt update &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo apt upgrade
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;5-服务管理systemctl&#34;&gt;5. 服务管理（systemctl）
+&lt;/h2&gt;&lt;p&gt;启动服务：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl start nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;重启：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl restart nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;查看状态：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl status nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;设置开机启动：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl enable nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;6-网络调试&#34;&gt;6. 网络调试
+&lt;/h2&gt;&lt;p&gt;查看 IP：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip a
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Ping：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ping baidu.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;端口监听：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ss -tulnp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;7-用户与权限&#34;&gt;7. 用户与权限
+&lt;/h2&gt;&lt;p&gt;当前用户：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;whoami
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;文件权限：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chmod &lt;span style=&#34;color:#ae81ff&#34;&gt;755&lt;/span&gt; app.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chown ubuntu:ubuntu app.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;五理解-linux-的权限模型非常重要&#34;&gt;五、理解 Linux 的权限模型（非常重要）
+&lt;/h1&gt;&lt;p&gt;Linux 权限由三部分组成：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;-rwxr-xr--
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;含义如下：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;区域&lt;/th&gt;
+          &lt;th&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;rwx&lt;/td&gt;
+          &lt;td&gt;文件所有者 的权限&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;r-x&lt;/td&gt;
+          &lt;td&gt;文件所属组 的权限&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;r&amp;ndash;&lt;/td&gt;
+          &lt;td&gt;其他用户 的权限&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;字符含义：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;r = read（读）&lt;/li&gt;
+&lt;li&gt;w = write（写）&lt;/li&gt;
+&lt;li&gt;x = execute（执行）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;数字对应：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;7 = rwx&lt;/li&gt;
+&lt;li&gt;6 = rw-&lt;/li&gt;
+&lt;li&gt;5 = r-x&lt;/li&gt;
+&lt;li&gt;4 = r&amp;ndash;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以 755 = &lt;code&gt;rwxr-xr-x&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;理解这个模型是管理服务器的关键。&lt;/p&gt;
+&lt;h1 id=&#34;六系统监控与排查&#34;&gt;六、系统监控与排查
+&lt;/h1&gt;&lt;h2 id=&#34;1-查看资源占用&#34;&gt;1. 查看资源占用
+&lt;/h2&gt;&lt;p&gt;CPU 和内存：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;top
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;htop
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;磁盘：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;df -h
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;目录占用：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;du -sh *
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;2-查看系统日志&#34;&gt;2. 查看系统日志
+&lt;/h2&gt;&lt;p&gt;systemd 日志：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;journalctl -xe
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;查看某个服务日志：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;journalctl -u nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
+        <title>Git 常用命令合集</title>
+        <link>https://yearsuns-github-io.vercel.app/p/comprehensive-git-command-reference/</link>
+        <pubDate>Mon, 14 Apr 2025 11:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/comprehensive-git-command-reference/</guid>
+        <description>&lt;h2 id=&#34;一配置相关&#34;&gt;一、配置相关
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 设置用户名和邮箱（全局）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git config --global user.name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Your Name&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git config --global user.email &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;you@example.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看所有配置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git config --list
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;二创建与获取仓库&#34;&gt;二、创建与获取仓库
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 在当前目录初始化仓库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git init
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 从远程仓库克隆&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git clone https://github.com/user/repo.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git clone git@github.com:user/repo.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;三查看状态与比较差异&#34;&gt;三、查看状态与比较差异
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看当前状态（修改了什么、哪些在暂存区）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git status
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看工作区与暂存区的差异&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git diff
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看暂存区与最近一次提交的差异&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git diff --cached
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;四添加与提交&#34;&gt;四、添加与提交
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加单个文件到暂存区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add file.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加当前目录所有修改&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 提交（-m 后面是提交说明）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;feat: add new feature&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 修改最近一次提交信息（未推送时常用）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit --amend
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;五查看提交历史&#34;&gt;五、查看提交历史
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看提交历史（详细）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git log
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 单行显示历史（更紧凑）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git log --oneline
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看某个文件的修改历史&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git log file.txt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;六分支操作&#34;&gt;六、分支操作
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看本地分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git branch
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 创建新分支（基于当前分支）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git branch dev
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 切换到分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout dev
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 创建并切换到新分支（常用）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout -b dev
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除本地分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git branch -d dev        &lt;span style=&#34;color:#75715e&#34;&gt;# 安全删除（有未合并会失败）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git branch -D dev        &lt;span style=&#34;color:#75715e&#34;&gt;# 强制删除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;新版 Git 也可以用 &lt;code&gt;git switch&lt;/code&gt; 更直观：&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git switch dev           &lt;span style=&#34;color:#75715e&#34;&gt;# 切换分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git switch -c dev        &lt;span style=&#34;color:#75715e&#34;&gt;# 创建并切换新分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;七合并与冲突&#34;&gt;七、合并与冲突
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 切换到目标分支（要被合并到的分支）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout main
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 把 dev 分支合并到当前分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git merge dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;发生冲突时：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;编辑冲突文件，手动保留正确内容&lt;/li&gt;
+&lt;li&gt;然后：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit      &lt;span style=&#34;color:#75715e&#34;&gt;# 完成合并&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;八远程仓库操作&#34;&gt;八、远程仓库操作
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看当前远程仓库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git remote -v
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加远程仓库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git remote add origin git@github.com:user/repo.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 修改远程地址&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git remote set-url origin git@github.com:user/new-repo.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;九推送与拉取&#34;&gt;九、推送与拉取
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 首次推送当前分支到远程，并设置跟踪&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push -u origin main
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 推送当前分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 从远程拉取并合并&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git pull
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 从远程获取最新记录（不自动合并）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git fetch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;十暂存现场stash&#34;&gt;十、暂存现场（stash）
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 暂存当前未提交的修改&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git stash
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 带说明的 stash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git stash save &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;WIP: something&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看所有 stash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git stash list
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 应用最近一次 stash（保留记录）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git stash apply
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 应用并删除最近一次 stash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git stash pop
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;十一撤销与回退&#34;&gt;十一、撤销与回退
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 丢弃工作区对某个文件的修改（回到最近一次提交）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout -- file.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 撤回暂存区中的文件到工作区&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reset file.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 回退到某次提交（保留修改到暂存区）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reset --soft &amp;lt;commit_id&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 回退到某次提交（修改回到工作区）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reset --mixed &amp;lt;commit_id&amp;gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# 默认&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 回退到某次提交（彻底丢弃之后的修改）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reset --hard &amp;lt;commit_id&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;commit_id&amp;gt;&lt;/code&gt; 可以通过 &lt;code&gt;git log&lt;/code&gt; 或 &lt;code&gt;git log --oneline&lt;/code&gt; 查看。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;十二撤销某个已提交的改动revert&#34;&gt;十二、撤销某个已提交的改动（revert）
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 生成一个新的提交，用来“反做”指定提交的修改&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git revert &amp;lt;commit_id&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;适合已经推到远程、不能直接改历史的情况。&lt;/p&gt;
+&lt;h2 id=&#34;十三标签tag&#34;&gt;十三、标签（Tag）
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 打轻量标签&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git tag v1.0.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 打附注标签（带说明）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git tag -a v1.0.0 -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Release version 1.0.0&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看所有标签&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git tag
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 推送某个标签&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push origin v1.0.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 推送所有标签&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push origin --tags
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;十四挑选提交cherry-pick&#34;&gt;十四、挑选提交（cherry-pick）
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 把某个提交“复制”到当前分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git cherry-pick &amp;lt;commit_id&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;适合从其他分支“捞”出某个修复或功能。&lt;/p&gt;
+&lt;h2 id=&#34;十五安全网reflog&#34;&gt;十五、安全网：reflog
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看所有 HEAD 变动记录（包括 reset 等操作）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reflog
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当你不小心 reset &amp;ndash;hard、删错东西时，可以通过 &lt;code&gt;reflog&lt;/code&gt; 找回之前的提交 ID，再 reset 回去。&lt;/p&gt;
+&lt;h2 id=&#34;十六超精简日常命令清单&#34;&gt;十六、超精简日常命令清单
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 状态 &amp;amp; 历史&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git status
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git log --oneline
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 常规提交流程&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 更新代码&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git pull
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 分支&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git branch
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout -b feature/login
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout main
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git merge feature/login
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 撤销&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git checkout -- file.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git reset --hard HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>Git 入门教程：从原理到实践的最小知识体系</title>
         <link>https://yearsuns-github-io.vercel.app/p/a-beginner-friendly-git-guide-clear-concepts-and-practical-steps-for-new-developers/</link>
         <pubDate>Sun, 30 Mar 2025 11:59:56 +0800</pubDate>

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="软件世界是建立在信任之上的：用户相信程序，程序相信数据，系统相信环境。 然而，只要存在输入、网络、用户与攻击者，这种信任就随时可能被打破。\n下面总结了程序员必须了解的 十大网络安全风险。它们并不神秘，但都极其常见。一旦发生，会直接影响系统的可靠性、数据安全以及用户信任。\n">
+<meta name="keywords" content="网络安全, SQL注入, XSS, CSRF"><title>程序员必须知道的十大网络安全风险</title>
+
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/p/top-ten-cybersecurity-risks-every-programmer-must-know/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="程序员必须知道的十大网络安全风险">
+<meta property='og:description' content="软件世界是建立在信任之上的：用户相信程序，程序相信数据，系统相信环境。 然而，只要存在输入、网络、用户与攻击者，这种信任就随时可能被打破。\n下面总结了程序员必须了解的 十大网络安全风险。它们并不神秘，但都极其常见。一旦发生，会直接影响系统的可靠性、数据安全以及用户信任。\n">
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/p/top-ten-cybersecurity-risks-every-programmer-must-know/'>
+<meta property='og:site_name' content='王离谱的小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='网络安全' /><meta property='article:tag' content='SQL注入' /><meta property='article:tag' content='XSS' /><meta property='article:tag' content='CSRF' /><meta property='article:published_time' content='2025-06-07T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-06-07T14:59:56&#43;08:00'/>
+<meta name="twitter:title" content="程序员必须知道的十大网络安全风险">
+<meta name="twitter:description" content="软件世界是建立在信任之上的：用户相信程序，程序相信数据，系统相信环境。 然而，只要存在输入、网络、用户与攻击者，这种信任就随时可能被打破。\n下面总结了程序员必须了解的 十大网络安全风险。它们并不神秘，但都极其常见。一旦发生，会直接影响系统的可靠性、数据安全以及用户信任。\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王离谱的小破站</a></h1>
+            <h2 class="site-description">破破烂烂</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>分类</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://tools.yearsuns.com' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>工具</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" selected>中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-sql-注入sql-injection">1. SQL 注入（SQL Injection）</a></li>
+    <li><a href="#2-跨站脚本攻击xss">2. 跨站脚本攻击（XSS）</a></li>
+    <li><a href="#3-跨站请求伪造csrf">3. 跨站请求伪造（CSRF）</a></li>
+    <li><a href="#4-弱密码与密码泄露">4. 弱密码与密码泄露</a></li>
+    <li><a href="#5-明文传输http">5. 明文传输（HTTP）</a></li>
+    <li><a href="#6-未授权访问broken-access-control">6. 未授权访问（Broken Access Control）</a></li>
+    <li><a href="#7-文件上传漏洞">7. 文件上传漏洞</a></li>
+    <li><a href="#8-暴露的管理接口">8. 暴露的管理接口</a></li>
+    <li><a href="#9-依赖与供应链攻击">9. 依赖与供应链攻击</a></li>
+    <li><a href="#10-日志与调试信息泄露">10. 日志与调试信息泄露</a></li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/top-ten-cybersecurity-risks-every-programmer-must-know/">程序员必须知道的十大网络安全风险</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025年06月07日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>软件世界是建立在信任之上的：用户相信程序，程序相信数据，系统相信环境。
+然而，只要存在输入、网络、用户与攻击者，这种信任就随时可能被打破。</p>
+<p>下面总结了程序员必须了解的 <strong>十大网络安全风险</strong>。它们并不神秘，但都极其常见。一旦发生，会直接影响系统的可靠性、数据安全以及用户信任。</p>
+<h2 id="1-sql-注入sql-injection">1. SQL 注入（SQL Injection）
+</h2><p>SQL 注入是最经典也最基础的安全问题。
+只要 SQL 是通过字符串拼接生成的，就可能被恶意修改逻辑。</p>
+<p>示例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>query <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;SELECT * FROM users WHERE name = &#39;</span><span style="color:#e6db74">{</span>username<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;&#34;</span>
+</span></span></code></pre></div><p>当 <code>username</code> 为：</p>
+<pre tabindex="0"><code>&#39; OR 1=1 --
+</code></pre><p>SQL 将变为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> users <span style="color:#66d9ef">WHERE</span> name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">OR</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> <span style="color:#75715e">--&#39;
+</span></span></span></code></pre></div><p>结果就是把整张表都查出来。</p>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>使用参数化查询（Prepared Statement）</li>
+<li>永远不要用字符串拼接构造 SQL</li>
+</ul>
+<h2 id="2-跨站脚本攻击xss">2. 跨站脚本攻击（XSS）
+</h2><p>XSS 的本质是：<strong>用户输入的内容被当作脚本执行了</strong>。</p>
+<p>例子：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span>&gt;{{ nickname }}&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span></code></pre></div><p>如果昵称是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span>&gt;<span style="color:#a6e22e">alert</span>(<span style="color:#e6db74">&#39;XSS&#39;</span>)&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><p>页面就会执行这段代码。</p>
+<p>后果可能是窃取 Cookie、篡改页面、发起恶意请求等。</p>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>输出前进行 HTML 转义</li>
+<li>使用默认防御 XSS 的模板引擎（React/Vue 等）</li>
+</ul>
+<h2 id="3-跨站请求伪造csrf">3. 跨站请求伪造（CSRF）
+</h2><p>CSRF 的特点是：用户在登录状态下，被诱导访问某个恶意页面，然后浏览器自动携带 Cookie，导致后台执行了用户并未授权的操作。</p>
+<p>例如：</p>
+<pre tabindex="0"><code>&lt;img src=&#34;https://bank.com/transfer?to=hacker&amp;amount=5000&#34;&gt;
+</code></pre><p>只要用户登录过银行网站，这个请求就可能执行。</p>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>使用 CSRF Token</li>
+<li>设置 Cookie 的 SameSite 属性</li>
+<li>对敏感操作要求二次确认</li>
+</ul>
+<h2 id="4-弱密码与密码泄露">4. 弱密码与密码泄露
+</h2><p>很多攻击并不依赖技术漏洞，而是依赖人类弱点。
+弱密码（如 <code>123456</code>、<code>password</code>）被暴力破解是十分常见的。</p>
+<p>另一个问题是服务器端存储明文密码，一旦数据库泄露，就是灾难。</p>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>要求使用复杂密码</li>
+<li>存储密码时使用强哈希算法（bcrypt / argon2）</li>
+<li>支持双因素认证（2FA）</li>
+</ul>
+<h2 id="5-明文传输http">5. 明文传输（HTTP）
+</h2><p>HTTP 是明文的，任何中间节点都可以看到所有内容，包括账号密码。
+在公共 WiFi 下尤为危险。</p>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>全站使用 HTTPS</li>
+<li>不要将敏感数据暴露在 URL 查询参数中</li>
+</ul>
+<h2 id="6-未授权访问broken-access-control">6. 未授权访问（Broken Access Control）
+</h2><p>这是后端最容易忽视的问题。
+比如：</p>
+<pre tabindex="0"><code>/admin/listUsers
+</code></pre><p>如果后台只检查用户是否“已登录”，但不验证用户是否“管理员”，就会造成权限绕过。</p>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>所有敏感接口都必须进行权限检查</li>
+<li>不要依赖前端控制权限</li>
+</ul>
+<h2 id="7-文件上传漏洞">7. 文件上传漏洞
+</h2><p>文件上传听起来很常见，但风险也极高。</p>
+<p>例如：</p>
+<ul>
+<li>攻击者上传一张看起来是 <code>.jpg</code> 的文件，但实际上内部包含可执行代码</li>
+<li>上传目录允许执行脚本文件</li>
+</ul>
+<p>一旦成功，攻击者可以直接控制服务器。</p>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>校验文件的 MIME 类型而不是文件扩展名</li>
+<li>上传后重新命名文件</li>
+<li>将文件放在不可执行目录</li>
+<li>对图片进行重新编码以确保其内容安全</li>
+</ul>
+<h2 id="8-暴露的管理接口">8. 暴露的管理接口
+</h2><p>很多框架在开发模式下会暴露调试接口，例如：</p>
+<pre tabindex="0"><code>/debug
+/swagger-ui
+/actuator
+</code></pre><p>如果在生产环境中忘记关闭，就会造成极大的安全风险。</p>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>生产环境关闭不必要的管理端口</li>
+<li>必须暴露的端点需要权限认证</li>
+<li>不在页面上输出敏感系统信息</li>
+</ul>
+<h2 id="9-依赖与供应链攻击">9. 依赖与供应链攻击
+</h2><p>现代开发高度依赖第三方库。
+如果依赖包本身含有恶意代码（或被入侵），攻击者就能“曲线入侵”你的系统。</p>
+<p>典型方式包括：</p>
+<ul>
+<li>伪装成相似名字的库</li>
+<li>在常见库中加入恶意更新</li>
+<li>泄露依赖版本导致漏洞被利用</li>
+</ul>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>定期更新和扫描依赖</li>
+<li>锁定依赖版本</li>
+<li>只使用可信来源的包</li>
+</ul>
+<h2 id="10-日志与调试信息泄露">10. 日志与调试信息泄露
+</h2><p>日志里常出现敏感数据，例如：</p>
+<pre tabindex="0"><code>Login failed: username=alice, password=secret
+</code></pre><p>一旦日志泄露，相当于主动暴露系统内部状态。</p>
+<p>数据泄露事件中，日志泄漏占比相当高。</p>
+<p><strong>防御方式：</strong></p>
+<ul>
+<li>不记录密码、Token、身份证号等敏感数据</li>
+<li>控制日志访问权限</li>
+<li>在生产环境关闭过度详细的调试信息（如 stack trace）</li>
+</ul>
+<h1 id="总结">总结
+</h1><p>安全风险的根源往往不是复杂的攻击，而是我们理所当然的假设。</p>
+<p>一个稳健的系统应该具备：</p>
+<ol>
+<li>不信任任何输入</li>
+<li>不依赖客户端安全</li>
+<li>不暴露内部实现</li>
+<li>对敏感数据尽量减少存储</li>
+<li>始终假设攻击者存在</li>
+</ol>
+<p>掌握这十大安全风险，可以帮助程序员在设计和构建系统时提前预判问题，减少代价高昂的“线上事故”。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>
+        
+            <a href="/tags/sql%E6%B3%A8%E5%85%A5/">SQL注入</a>
+        
+            <a href="/tags/xss/">XSS</a>
+        
+            <a href="/tags/csrf/">CSRF</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'zh-CN',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 王离谱
+    </section>
+    
+    <section class="powerby">
+        
+            <a href="https://beian.miit.gov.cn/">粤ICP备2022043168号</a> <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

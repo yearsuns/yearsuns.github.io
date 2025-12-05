@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一、为什么要选择 Ubuntu Server？ CentOS 8 停止维护后，许多团队逐渐转向 Ubuntu。原因很简单：\n更新稳定 + 周期明确：Ubuntu LTS（长期支持版）提供 5 年官方支持。 软件生态更丰富：apt 软件仓库巨大，新软件更新快。 社区文档完善：遇到问题基本都能找到解决方案。 云原生友好：Docker、Kubernetes 等官方支持都以 Ubuntu 为优先平台。 如果你希望服务器省心、上手快，Ubuntu 是最佳选择之一。\n">
+<meta name="keywords" content="Ubuntu, Linux, 服务器, 教程"><title>Ubuntu24服务器入门教程</title>
+
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/p/ubuntu-24-server-beginners-guide/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="Ubuntu24服务器入门教程">
+<meta property='og:description' content="一、为什么要选择 Ubuntu Server？ CentOS 8 停止维护后，许多团队逐渐转向 Ubuntu。原因很简单：\n更新稳定 + 周期明确：Ubuntu LTS（长期支持版）提供 5 年官方支持。 软件生态更丰富：apt 软件仓库巨大，新软件更新快。 社区文档完善：遇到问题基本都能找到解决方案。 云原生友好：Docker、Kubernetes 等官方支持都以 Ubuntu 为优先平台。 如果你希望服务器省心、上手快，Ubuntu 是最佳选择之一。\n">
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/p/ubuntu-24-server-beginners-guide/'>
+<meta property='og:site_name' content='王离谱的小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Ubuntu' /><meta property='article:tag' content='Linux' /><meta property='article:tag' content='服务器' /><meta property='article:tag' content='教程' /><meta property='article:published_time' content='2025-04-25T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-04-25T14:59:56&#43;08:00'/>
+<meta name="twitter:title" content="Ubuntu24服务器入门教程">
+<meta name="twitter:description" content="一、为什么要选择 Ubuntu Server？ CentOS 8 停止维护后，许多团队逐渐转向 Ubuntu。原因很简单：\n更新稳定 + 周期明确：Ubuntu LTS（长期支持版）提供 5 年官方支持。 软件生态更丰富：apt 软件仓库巨大，新软件更新快。 社区文档完善：遇到问题基本都能找到解决方案。 云原生友好：Docker、Kubernetes 等官方支持都以 Ubuntu 为优先平台。 如果你希望服务器省心、上手快，Ubuntu 是最佳选择之一。\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王离谱的小破站</a></h1>
+            <h2 class="site-description">破破烂烂</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>分类</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://tools.yearsuns.com' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>工具</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" selected>中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-linux--内核--用户空间">1. Linux = 内核 + 用户空间</a></li>
+    <li><a href="#2-文件系统结构fhs">2. 文件系统结构（FHS）</a></li>
+    <li><a href="#3-软件管理apt">3. 软件管理：APT</a></li>
+    <li><a href="#4-服务管理systemd">4. 服务管理：systemd</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#1-更新系统">1. 更新系统</a></li>
+    <li><a href="#2-创建新用户并加-sudo-权限">2. 创建新用户并加 sudo 权限</a></li>
+    <li><a href="#3-配置-ssh可选禁止密码登录">3. 配置 SSH（可选：禁止密码登录）</a></li>
+    <li><a href="#4-安装常用工具">4. 安装常用工具</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#1-文件与目录">1. 文件与目录</a>
+      <ul>
+        <li><a href="#查看目录">查看目录</a></li>
+        <li><a href="#切换目录">切换目录</a></li>
+        <li><a href="#创建--删除">创建 / 删除</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-文件处理">2. 文件处理</a>
+      <ul>
+        <li><a href="#查看文件内容">查看文件内容</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-编辑文件nanovim">3. 编辑文件（nano/vim）</a></li>
+    <li><a href="#4-软件安装与管理apt">4. 软件安装与管理（APT）</a>
+      <ul>
+        <li><a href="#安装软件">安装软件</a></li>
+        <li><a href="#删除软件">删除软件</a></li>
+        <li><a href="#搜索软件包">搜索软件包</a></li>
+        <li><a href="#更新整个系统">更新整个系统</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-服务管理systemctl">5. 服务管理（systemctl）</a></li>
+    <li><a href="#6-网络调试">6. 网络调试</a></li>
+    <li><a href="#7-用户与权限">7. 用户与权限</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#1-查看资源占用">1. 查看资源占用</a></li>
+    <li><a href="#2-查看系统日志">2. 查看系统日志</a></li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/ubuntu-24-server-beginners-guide/">Ubuntu24服务器入门教程</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025年04月25日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="一为什么要选择-ubuntu-server">一、为什么要选择 Ubuntu Server？
+</h1><p>CentOS 8 停止维护后，许多团队逐渐转向 Ubuntu。原因很简单：</p>
+<ul>
+<li><strong>更新稳定 + 周期明确</strong>：Ubuntu LTS（长期支持版）提供 5 年官方支持。</li>
+<li><strong>软件生态更丰富</strong>：apt 软件仓库巨大，新软件更新快。</li>
+<li><strong>社区文档完善</strong>：遇到问题基本都能找到解决方案。</li>
+<li><strong>云原生友好</strong>：Docker、Kubernetes 等官方支持都以 Ubuntu 为优先平台。</li>
+</ul>
+<p>如果你希望服务器省心、上手快，Ubuntu 是最佳选择之一。</p>
+<h1 id="二ubuntu-的基本原理它是如何工作的">二、Ubuntu 的基本原理：它是如何工作的？
+</h1><p>理解 Linux 的运行原理，有助于你更好地排查问题。</p>
+<h2 id="1-linux--内核--用户空间">1. Linux = 内核 + 用户空间
+</h2><p>一个 Linux 系统本质上由两部分组成：</p>
+<ul>
+<li><strong>内核（Kernel）</strong>：直接与硬件交互，负责调度、内存、文件系统、网络等。</li>
+<li><strong>用户空间（User Space）</strong>：各种应用程序、Shell、守护进程等。</li>
+</ul>
+<p>Ubuntu Server 提供用户空间环境，让你用命令行操作内核能力。</p>
+<h2 id="2-文件系统结构fhs">2. 文件系统结构（FHS）
+</h2><p>Linux 文件系统采用“树状结构”，<strong>所有内容都从根目录 <code>/</code> 开始</strong>。</p>
+<p>常见目录解释：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>目录</th>
+          <th>用途</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>/etc</code></td>
+          <td>系统配置文件</td>
+      </tr>
+      <tr>
+          <td><code>/var</code></td>
+          <td>日志、缓存、可变数据</td>
+      </tr>
+      <tr>
+          <td><code>/usr</code></td>
+          <td>系统级程序与库</td>
+      </tr>
+      <tr>
+          <td><code>/home</code></td>
+          <td>普通用户的家目录</td>
+      </tr>
+      <tr>
+          <td><code>/root</code></td>
+          <td>root 用户家目录</td>
+      </tr>
+      <tr>
+          <td><code>/tmp</code></td>
+          <td>临时文件</td>
+      </tr>
+      <tr>
+          <td><code>/opt</code></td>
+          <td>第三方软件（可选）</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>把它理解为一棵树，而不是 Windows 的 C: D: 驱动器。</p>
+<h2 id="3-软件管理apt">3. 软件管理：APT
+</h2><p>Ubuntu 使用 <strong>APT（Advanced Package Tool）</strong> 管理软件。</p>
+<p>特点：</p>
+<ul>
+<li>自动解决依赖</li>
+<li>软件来源于官方仓库</li>
+<li>一行命令即可安装/更新</li>
+</ul>
+<p>后面会有详细示例。</p>
+<h2 id="4-服务管理systemd">4. 服务管理：systemd
+</h2><p>Ubuntu 24 使用 <strong>systemd</strong> 作为服务管理系统：</p>
+<ul>
+<li>开机启动</li>
+<li>服务管理（start/stop/restart）</li>
+<li>日志系统（journalctl）</li>
+</ul>
+<p>这类命令你会非常常用。</p>
+<h1 id="三快速上手安装后必须做的初始化">三、快速上手：安装后必须做的初始化
+</h1><p>假设你已经安装好 Ubuntu Server 24.x，以下步骤是上线前必须做的。</p>
+<h2 id="1-更新系统">1. 更新系统
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt upgrade -y
+</span></span></code></pre></div><h2 id="2-创建新用户并加-sudo-权限">2. 创建新用户并加 sudo 权限
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo adduser devuser
+</span></span><span style="display:flex;"><span>sudo usermod -aG sudo devuser
+</span></span></code></pre></div><p>尽量不要用 root 直接工作。</p>
+<h2 id="3-配置-ssh可选禁止密码登录">3. 配置 SSH（可选：禁止密码登录）
+</h2><p>查看 SSH 配置文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo nano /etc/ssh/sshd_config
+</span></span></code></pre></div><p>常见设置：</p>
+<pre tabindex="0"><code>PasswordAuthentication no
+PermitRootLogin no
+</code></pre><p>改完后重启 SSH：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl restart ssh
+</span></span></code></pre></div><h2 id="4-安装常用工具">4. 安装常用工具
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install -y vim git curl unzip htop net-tools
+</span></span></code></pre></div><h1 id="四入门必学ubuntu-常用命令">四、入门必学：Ubuntu 常用命令
+</h1><p>以下命令覆盖日常开发者 90% 的工作量。</p>
+<h2 id="1-文件与目录">1. 文件与目录
+</h2><h3 id="查看目录">查看目录
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ls
+</span></span><span style="display:flex;"><span>ls -l    <span style="color:#75715e"># 显示详细信息</span>
+</span></span><span style="display:flex;"><span>ls -a    <span style="color:#75715e"># 显示隐藏文件</span>
+</span></span></code></pre></div><h3 id="切换目录">切换目录
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /etc
+</span></span><span style="display:flex;"><span>cd ~      <span style="color:#75715e"># 回到自己的 home 目录</span>
+</span></span><span style="display:flex;"><span>cd -      <span style="color:#75715e"># 回到上一次目录</span>
+</span></span></code></pre></div><h3 id="创建--删除">创建 / 删除
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir logs
+</span></span><span style="display:flex;"><span>rm -rf logs
+</span></span></code></pre></div><h2 id="2-文件处理">2. 文件处理
+</h2><h3 id="查看文件内容">查看文件内容
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat file.txt
+</span></span><span style="display:flex;"><span>less file.txt   <span style="color:#75715e"># 支持翻页</span>
+</span></span><span style="display:flex;"><span>head -n <span style="color:#ae81ff">20</span> file.txt
+</span></span><span style="display:flex;"><span>tail -f /var/log/syslog    <span style="color:#75715e"># 实时查看日志</span>
+</span></span></code></pre></div><h2 id="3-编辑文件nanovim">3. 编辑文件（nano/vim）
+</h2><p>nano 简单直接：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nano config.ini
+</span></span></code></pre></div><p>vim 强大但需要学习：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vim config.ini
+</span></span></code></pre></div><h2 id="4-软件安装与管理apt">4. 软件安装与管理（APT）
+</h2><h3 id="安装软件">安装软件
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install nginx
+</span></span></code></pre></div><h3 id="删除软件">删除软件
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt remove nginx
+</span></span></code></pre></div><h3 id="搜索软件包">搜索软件包
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt search redis
+</span></span></code></pre></div><h3 id="更新整个系统">更新整个系统
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update <span style="color:#f92672">&amp;&amp;</span> sudo apt upgrade
+</span></span></code></pre></div><h2 id="5-服务管理systemctl">5. 服务管理（systemctl）
+</h2><p>启动服务：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl start nginx
+</span></span></code></pre></div><p>重启：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl restart nginx
+</span></span></code></pre></div><p>查看状态：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl status nginx
+</span></span></code></pre></div><p>设置开机启动：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl enable nginx
+</span></span></code></pre></div><h2 id="6-网络调试">6. 网络调试
+</h2><p>查看 IP：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ip a
+</span></span></code></pre></div><p>Ping：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ping baidu.com
+</span></span></code></pre></div><p>端口监听：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo ss -tulnp
+</span></span></code></pre></div><h2 id="7-用户与权限">7. 用户与权限
+</h2><p>当前用户：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>whoami
+</span></span></code></pre></div><p>文件权限：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>chmod <span style="color:#ae81ff">755</span> app.sh
+</span></span><span style="display:flex;"><span>chown ubuntu:ubuntu app.sh
+</span></span></code></pre></div><h1 id="五理解-linux-的权限模型非常重要">五、理解 Linux 的权限模型（非常重要）
+</h1><p>Linux 权限由三部分组成：</p>
+<pre tabindex="0"><code>-rwxr-xr--
+</code></pre><p>含义如下：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>区域</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>rwx</td>
+          <td>文件所有者 的权限</td>
+      </tr>
+      <tr>
+          <td>r-x</td>
+          <td>文件所属组 的权限</td>
+      </tr>
+      <tr>
+          <td>r&ndash;</td>
+          <td>其他用户 的权限</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>字符含义：</p>
+<ul>
+<li>r = read（读）</li>
+<li>w = write（写）</li>
+<li>x = execute（执行）</li>
+</ul>
+<p>数字对应：</p>
+<ul>
+<li>7 = rwx</li>
+<li>6 = rw-</li>
+<li>5 = r-x</li>
+<li>4 = r&ndash;</li>
+</ul>
+<p>所以 755 = <code>rwxr-xr-x</code>。</p>
+<p>理解这个模型是管理服务器的关键。</p>
+<h1 id="六系统监控与排查">六、系统监控与排查
+</h1><h2 id="1-查看资源占用">1. 查看资源占用
+</h2><p>CPU 和内存：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>top
+</span></span><span style="display:flex;"><span>htop
+</span></span></code></pre></div><p>磁盘：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>df -h
+</span></span></code></pre></div><p>目录占用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>du -sh *
+</span></span></code></pre></div><h2 id="2-查看系统日志">2. 查看系统日志
+</h2><p>systemd 日志：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>journalctl -xe
+</span></span></code></pre></div><p>查看某个服务日志：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>journalctl -u nginx
+</span></span></code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ubuntu/">Ubuntu</a>
+        
+            <a href="/tags/linux/">Linux</a>
+        
+            <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器</a>
+        
+            <a href="/tags/%E6%95%99%E7%A8%8B/">教程</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/comprehensive-git-command-reference/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Git 常用命令合集</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/a-beginner-friendly-git-guide-clear-concepts-and-practical-steps-for-new-developers/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Git 入门教程：从原理到实践的最小知识体系</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/the-ultimate-guide-to-development-with-cursor/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cursor开发终极指南</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/best-practices-for-rest-api/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">REST API的最佳实践</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/best-practices-of-jwt/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">JWT的最佳实践</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'zh-CN',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 王离谱
+    </section>
+    
+    <section class="powerby">
+        
+            <a href="https://beian.miit.gov.cn/">粤ICP备2022043168号</a> <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
