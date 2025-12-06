@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>AMM on 王离谱的小破站</title>
+        <link>https://yearsuns-github-io.vercel.app/tags/amm/</link>
+        <description>Recent content in AMM on 王离谱的小破站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <copyright>王离谱</copyright>
+        <lastBuildDate>Wed, 16 Jul 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/amm/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>XYK模型的基本原理</title>
+        <link>https://yearsuns-github-io.vercel.app/p/the-fundamental-principles-of-the-xyk-model/</link>
+        <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/the-fundamental-principles-of-the-xyk-model/</guid>
+        <description>&lt;blockquote&gt;
+&lt;p&gt;XYK 就是：把一对资产放进一个“水池”，规定池里两种资产数量的乘积始终相等 &lt;code&gt;x * y = k&lt;/code&gt;；
+所有交易都必须沿着这条规则移动，于是&lt;strong&gt;价格、滑点、收益、风险&lt;/strong&gt;都从这个公式里自然长出来。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;接下来我们通过简单推导，一步一步厘清这其中的数学逻辑。&lt;/p&gt;
+&lt;h2 id=&#34;一传统交易为什么非得有个订单簿&#34;&gt;一、传统交易：为什么非得有个订单簿？
+&lt;/h2&gt;&lt;p&gt;在传统交易所里，核心是一个&lt;strong&gt;订单簿&lt;/strong&gt;（Order Book）：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A 在 100 元挂买 1 个 ETH&lt;/li&gt;
+&lt;li&gt;B 在 101 元挂卖 2 个 ETH&lt;/li&gt;
+&lt;li&gt;系统把买单卖单匹配，&lt;strong&gt;撮合成交&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这种模式有几个典型特点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;需要专业做市商&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果没人挂单，普通人根本没法交易&lt;/li&gt;
+&lt;li&gt;做市商需要 24 小时盯盘、调价&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;需要一个中心化撮合引擎&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;由交易所运营&lt;/li&gt;
+&lt;li&gt;你必须“相信”这个中间人&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;普通人难以参与做市&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提供流动性门槛很高&lt;/li&gt;
+&lt;li&gt;很多收益只掌握在少数机构手里&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;对于区块链这种“人人都可以参与”的世界来说，这种设计太“中心化”了。&lt;/p&gt;
+&lt;h2 id=&#34;二amm把做市变成一个资金池&#34;&gt;二、AMM：把做市变成一个资金池
+&lt;/h2&gt;&lt;p&gt;AMM（自动做市商）最大的创新，是把交易市场从“挂单撮合 → 双边参与”变成了“资金池 → 任何人都能加入”。&lt;/p&gt;
+&lt;p&gt;资金池（Liquidity Pool）里同时放入两种资产，例如 ETH 和 USDT。池子运行遵循一个数学规则：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;x * y = k
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这就是所谓的 &lt;strong&gt;XYK（x*y=k）恒定乘积做市模型&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;只要有人用 USDT 买 ETH，那么 ETH 减少、USDT 增多，就必须自动调整数值，使乘积保持不变。&lt;/p&gt;
+&lt;p&gt;这个规则取代了订单簿：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;无需挂买卖单&lt;/li&gt;
+&lt;li&gt;无需专业做市商&lt;/li&gt;
+&lt;li&gt;无需中心化撮合引擎&lt;/li&gt;
+&lt;li&gt;任意用户都能参与&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以 AMM 的本质是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用一个资金池 + 一个数学公式 替代传统撮合系统。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;价格、滑点、流动性深度等概念，全部从这个公式里自然推导出来。&lt;/p&gt;
+&lt;h2 id=&#34;三价格是怎么算出来的&#34;&gt;三、价格是怎么算出来的？
+&lt;/h2&gt;&lt;p&gt;先设定一个具体例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;池子里有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ETH：&lt;code&gt;x = 100&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;USDT：&lt;code&gt;y = 10000&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;那 ETH 的价格是什么？&lt;/p&gt;
+&lt;p&gt;很自然的想法：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;价格 = USDT 数量 / ETH 数量 = y / x = 10000 / 100 = 100 USDT
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;几点关键认识：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;价格不是“挂出来的”，而是由池子状态算出来的&lt;/li&gt;
+&lt;li&gt;池子状态一变，价格就自动变化&lt;/li&gt;
+&lt;li&gt;这个价格是“池内价格”，会被外部市场套利修正&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;所以在 AMM 中：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;价格 = 池内两种资产的数量比&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;四交易是怎么推动价格变动的&#34;&gt;四、交易是怎么推动价格变动的？
+&lt;/h2&gt;&lt;p&gt;现在我们来做一个简单但非常重要的例子。&lt;/p&gt;
+&lt;h3 id=&#34;41-初始状态&#34;&gt;4.1 初始状态
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x = 100 ETH
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y = 10000 USDT
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;k = x * y = 100 * 10000 = 1,000,000
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;价格 P₀ = y / x = 100 USDT/ETH
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;有个用户想用 &lt;strong&gt;1000 USDT 买 ETH&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;在 AMM 中，交易规则是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;交易前后都要满足：&lt;code&gt;x * y = k&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;42-交易后的新状态&#34;&gt;4.2 交易后的新状态
+&lt;/h3&gt;&lt;p&gt;用户往池子里&lt;strong&gt;加入 1000 USDT&lt;/strong&gt;，记为 &lt;code&gt;Δy = +1000&lt;/code&gt;：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;交易后 USDT 数量：
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y₂ = 10000 + 1000 = 11000
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;因为 x * y 要保持等于 1,000,000：
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x₂ = k / y₂ = 1,000,000 / 11000 ≈ 90.909 ETH
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;那么，用户从池子里拿走的 ETH 是：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Δx = x₁ - x₂ = 100 - 90.909 ≈ 9.091 ETH
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;他实际上用 1000 USDT 买到了约 9.091 ETH：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;平均买入价格 ≈ 1000 / 9.091 ≈ 110 USDT/ETH
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;而此时新价格为：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;P₁ = y₂ / x₂ ≈ 11000 / 90.909 ≈ 121 USDT/ETH
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;你会看到三件事：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用户最后的平均买价 ≈ 110&lt;/li&gt;
+&lt;li&gt;交易结束时的最新价格 ≈ 121&lt;/li&gt;
+&lt;li&gt;一开始池子的价格是 100&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这就是现实里感受到的：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“怎么我一买，价格就上去了，还越买越贵？”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这就是 &lt;strong&gt;滑点（Slippage）&lt;/strong&gt; 的来源。&lt;/p&gt;
+&lt;h2 id=&#34;五滑点不是费用而是你自己推高的价格&#34;&gt;五、滑点：不是费用，而是你自己推高的价格
+&lt;/h2&gt;&lt;p&gt;从上面的例子可以总结：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;滑点并不是额外收费&lt;/li&gt;
+&lt;li&gt;而是：&lt;strong&gt;因为你的这笔交易改变了池子的价格&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;可以粗略理解为：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你在交易的过程中，从&lt;strong&gt;便宜 → 贵&lt;/strong&gt; 的一整条价格区间上买了一段货。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;交易越大，沿着曲线走得越远，平均买入价就比起点价格高得越多。&lt;/p&gt;
+&lt;h2 id=&#34;六为什么池子越大滑点越小&#34;&gt;六、为什么池子越大，滑点越小？
+&lt;/h2&gt;&lt;p&gt;做一个对比试验。&lt;/p&gt;
+&lt;h3 id=&#34;61-小池子100-eth--10000-usdt&#34;&gt;6.1 小池子：100 ETH / 10000 USDT
+&lt;/h3&gt;&lt;p&gt;还是刚才的池子：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;100 ETH&lt;/li&gt;
+&lt;li&gt;10000 USDT&lt;/li&gt;
+&lt;li&gt;用 1000 USDT 买，价格从 100 → 121，变化很明显&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;62-大池子1000-eth--100000-usdt&#34;&gt;6.2 大池子：1000 ETH / 100000 USDT
+&lt;/h3&gt;&lt;p&gt;换成一个更大的池子（&lt;strong&gt;放大 10 倍&lt;/strong&gt;）：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x = 1000
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y = 100000
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;k = 1000 * 100000 = 100,000,000
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;初始价格 = 100,000 / 1000 = 100 USDT/ETH
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;同样用 1000 USDT 买：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y₂ = 100000 + 1000 = 101000
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x₂ = k / y₂ = 100,000,000 / 101000 ≈ 990.099 ETH
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Δx ≈ 1000 - 990.099 ≈ 9.901 ETH
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;平均买入价 ≈ 1000 / 9.901 ≈ 101.0 USDT/ETH
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;新价格 P₁ ≈ 101000 / 990.099 ≈ 102.0 USDT/ETH
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;对比一下：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;池子大小&lt;/th&gt;
+          &lt;th&gt;初始价&lt;/th&gt;
+          &lt;th&gt;平均买价&lt;/th&gt;
+          &lt;th&gt;最终价格&lt;/th&gt;
+          &lt;th&gt;价格涨幅&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;小池（100 / 10000）&lt;/td&gt;
+          &lt;td&gt;100&lt;/td&gt;
+          &lt;td&gt;≈110&lt;/td&gt;
+          &lt;td&gt;≈121&lt;/td&gt;
+          &lt;td&gt;涨 21%&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;大池（1000 / 100000）&lt;/td&gt;
+          &lt;td&gt;100&lt;/td&gt;
+          &lt;td&gt;≈101&lt;/td&gt;
+          &lt;td&gt;≈102&lt;/td&gt;
+          &lt;td&gt;涨 2%&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;池子越大，单笔交易对价格的影响越小，滑点就越低。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;直觉类比：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;小池子像一个脸盆，你舀一桶水进去，水位变化很明显&lt;/li&gt;
+&lt;li&gt;大池子像一个湖，你舀一桶水进去，没啥感觉&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这就是“流动性深度”的直观意义。&lt;/p&gt;
+&lt;h2 id=&#34;七流动性到底是什么&#34;&gt;七、流动性：到底是什么？
+&lt;/h2&gt;&lt;p&gt;在 AMM 中，“流动性”不再是一个抽象词，而是&lt;strong&gt;池子里真实存在的资产数量&lt;/strong&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;流动性越多 → 曲线越“平滑” → 价格越稳定&lt;/li&gt;
+&lt;li&gt;流动性越少 → 曲线越“陡峭” → 价格更容易被推飞&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;更重要的是：在 AMM 中，&lt;strong&gt;任何人都可以提供流动性&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;这意味着：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;原本只有专业做市商能干的事，现在所有用户都能做，而且还能赚手续费。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;八作为普通人你怎么参与这个池子&#34;&gt;八、作为普通人，你怎么参与这个池子？
+&lt;/h2&gt;&lt;p&gt;假设现在有一个 ETH/USDT 池，状态是：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x = 100 ETH
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y = 10000 USDT
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;价格是 100 USDT/ETH。&lt;/p&gt;
+&lt;p&gt;你想成为 LP（流动性提供者），往里加一点资金。&lt;/p&gt;
+&lt;h3 id=&#34;81-必须按当前价格比例存入&#34;&gt;8.1 必须按当前价格比例存入
+&lt;/h3&gt;&lt;p&gt;因为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;池子里的资产比例本身就是价格&lt;/li&gt;
+&lt;li&gt;如果你随便乱放，只放 ETH 不放 USDT，就会破坏价格&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以系统要求：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你要&lt;strong&gt;按当前价格的比例&lt;/strong&gt;同时存入两种资产。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;比如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;想存入 &lt;code&gt;1 ETH&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;当前价格是 &lt;code&gt;100 USDT/ETH&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;那就需要再存入 &lt;code&gt;100 USDT&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这时：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x_new = 101 ETH
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y_new = 10100 USDT
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;价格仍然 = 10100 / 101 = 100 USDT/ETH
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;价格没有被你改变，池子只是&lt;strong&gt;变大了一点&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;82-你获得份额凭证&#34;&gt;8.2 你获得“份额凭证”
+&lt;/h3&gt;&lt;p&gt;每个 LP 存入资产后，会得到一个代表池子份额的代币（LP Token）。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;整个池子好比一个“蛋糕”&lt;/li&gt;
+&lt;li&gt;你按照你贡献的资产获得“蛋糕份额”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;将来你退出时：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你拿回的是 &lt;strong&gt;当时池子里的一部分资产&lt;/strong&gt;，而不是你最初存进去的那一模一样的组合。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这一点，是理解“无常损失”的基础。&lt;/p&gt;
+&lt;h2 id=&#34;九手续费lp-是怎么赚钱的&#34;&gt;九、手续费：LP 是怎么赚钱的？
+&lt;/h2&gt;&lt;p&gt;每一笔交易，协议一般会收取一小部分手续费（比如 0.3%），这笔钱：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;不是给“平台”拿走&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;而是&lt;strong&gt;直接进入资金池&lt;/strong&gt;，按份额分给所有 LP&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;可以这样理解：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;交易者在用你的资产做交换，你从中抽取一点点“路费”。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;简单模拟：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;你占池子 10% 的份额&lt;/li&gt;
+&lt;li&gt;全池一共累积了 1000 USDT 的手续费&lt;/li&gt;
+&lt;li&gt;你退出时，就拿到大约 100 USDT 的手续费收益（再加上池子里的资产变化）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;所以 LP 的收入来源主要有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;交易手续费&lt;/li&gt;
+&lt;li&gt;某些协议发放的激励（比如奖励代币）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;十无常损失为什么-lp-会看起来亏了&#34;&gt;十、无常损失：为什么 LP 会看起来亏了？
+&lt;/h2&gt;&lt;p&gt;虽然 LP 可以赚手续费，但也会面临一个著名问题：&lt;strong&gt;无常损失&lt;/strong&gt;（Impermanent Loss）。&lt;/p&gt;
+&lt;p&gt;先看一个最直观、最典型、最容易理解的例子。&lt;/p&gt;
+&lt;p&gt;假设池子里只有：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1 ETH + 100 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这表示当前价格隐含为：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1 ETH = 100 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;现在你作为 LP 存入等价的资产（即同样按照当前价格比例）：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;再存入 1 ETH + 100 USDT（价值 200 USDT）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;池子变成：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2 ETH + 200 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;总价值 400 USDT，而你贡献了其中 200 USDT，也就是：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;你占整个池子的 50%
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;101-lp-份额不会变但池子的资产会变&#34;&gt;10.1 LP 份额不会变，但池子的资产会变
+&lt;/h3&gt;&lt;p&gt;注意：作为 LP，你拥有的是池子整体的 &lt;strong&gt;份额（%）&lt;/strong&gt;，不是具体资产数量。&lt;/p&gt;
+&lt;p&gt;也就是说：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你拥有池子 50%，但未来那“50%”里面，ETH 和 USDT 的数量会变。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;102-假设市场发生变化&#34;&gt;10.2 假设市场发生变化
+&lt;/h3&gt;&lt;p&gt;经过一段时间，如果 ETH 相对 USDT 的价格下降，为了维持恒定乘积规则，池子里的 ETH 会变多，USDT 会变少。&lt;/p&gt;
+&lt;p&gt;假设最终池子变成：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;4 ETH + 100 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;别看：数量看起来好像多了，但我们来计算 LP 的实际资产。&lt;/p&gt;
+&lt;p&gt;你拥有 50%，所以你取出：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2 ETH + 50 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;103-来算一下实际价值&#34;&gt;10.3 来算一下实际价值
+&lt;/h3&gt;&lt;p&gt;现在池子隐含价格为：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;100 / 4 = 25 USDT/ETH
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;因此你实际得到的价值是：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2 ETH = 2 * 25 = 50 USDT
+50 USDT + 50 USDT = 100 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;也就是说：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你投入价值 200 USDT，最后只剩价值 100 USDT&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;注意这里还没算手续费，所以我们可以说你经历了一个典型的“无常损失”。&lt;/p&gt;
+&lt;h3 id=&#34;104-为什么会这样&#34;&gt;10.4 为什么会这样？
+&lt;/h3&gt;&lt;p&gt;仔细观察资产变化：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;项目&lt;/th&gt;
+          &lt;th&gt;初始&lt;/th&gt;
+          &lt;th&gt;退出&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;ETH&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;2&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;USDT&lt;/td&gt;
+          &lt;td&gt;100&lt;/td&gt;
+          &lt;td&gt;50&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;因为 ETH 比例增加、USDT 减少，说明市场认为 ETH “更不值钱”，套利者从池子里拿走 USDT、往池子里丢 ETH，让价格回归外部市场。&lt;/p&gt;
+&lt;p&gt;最终表现是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你成了“接盘 ETH”那部分人&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;当价格下跌时，池子倾向变成“ETH 更多、USDT 更少”，而你的份额跟着变，因此导致资产缩水。&lt;/p&gt;
+&lt;h3 id=&#34;105-最重要的理解&#34;&gt;10.5 最重要的理解
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;LP 不是持有一组固定数量的资产，而是持有池子的一段“动态资产组合”。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而这个组合&lt;strong&gt;会自动调整方向&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ETH 上涨 → 资产组合偏向 USDT&lt;/li&gt;
+&lt;li&gt;ETH 下跌 → 资产组合偏向 ETH&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因此：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;价格波动越大，无常损失越明显。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这才是无常损失本质。&lt;/p&gt;
+&lt;h2 id=&#34;十一xyk-模型到底解决了什么&#34;&gt;十一、XYK 模型到底解决了什么？
+&lt;/h2&gt;&lt;p&gt;总结一下 XYK 带来的改变：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;不再需要订单簿&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;没有挂单，也没有撮合引擎&lt;/li&gt;
+&lt;li&gt;一切都在一个池子里完成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;价格靠算法决定&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;x * y = k&lt;/code&gt; + &lt;code&gt;价格 = y / x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;所有价格变动都是公式推出来的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;任何人都能成为做市商&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;只要照比例存入两种资产&lt;/li&gt;
+&lt;li&gt;不需要 24 小时盯盘，也不需要写交易策略&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;交易基础设施变成公共的&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不是某个中心化机构专有&lt;/li&gt;
+&lt;li&gt;而是任何人都能参与、共享收益&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;十二xyk-的局限与后续演进&#34;&gt;十二、XYK 的局限与后续演进
+&lt;/h1&gt;&lt;p&gt;XYK 虽然经典，但也有明显缺点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;滑点较大&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;对于价格波动小、稳定币之间的交易，XYK 不够“省滑点”&lt;/li&gt;
+&lt;li&gt;于是出现了像 Curve 那样的“稳定币专用曲线”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;资本利用率不高&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;资金需要覆盖一个宽范围的价格区间，却不一定都被用到&lt;/li&gt;
+&lt;li&gt;Uniswap v3 通过“集中流动性”优化了这一点&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;无常损失&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;LP 承担价格波动风险&lt;/li&gt;
+&lt;li&gt;对只想“躺平持币”的人不够友好&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;尽管如此：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;XYK 仍然是所有后续 AMM 设计的&lt;strong&gt;入门钥匙&lt;/strong&gt;。
+理解了 XYK，后面看 Uniswap v2/v3、Curve、Balancer 等模型都会轻松很多。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;十三总结再看一眼那条简单的公式&#34;&gt;十三、总结：再看一眼那条简单的公式
+&lt;/h1&gt;&lt;p&gt;我们再回到那条看似朴素的公式：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x * y = k
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在这条公式之上，实际上生长出了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;价格&lt;/strong&gt;：&lt;code&gt;P = y / x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;滑点&lt;/strong&gt;：交易沿曲线移动带来的价格变化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;流动性深度&lt;/strong&gt;：池子大小决定曲线陡峭程度&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;LP 收益&lt;/strong&gt;：手续费分配机制&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;无常损失&lt;/strong&gt;：LP 与单纯持币的结果对比差额&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;你可以把 XYK 看成 DeFi 里的“F=ma”：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它简单到一句话就能写完，但&lt;strong&gt;几乎整个去中心化交易市场，都建立在它的思想之上&lt;/strong&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

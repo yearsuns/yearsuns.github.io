@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>密码安全 on 王离谱的小破站</title>
+        <link>https://yearsuns-github-io.vercel.app/tags/%E5%AF%86%E7%A0%81%E5%AE%89%E5%85%A8/</link>
+        <description>Recent content in 密码安全 on 王离谱的小破站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <copyright>王离谱</copyright>
+        <lastBuildDate>Sun, 29 Jun 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/%E5%AF%86%E7%A0%81%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>用户密码应该如何安全传输与存储</title>
+        <link>https://yearsuns-github-io.vercel.app/p/how-passwords-should-be-safely-transmitted-and-stored/</link>
+        <pubDate>Sun, 29 Jun 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/how-passwords-should-be-safely-transmitted-and-stored/</guid>
+        <description>&lt;h2 id=&#34;一引言密码是互联网世界的最后防线&#34;&gt;一、引言：密码是互联网世界的最后防线
+&lt;/h2&gt;&lt;p&gt;在整个互联网安全体系中，密码是最常见但也最脆弱的那一环。
+我们每天使用的几乎所有服务——邮箱、网银、社交平台、游戏、论坛——都依赖密码来识别用户身份。&lt;/p&gt;
+&lt;p&gt;密码本质上是一种“弱凭证”：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;它不能证明用户是谁，只能证明“知道某个秘密”&lt;/li&gt;
+&lt;li&gt;一旦这个秘密泄露，攻击者就能完全冒充你&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;现代互联网攻击频繁且多样化，一次普通的密码泄露事件，往往会导致用户多个平台的账号一起“沦陷”。
+要想守住这道防线，必须从&lt;strong&gt;传输阶段&lt;/strong&gt;和&lt;strong&gt;存储阶段&lt;/strong&gt;两方面同时发力。&lt;/p&gt;
+&lt;p&gt;本文将从基础概念出发，逐层深入，到最后构建出现代网站应采用的完整密码安全体系。&lt;/p&gt;
+&lt;h2 id=&#34;二密码为什么如此危险&#34;&gt;二、密码为什么如此危险？
+&lt;/h2&gt;&lt;p&gt;初看起来，密码就是一些字符组成的字符串。
+但密码泄露的危害远比想象严重，主要体现在两个方面。&lt;/p&gt;
+&lt;h3 id=&#34;21-风险一传输途中泄露&#34;&gt;2.1 风险一：传输途中泄露
+&lt;/h3&gt;&lt;p&gt;从用户输入密码，到密码抵达服务器，中间会经过：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;浏览器&lt;/li&gt;
+&lt;li&gt;本地域名解析&lt;/li&gt;
+&lt;li&gt;操作系统网络栈&lt;/li&gt;
+&lt;li&gt;路由器&lt;/li&gt;
+&lt;li&gt;运营商网络&lt;/li&gt;
+&lt;li&gt;服务器负载均衡&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;只要链路中任何一个环节被攻击，密码就可能被拦截。&lt;/p&gt;
+&lt;p&gt;理论上，HTTPS 已经解决了“被监听问题”。
+但实际情况比理论复杂得多，常见风险包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户电脑被恶意软件植入假根证书（典型的中间人攻击手段）&lt;/li&gt;
+&lt;li&gt;公司/学校内网采用流量审计，自动解密 TLS&lt;/li&gt;
+&lt;li&gt;公共 Wi-Fi 通过 ARP 欺骗截获 HTTPS 并强制重新签发证书&lt;/li&gt;
+&lt;li&gt;浏览器插件注入恶意脚本读取用户输入&lt;/li&gt;
+&lt;li&gt;某些软件声称“优化网速”，实际插入监听模块&lt;/li&gt;
+&lt;li&gt;某些企业网关进行 SSL Inspection（合法但不安全）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;换句话说：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你无法假设用户设备、网络环境永远是安全的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;因此，传输阶段仍有提升空间。&lt;/p&gt;
+&lt;h3 id=&#34;22-风险二服务器端泄露&#34;&gt;2.2 风险二：服务器端泄露
+&lt;/h3&gt;&lt;p&gt;更多泄露事件来自服务器端，常见场景包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据库被拖库（最常见）&lt;/li&gt;
+&lt;li&gt;日志中意外打印了用户密码&lt;/li&gt;
+&lt;li&gt;开发者临时调试时把密码输出到控制台&lt;/li&gt;
+&lt;li&gt;备份文件未加密，被误传到公共服务器&lt;/li&gt;
+&lt;li&gt;第三方监控系统抓取了敏感字段&lt;/li&gt;
+&lt;li&gt;代码漏洞（SQL 注入、RCE）导致数据库暴露&lt;/li&gt;
+&lt;li&gt;运维人员内部滥用权限&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果服务器保存的是 &lt;strong&gt;明文密码&lt;/strong&gt;，后果极其严重：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;所有用户密码全部泄露&lt;/li&gt;
+&lt;li&gt;用户在其他网站的账号也会被攻击（密码复用）&lt;/li&gt;
+&lt;li&gt;一旦攻击者能登录用户邮箱，后果会更加连锁扩大&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因此，服务器端必须确保“即使泄露，攻击者也不能从数据库中拿到真正密码”。&lt;/p&gt;
+&lt;h2 id=&#34;三密码应该如何在网络中安全传输&#34;&gt;三、密码应该如何在网络中安全传输？
+&lt;/h2&gt;&lt;h3 id=&#34;31-最朴素的方案https-直接发送密码&#34;&gt;3.1 最朴素的方案：HTTPS 直接发送密码
+&lt;/h3&gt;&lt;p&gt;这是目前几乎所有网站的默认做法：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;浏览器 ——HTTPS——&amp;gt; 服务器
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;优点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;简单&lt;/li&gt;
+&lt;li&gt;成熟&lt;/li&gt;
+&lt;li&gt;性能高&lt;/li&gt;
+&lt;li&gt;兼容性好&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;缺点是：
+&lt;strong&gt;它把所有风险完全寄托在 TLS 的可靠性上。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果 TLS 被中间人攻击破坏，密码也会被明文劫持。&lt;/p&gt;
+&lt;p&gt;于是有人提出：是否应该 &lt;strong&gt;在浏览器端先对密码做一次 hash&lt;/strong&gt;？&lt;/p&gt;
+&lt;h2 id=&#34;四前端-hash可降低的风险与无法降低的风险&#34;&gt;四、前端 hash：可降低的风险与无法降低的风险
+&lt;/h2&gt;&lt;p&gt;前端 hash 的核心思想是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;即便传输被监听，攻击者拿到的也不是明文密码。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;假设：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;P  = 用户密码
+H1 = hash(P)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;浏览器发送 H1，而非 P。&lt;/p&gt;
+&lt;h3 id=&#34;41-前端-hash-能防护什么&#34;&gt;4.1 前端 hash 能防护什么？
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;避免 MITM 直接获得用户真实密码&lt;/li&gt;
+&lt;li&gt;服务器日志、监控系统误输出时不会泄露明文密码&lt;/li&gt;
+&lt;li&gt;攻击者得到 H1 也无法用它登录用户在&lt;strong&gt;其他网站&lt;/strong&gt;的账号&lt;/li&gt;
+&lt;li&gt;即使用户复用密码，也不会因为你的网站泄露而波及其他网站（很重要）&lt;/li&gt;
+&lt;li&gt;服务器可以完全不接触明文密码（零知识认证的一种初级形态）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;前端 hash 的意义在于：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“就算你的网站被攻破，也不能泄露用户在其他网站的密码。”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这是传统方案做不到的。&lt;/p&gt;
+&lt;h3 id=&#34;42-前端-hash-不能防护什么&#34;&gt;4.2 前端 hash 不能防护什么？
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;攻击者可以直接使用 H1 登录你的网站（因为你把它当成凭证）&lt;/li&gt;
+&lt;li&gt;用户电脑中毒、键盘监听仍能拿到 P&lt;/li&gt;
+&lt;li&gt;不带 challenge 的 hash 会被重放攻击利用&lt;/li&gt;
+&lt;li&gt;不能替代 HTTPS（hash 后的结果也需要加密）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;换句话说：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;前端 hash 能减少损失，但不能消灭风险。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;43-前端-hash-是否必要&#34;&gt;4.3 前端 hash 是否必要？
+&lt;/h3&gt;&lt;p&gt;实践中，它属于 &lt;strong&gt;可选但增益明确&lt;/strong&gt; 的安全措施。&lt;/p&gt;
+&lt;p&gt;如果实现得当（通过 challenge 防重放），前端 hash 可以构成双重防线：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;TLS 层：传输安全&lt;/li&gt;
+&lt;li&gt;hash 层：降低密码复用的连带风险&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;对于安全要求较高的系统（银行、企业级服务、开发者平台），常会采用这种方式。&lt;/p&gt;
+&lt;h2 id=&#34;五服务器端应该如何存储密码&#34;&gt;五、服务器端应该如何存储密码？
+&lt;/h2&gt;&lt;p&gt;接下来进入密码安全的核心：
+&lt;strong&gt;密码永不以明文形式出现，即便在服务器内部。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;行业标准包含三个关键词：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;hash&lt;/li&gt;
+&lt;li&gt;salt&lt;/li&gt;
+&lt;li&gt;slow hash（慢哈希）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;51-哈希算法从可逆变成不可逆&#34;&gt;5.1 哈希算法：从可逆变成不可逆
+&lt;/h3&gt;&lt;p&gt;一个好的哈希函数应具备：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;碰撞概率极低&lt;/li&gt;
+&lt;li&gt;输入变化一位，输出完全不同（雪崩效应）&lt;/li&gt;
+&lt;li&gt;无法从输出反推输入&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;服务器保存的不是密码，而是：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;H = hash(P)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果数据库泄露，攻击者无法直接得到密码。&lt;/p&gt;
+&lt;h3 id=&#34;52-盐salt阻止彩虹表和批量破解&#34;&gt;5.2 盐（Salt）：阻止彩虹表和批量破解
+&lt;/h3&gt;&lt;p&gt;没有盐，所有用户的弱密码会产生相同的哈希。攻击者可以：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用现成彩虹表匹配&lt;/li&gt;
+&lt;li&gt;批量推测密码（只需对每种常见密码算一次 hash）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;加入随机盐：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;H = hash(P + salt)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;每个用户的 salt 都不同，这意味着：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;两个“123456”的用户哈希也完全不同&lt;/li&gt;
+&lt;li&gt;彩虹表无效&lt;/li&gt;
+&lt;li&gt;攻击者必须针对每个用户分别尝试（成本剧增）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;salt 必须：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;足够长（16 字节以上）&lt;/li&gt;
+&lt;li&gt;随机（CSPRNG）&lt;/li&gt;
+&lt;li&gt;每个用户独立生成&lt;/li&gt;
+&lt;li&gt;不加密，明文存储在数据库中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;53-慢哈希slow-hash真正提升攻击成本&#34;&gt;5.3 慢哈希（Slow Hash）：真正提升攻击成本
+&lt;/h3&gt;&lt;p&gt;SHA256 这类传统算法太快了。
+现代 GPU 每秒可计算数十亿次 SHA256。&lt;/p&gt;
+&lt;p&gt;这意味着：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果使用 SHA256 直接存密码，即便加盐，攻击者仍然可以在短时间内撞库。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;因此必须使用专门为密码存储设计的慢哈希算法，例如：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;算法&lt;/th&gt;
+          &lt;th&gt;特点&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;bcrypt&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;经典方案，可靠成熟&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;scrypt&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;抗 GPU，内存占用高&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Argon2（推荐）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;密码学大赛冠军，可调节 CPU、内存、并行度&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;慢哈希的目标并不是“更安全的哈希”，而是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;让每次计算都变得昂贵，使攻击者无法进行大规模暴力破解。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;工程实践中，登录速度影响不大，因为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户登录次数相对少&lt;/li&gt;
+&lt;li&gt;每次 slow-hash 只需几十毫秒&lt;/li&gt;
+&lt;li&gt;攻击者无法用同样的速度尝试数十亿次密码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;六双层保护前端-hash--后端-slow-hash&#34;&gt;六、双层保护：前端 hash + 后端 slow-hash
+&lt;/h2&gt;&lt;p&gt;综合前端与后端：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;P → H1 = hash1(P) → （传输） → H2 = bcrypt(H1 + salt)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;双层含义：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;即使 MITM 拿到 H1，也无法登录其他网站&lt;/li&gt;
+&lt;li&gt;即使数据库泄露拿到 H2，也很难反推 H1，更推不回 P&lt;/li&gt;
+&lt;li&gt;服务器永不接触明文密码，减少数据泄露面&lt;/li&gt;
+&lt;li&gt;日志、监控、报错信息都不会泄露 P&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这种“前端 hash + 后端慢哈希”的双层方案，在一些高安全要求的系统中被采用，用来降低密码泄露带来的连带风险。&lt;/p&gt;
+&lt;h2 id=&#34;七前端-hash-面临的重放攻击问题与解决方案&#34;&gt;七、前端 hash 面临的“重放攻击”问题与解决方案
+&lt;/h2&gt;&lt;p&gt;如果前端 hash 写成：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;H1 = hash(P)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;攻击者截获 H1 → 可反复使用 H1 伪装用户登录。
+这与“截获明文密码”几乎一样危险。&lt;/p&gt;
+&lt;p&gt;解决方案是加入 &lt;strong&gt;随机 challenge（挑战值）&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;71-完整流程&#34;&gt;7.1 完整流程
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;用户访问登录页&lt;/strong&gt;
+服务器生成 challenge&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;challenge = 随机字符串
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;浏览器收到 challenge 并计算&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;H1 = hash(P + challenge)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;服务器验证&lt;/strong&gt;
+服务器用相同的规则验证：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;bcrypt(H1 + salt) == stored_hash
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;72-这样做的好处&#34;&gt;7.2 这样做的好处
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;H1 每次不同（因为 challenge 不同）&lt;/li&gt;
+&lt;li&gt;攻击者截获 H1 不能重放&lt;/li&gt;
+&lt;li&gt;MITM 攻击的价值下降&lt;/li&gt;
+&lt;li&gt;不需要在后端存储 challenge，只需验证一次后丢弃即可&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;73-常见工程问题&#34;&gt;7.3 常见工程问题
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;challenge 需要避免被缓存（设置 no-cache 响应头）&lt;/li&gt;
+&lt;li&gt;challenge 不能太短（至少 16 字节以上）&lt;/li&gt;
+&lt;li&gt;前端必须使用安全的哈希函数（SHA256 或以上）&lt;/li&gt;
+&lt;li&gt;必须配合 HTTPS，否则 challenge 也会被劫持&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;八密码安全的若干补充实践常被忽略&#34;&gt;八、密码安全的若干补充实践（常被忽略）
+&lt;/h2&gt;&lt;p&gt;以下是许多工程团队常忽略但非常重要的细节。&lt;/p&gt;
+&lt;h3 id=&#34;81-永远不要通过邮件发送用户密码&#34;&gt;8.1 永远不要通过邮件发送用户密码
+&lt;/h3&gt;&lt;p&gt;“重置密码并邮件发送新密码”这种做法极其危险。
+正确方式是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;邮件发送重置链接&lt;/li&gt;
+&lt;li&gt;链接带一次性 token&lt;/li&gt;
+&lt;li&gt;用户必须重新设置密码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;82-不要允许弱密码&#34;&gt;8.2 不要允许弱密码
+&lt;/h3&gt;&lt;p&gt;弱密码的破解速度是指数级快的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;123456&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;password&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;qwerty&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;用户手机号&lt;/li&gt;
+&lt;li&gt;用户生日&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;应采用：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;黑名单词表（top 10k 最常见密码）&lt;/li&gt;
+&lt;li&gt;长度策略（≥12 字符）&lt;/li&gt;
+&lt;li&gt;强制使用密码管理器提示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;83-多因素身份验证mfa--2fa&#34;&gt;8.3 多因素身份验证（MFA / 2FA）
+&lt;/h3&gt;&lt;p&gt;密码只是第一层。
+加入第二层身份验证可以极大降低攻击成功率：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;TOTP（Google Authenticator）&lt;/li&gt;
+&lt;li&gt;短信验证码（弱，但仍有意义）&lt;/li&gt;
+&lt;li&gt;硬件密钥（FIDO2 / U2F）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;84-账号保护机制&#34;&gt;8.4 账号保护机制
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;登录失败次数过多 → 暂时锁定&lt;/li&gt;
+&lt;li&gt;在可疑设备登录 → 发送提醒邮件&lt;/li&gt;
+&lt;li&gt;登录 IP/UA 异常 → 要求二次验证&lt;/li&gt;
+&lt;li&gt;支持用户查看“最近登录设备记录”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;85-密码泄露检测hibp-api&#34;&gt;8.5 密码泄露检测（HIBP API）
+&lt;/h3&gt;&lt;p&gt;大型网站会在用户设置新密码时检查：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;该密码是否出现在大型泄露数据库中（如 HaveIBeenPwned）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这能显著降低弱密码带来的风险。&lt;/p&gt;
+&lt;h2 id=&#34;九现代密码体系的目标&#34;&gt;九、现代密码体系的目标
+&lt;/h2&gt;&lt;p&gt;通过本文的 step-by-step 介绍，我们可以建立一套现代密码工程的完整体系：&lt;/p&gt;
+&lt;h3 id=&#34;91-传输安全&#34;&gt;9.1 传输安全
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;使用 HTTPS&lt;/li&gt;
+&lt;li&gt;必要时使用前端 hash 防止密码复用带来的连锁风险&lt;/li&gt;
+&lt;li&gt;使用 challenge 防止重放&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;92-存储安全&#34;&gt;9.2 存储安全
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;永不存储明文密码&lt;/li&gt;
+&lt;li&gt;每个用户使用独立 salt&lt;/li&gt;
+&lt;li&gt;使用 slow-hash&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;93-账号安全机制&#34;&gt;9.3 账号安全机制
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;强密码策略&lt;/li&gt;
+&lt;li&gt;MFA&lt;/li&gt;
+&lt;li&gt;登录异常检测&lt;/li&gt;
+&lt;li&gt;密码泄露比对&lt;/li&gt;
+&lt;li&gt;日志不记录敏感信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最终实现的目标只有一个：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;即便整个服务器被攻陷，攻击者仍然无法从系统中拿到任何用户的真实密码。&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

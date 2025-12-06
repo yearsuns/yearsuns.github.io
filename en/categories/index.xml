@@ -6,6 +6,15 @@
         <description>Recent content in Categories on Ryan&#39;s Janky Website</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-US</language>
-        <copyright>Yearsuns</copyright><atom:link href="https://yearsuns-github-io.vercel.app/en/categories/index.xml" rel="self" type="application/rss+xml" />
+        <copyright>Yearsuns</copyright>
+        <lastBuildDate>Wed, 16 Jul 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>IT</title>
+        <link>https://yearsuns-github-io.vercel.app/en/categories/it/</link>
+        <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/categories/it/</guid>
+        <description></description>
+        </item>
+        
     </channel>
 </rss>

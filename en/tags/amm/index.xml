@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>AMM on Ryan&#39;s Janky Website</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/amm/</link>
+        <description>Recent content in AMM on Ryan&#39;s Janky Website</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-US</language>
+        <copyright>Yearsuns</copyright>
+        <lastBuildDate>Wed, 16 Jul 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/tags/amm/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>The Fundamental Principles of the XYK Model</title>
+        <link>https://yearsuns-github-io.vercel.app/en/p/the-fundamental-principles-of-the-xyk-model/</link>
+        <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/p/the-fundamental-principles-of-the-xyk-model/</guid>
+        <description>&lt;blockquote&gt;
+&lt;p&gt;XYK means: put a pair of assets into a “pool”, and require that the product of the two asset amounts always stays equal: &lt;code&gt;x * y = k&lt;/code&gt;.
+All swaps must follow this rule, and therefore &lt;strong&gt;price, slippage, yield and risk&lt;/strong&gt; all naturally come from this formula.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Let’s walk through the math step by step.&lt;/p&gt;
+&lt;h2 id=&#34;1-traditional-trading-why-do-we-need-an-order-book&#34;&gt;1. Traditional Trading: Why Do We Need an Order Book?
+&lt;/h2&gt;&lt;p&gt;In traditional exchanges, the core mechanism is the &lt;strong&gt;order book&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A places a buy order at 100 for 1 ETH&lt;/li&gt;
+&lt;li&gt;B places a sell order at 101 for 2 ETH&lt;/li&gt;
+&lt;li&gt;The system matches orders and completes the trade&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This design has several characteristics:&lt;/p&gt;
+&lt;h3 id=&#34;1-requires-professional-market-makers&#34;&gt;1. Requires professional market makers
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Without someone providing orders, ordinary traders cannot trade&lt;/li&gt;
+&lt;li&gt;Market makers must watch the market and continuously update orders&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-requires-a-centralized-matching-engine&#34;&gt;2. Requires a centralized matching engine
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Run by the exchange&lt;/li&gt;
+&lt;li&gt;You have to &lt;strong&gt;trust&lt;/strong&gt; the intermediary&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-ordinary-users-cannot-participate-in-market-making-easily&#34;&gt;3. Ordinary users cannot participate in market-making easily
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Hard to provide liquidity&lt;/li&gt;
+&lt;li&gt;Most profits go to institutions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For blockchain, which emphasizes open participation, this is too centralized.&lt;/p&gt;
+&lt;h2 id=&#34;2-amm-turning-market-making-into-a-liquidity-pool&#34;&gt;2. AMM: Turning Market Making into a Liquidity Pool
+&lt;/h2&gt;&lt;p&gt;The innovation of AMM (Automated Market Maker) is transforming trading from order matching into a &lt;strong&gt;liquidity pool&lt;/strong&gt; that &lt;strong&gt;anyone&lt;/strong&gt; can join.&lt;/p&gt;
+&lt;p&gt;A liquidity pool holds two assets (e.g., ETH and USDT) and follows:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;x * y = k
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is the &lt;strong&gt;XYK constant product market maker model&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;When someone buys ETH with USDT, ETH decreases and USDT increases, while keeping the product constant.&lt;/p&gt;
+&lt;p&gt;AMM replaces the order book:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;no buy/sell orders&lt;/li&gt;
+&lt;li&gt;no professional market makers&lt;/li&gt;
+&lt;li&gt;no centralized matching engine&lt;/li&gt;
+&lt;li&gt;anyone can join&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So essentially:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;AMM = liquidity pool + mathematical rule&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Price, slippage and liquidity depth all follow from this.&lt;/p&gt;
+&lt;h2 id=&#34;3-how-is-price-determined&#34;&gt;3. How Is Price Determined?
+&lt;/h2&gt;&lt;p&gt;Example:&lt;/p&gt;
+&lt;p&gt;Pool state:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ETH &lt;code&gt;x = 100&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;USDT &lt;code&gt;y = 10000&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Then the price is naturally:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;price = y / x = 10000 / 100 = 100 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Key points:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Price is not quoted manually&lt;/li&gt;
+&lt;li&gt;Price changes automatically with pool state&lt;/li&gt;
+&lt;li&gt;External arbitrage aligns the pool price to market price&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;So in AMM:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Price = asset ratio in pool&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;4-how-do-trades-change-price&#34;&gt;4. How Do Trades Change Price?
+&lt;/h2&gt;&lt;h3 id=&#34;initial-state&#34;&gt;Initial State
+&lt;/h3&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;x = 100 ETH
+y = 10000 USDT
+k = 1,000,000
+P₀ = 100
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A user wants to spend &lt;strong&gt;1000 USDT to buy ETH&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;transaction-rule&#34;&gt;Transaction rule
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;Must satisfy &lt;code&gt;x * y = k&lt;/code&gt; before and after the swap&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;after-the-swap&#34;&gt;After the swap
+&lt;/h3&gt;&lt;p&gt;User adds:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Δy = +1000
+y₂ = 11000
+x₂ = 1,000,000 / 11000 ≈ 90.909
+Δx ≈ 9.091
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Average price ≈ 110
+Final price ≈ 121&lt;/p&gt;
+&lt;p&gt;You observe:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Average paid ≈ 110&lt;/li&gt;
+&lt;li&gt;Final price ≈ 121&lt;/li&gt;
+&lt;li&gt;Initial price = 100&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That feeling of:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“I buy → the price jumps!”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;That is &lt;strong&gt;slippage&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;5-slippage-not-a-fee-but-price-you-push-higher&#34;&gt;5. Slippage: Not a Fee, But Price You Push Higher
+&lt;/h2&gt;&lt;p&gt;Slippage is not a fee:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You moved the price by trading&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You are literally buying along the curve from cheap → expensive.
+Bigger trades cause more slippage.&lt;/p&gt;
+&lt;h2 id=&#34;6-why-bigger-pools-have-lower-slippage&#34;&gt;6. Why Bigger Pools Have Lower Slippage?
+&lt;/h2&gt;&lt;p&gt;Compare:&lt;/p&gt;
+&lt;h3 id=&#34;small-pool-100--10000&#34;&gt;Small pool: 100 / 10000
+&lt;/h3&gt;&lt;p&gt;Price moves 100 → 121&lt;/p&gt;
+&lt;h3 id=&#34;big-pool-1000--100000&#34;&gt;Big pool: 1000 / 100000
+&lt;/h3&gt;&lt;p&gt;Price moves 100 → 102&lt;/p&gt;
+&lt;p&gt;Conclusion:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;More liquidity → milder price curve → lower slippage&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;It&amp;rsquo;s like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a basin vs. a lake&lt;/li&gt;
+&lt;li&gt;adding a bucket changes the level much more in a basin&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;7-what-exactly-is-liquidity&#34;&gt;7. What Exactly Is Liquidity?
+&lt;/h2&gt;&lt;p&gt;Liquidity = actual asset amounts in the pool&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;more liquidity → flatter curve → stable prices&lt;/li&gt;
+&lt;li&gt;less liquidity → steep curve → price impact increases&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Anyone can provide liquidity, therefore:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Market-making becomes open&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;8-how-do-you-join-as-a-liquidity-provider&#34;&gt;8. How Do You Join as a Liquidity Provider?
+&lt;/h2&gt;&lt;p&gt;Pool state:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;x = 100 ETH
+y = 10000 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Price = 100 USDT/ETH&lt;/p&gt;
+&lt;p&gt;To add liquidity, you must deposit &lt;strong&gt;proportionally&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;add 1 ETH&lt;/li&gt;
+&lt;li&gt;plus 100 USDT&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Otherwise you change the price.&lt;/p&gt;
+&lt;p&gt;You receive &lt;strong&gt;LP tokens&lt;/strong&gt; representing your share.&lt;/p&gt;
+&lt;p&gt;When you withdraw, you take &lt;strong&gt;a share of the pool&lt;/strong&gt;, not exactly what you put in.&lt;/p&gt;
+&lt;p&gt;This is important for understanding impermanent loss.&lt;/p&gt;
+&lt;h2 id=&#34;9-how-do-lps-earn-fees&#34;&gt;9. How Do LPs Earn Fees?
+&lt;/h2&gt;&lt;p&gt;Each trade pays a small fee (e.g., 0.3%), and this fee:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;does NOT go to “the platform”&lt;/li&gt;
+&lt;li&gt;goes into the pool&lt;/li&gt;
+&lt;li&gt;distributed to LPs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Think of it as:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Traders use your assets, and you charge toll fees&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;LP earnings:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;trading fees&lt;/li&gt;
+&lt;li&gt;token incentives&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;10-impermanent-loss&#34;&gt;10. Impermanent Loss
+&lt;/h2&gt;&lt;p&gt;LPs earn fees but face impermanent loss.&lt;/p&gt;
+&lt;p&gt;Example pool:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1 ETH + 100 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You add:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1 ETH + 100 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pool:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2 ETH + 200 USDT
+(You own 50%)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If ETH price falls, the pool becomes:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;4 ETH + 100 USDT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You withdraw:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2 ETH + 50 USDT = 100 USDT value
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You deposited value: 200
+You withdraw value: 100&lt;/p&gt;
+&lt;p&gt;You lose value because:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pool moved toward the depreciating asset&lt;/li&gt;
+&lt;li&gt;arbitrage takes the increasing asset out&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The pool automatically rebalances toward cheaper assets.&lt;/p&gt;
+&lt;h2 id=&#34;11-what-problems-does-xyk-solve&#34;&gt;11. What Problems Does XYK Solve?
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;No order book&lt;/li&gt;
+&lt;li&gt;Price determined algorithmically&lt;/li&gt;
+&lt;li&gt;Anyone can become a market maker&lt;/li&gt;
+&lt;li&gt;Infrastructure becomes public and open&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;12-limitations--evolution&#34;&gt;12. Limitations &amp;amp; Evolution
+&lt;/h2&gt;&lt;h3 id=&#34;xyk-drawbacks&#34;&gt;XYK drawbacks
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;Large slippage
+→ specialized stable-swap curves (Curve)&lt;/li&gt;
+&lt;li&gt;Poor capital efficiency
+→ concentrated liquidity (Uniswap v3)&lt;/li&gt;
+&lt;li&gt;Impermanent loss
+→ LP bears volatility risk&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Still:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;XYK is the entrance door to AMM design&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Understanding XYK makes everything else easier.&lt;/p&gt;
+&lt;h2 id=&#34;13-the-one-simple-formula&#34;&gt;13. The One Simple Formula
+&lt;/h2&gt;&lt;p&gt;Back to:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;x * y = k
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;From this follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;price: &lt;code&gt;P = y / x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;slippage&lt;/li&gt;
+&lt;li&gt;liquidity depth&lt;/li&gt;
+&lt;li&gt;LP revenue&lt;/li&gt;
+&lt;li&gt;impermanent loss&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;XYK is the &lt;strong&gt;F = ma of DeFi&lt;/strong&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;deceptively simple, yet the foundation of decentralized trading.&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

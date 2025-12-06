@@ -6,6 +6,87 @@
         <description>Recent content in Tags on Ryan&#39;s Janky Website</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-US</language>
-        <copyright>Yearsuns</copyright><atom:link href="https://yearsuns-github-io.vercel.app/en/tags/index.xml" rel="self" type="application/rss+xml" />
+        <copyright>Yearsuns</copyright>
+        <lastBuildDate>Wed, 16 Jul 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>AMM</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/amm/</link>
+        <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/amm/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>BlockChain</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/blockchain/</link>
+        <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/blockchain/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Impermanent Loss</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/impermanent-loss/</link>
+        <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/impermanent-loss/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Uniswap</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/uniswap/</link>
+        <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/uniswap/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>XYK Model</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/xyk-model/</link>
+        <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/xyk-model/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>IT</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/it/</link>
+        <pubDate>Sun, 29 Jun 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/it/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>MITM Attack Prevention</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/mitm-attack-prevention/</link>
+        <pubDate>Sun, 29 Jun 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/mitm-attack-prevention/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Password Security</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/password-security/</link>
+        <pubDate>Sun, 29 Jun 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/password-security/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Password Storage</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/password-storage/</link>
+        <pubDate>Sun, 29 Jun 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/password-storage/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Secure Password Transmission</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/secure-password-transmission/</link>
+        <pubDate>Sun, 29 Jun 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/secure-password-transmission/</guid>
+        <description></description>
+        </item>
+        
     </channel>
 </rss>

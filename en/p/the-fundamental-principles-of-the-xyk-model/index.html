@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" XYK means: put a pair of assets into a “pool”, and require that the product of the two asset amounts always stays equal: x * y = k. All swaps must follow this rule, and therefore price, slippage, yield and risk all naturally come from this formula.\nLet’s walk through the math step by step.\n1. Traditional Trading: Why Do We Need an Order Book? In traditional exchanges, the core mechanism is the order book:\n">
+<meta name="keywords" content="BlockChain, AMM, XYK Model, Uniswap, Impermanent Loss"><title>The Fundamental Principles of the XYK Model</title>
+
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/en/p/the-fundamental-principles-of-the-xyk-model/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="The Fundamental Principles of the XYK Model">
+<meta property='og:description' content=" XYK means: put a pair of assets into a “pool”, and require that the product of the two asset amounts always stays equal: x * y = k. All swaps must follow this rule, and therefore price, slippage, yield and risk all naturally come from this formula.\nLet’s walk through the math step by step.\n1. Traditional Trading: Why Do We Need an Order Book? In traditional exchanges, the core mechanism is the order book:\n">
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/en/p/the-fundamental-principles-of-the-xyk-model/'>
+<meta property='og:site_name' content='Ryan&#39;s Janky Website'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='BlockChain' /><meta property='article:tag' content='AMM' /><meta property='article:tag' content='XYK Model' /><meta property='article:tag' content='Uniswap' /><meta property='article:tag' content='Impermanent Loss' /><meta property='article:published_time' content='2025-07-16T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-07-16T14:59:56&#43;08:00'/>
+<meta name="twitter:title" content="The Fundamental Principles of the XYK Model">
+<meta name="twitter:description" content=" XYK means: put a pair of assets into a “pool”, and require that the product of the two asset amounts always stays equal: x * y = k. All swaps must follow this rule, and therefore price, slippage, yield and risk all naturally come from this formula.\nLet’s walk through the math step by step.\n1. Traditional Trading: Why Do We Need an Order Book? In traditional exchanges, the core mechanism is the order book:\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/en/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/en">Ryan&#39;s Janky Website</a></h1>
+            <h2 class="site-description">Crumble &amp; About to fall apart</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/en/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>Categories</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>Tags</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://toolify-app.vercel.app/' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>Tool</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" >中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" selected>English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-traditional-trading-why-do-we-need-an-order-book">1. Traditional Trading: Why Do We Need an Order Book?</a>
+      <ul>
+        <li><a href="#1-requires-professional-market-makers">1. Requires professional market makers</a></li>
+        <li><a href="#2-requires-a-centralized-matching-engine">2. Requires a centralized matching engine</a></li>
+        <li><a href="#3-ordinary-users-cannot-participate-in-market-making-easily">3. Ordinary users cannot participate in market-making easily</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-amm-turning-market-making-into-a-liquidity-pool">2. AMM: Turning Market Making into a Liquidity Pool</a></li>
+    <li><a href="#3-how-is-price-determined">3. How Is Price Determined?</a></li>
+    <li><a href="#4-how-do-trades-change-price">4. How Do Trades Change Price?</a>
+      <ul>
+        <li><a href="#initial-state">Initial State</a></li>
+        <li><a href="#transaction-rule">Transaction rule</a></li>
+        <li><a href="#after-the-swap">After the swap</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-slippage-not-a-fee-but-price-you-push-higher">5. Slippage: Not a Fee, But Price You Push Higher</a></li>
+    <li><a href="#6-why-bigger-pools-have-lower-slippage">6. Why Bigger Pools Have Lower Slippage?</a>
+      <ul>
+        <li><a href="#small-pool-100--10000">Small pool: 100 / 10000</a></li>
+        <li><a href="#big-pool-1000--100000">Big pool: 1000 / 100000</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-what-exactly-is-liquidity">7. What Exactly Is Liquidity?</a></li>
+    <li><a href="#8-how-do-you-join-as-a-liquidity-provider">8. How Do You Join as a Liquidity Provider?</a></li>
+    <li><a href="#9-how-do-lps-earn-fees">9. How Do LPs Earn Fees?</a></li>
+    <li><a href="#10-impermanent-loss">10. Impermanent Loss</a></li>
+    <li><a href="#11-what-problems-does-xyk-solve">11. What Problems Does XYK Solve?</a></li>
+    <li><a href="#12-limitations--evolution">12. Limitations &amp; Evolution</a>
+      <ul>
+        <li><a href="#xyk-drawbacks">XYK drawbacks</a></li>
+      </ul>
+    </li>
+    <li><a href="#13-the-one-simple-formula">13. The One Simple Formula</a></li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/en/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/en/p/the-fundamental-principles-of-the-xyk-model/">The Fundamental Principles of the XYK Model</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jul 16, 2025</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    5 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+        <footer class="article-translations">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+            <div>
+                
+                    <a href="https://yearsuns-github-io.vercel.app/p/the-fundamental-principles-of-the-xyk-model/" class="link">中文</a>
+                
+            </div>
+        </footer>
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <blockquote>
+<p>XYK means: put a pair of assets into a “pool”, and require that the product of the two asset amounts always stays equal: <code>x * y = k</code>.
+All swaps must follow this rule, and therefore <strong>price, slippage, yield and risk</strong> all naturally come from this formula.</p>
+</blockquote>
+<p>Let’s walk through the math step by step.</p>
+<h2 id="1-traditional-trading-why-do-we-need-an-order-book">1. Traditional Trading: Why Do We Need an Order Book?
+</h2><p>In traditional exchanges, the core mechanism is the <strong>order book</strong>:</p>
+<ul>
+<li>A places a buy order at 100 for 1 ETH</li>
+<li>B places a sell order at 101 for 2 ETH</li>
+<li>The system matches orders and completes the trade</li>
+</ul>
+<p>This design has several characteristics:</p>
+<h3 id="1-requires-professional-market-makers">1. Requires professional market makers
+</h3><ul>
+<li>Without someone providing orders, ordinary traders cannot trade</li>
+<li>Market makers must watch the market and continuously update orders</li>
+</ul>
+<h3 id="2-requires-a-centralized-matching-engine">2. Requires a centralized matching engine
+</h3><ul>
+<li>Run by the exchange</li>
+<li>You have to <strong>trust</strong> the intermediary</li>
+</ul>
+<h3 id="3-ordinary-users-cannot-participate-in-market-making-easily">3. Ordinary users cannot participate in market-making easily
+</h3><ul>
+<li>Hard to provide liquidity</li>
+<li>Most profits go to institutions</li>
+</ul>
+<p>For blockchain, which emphasizes open participation, this is too centralized.</p>
+<h2 id="2-amm-turning-market-making-into-a-liquidity-pool">2. AMM: Turning Market Making into a Liquidity Pool
+</h2><p>The innovation of AMM (Automated Market Maker) is transforming trading from order matching into a <strong>liquidity pool</strong> that <strong>anyone</strong> can join.</p>
+<p>A liquidity pool holds two assets (e.g., ETH and USDT) and follows:</p>
+<pre tabindex="0"><code>x * y = k
+</code></pre><p>This is the <strong>XYK constant product market maker model</strong>.</p>
+<p>When someone buys ETH with USDT, ETH decreases and USDT increases, while keeping the product constant.</p>
+<p>AMM replaces the order book:</p>
+<ul>
+<li>no buy/sell orders</li>
+<li>no professional market makers</li>
+<li>no centralized matching engine</li>
+<li>anyone can join</li>
+</ul>
+<p>So essentially:</p>
+<blockquote>
+<p>AMM = liquidity pool + mathematical rule</p>
+</blockquote>
+<p>Price, slippage and liquidity depth all follow from this.</p>
+<h2 id="3-how-is-price-determined">3. How Is Price Determined?
+</h2><p>Example:</p>
+<p>Pool state:</p>
+<ul>
+<li>ETH <code>x = 100</code></li>
+<li>USDT <code>y = 10000</code></li>
+</ul>
+<p>Then the price is naturally:</p>
+<pre tabindex="0"><code>price = y / x = 10000 / 100 = 100 USDT
+</code></pre><p>Key points:</p>
+<ol>
+<li>Price is not quoted manually</li>
+<li>Price changes automatically with pool state</li>
+<li>External arbitrage aligns the pool price to market price</li>
+</ol>
+<p>So in AMM:</p>
+<blockquote>
+<p><strong>Price = asset ratio in pool</strong></p>
+</blockquote>
+<h2 id="4-how-do-trades-change-price">4. How Do Trades Change Price?
+</h2><h3 id="initial-state">Initial State
+</h3><pre tabindex="0"><code>x = 100 ETH
+y = 10000 USDT
+k = 1,000,000
+P₀ = 100
+</code></pre><p>A user wants to spend <strong>1000 USDT to buy ETH</strong>.</p>
+<h3 id="transaction-rule">Transaction rule
+</h3><blockquote>
+<p>Must satisfy <code>x * y = k</code> before and after the swap</p>
+</blockquote>
+<h3 id="after-the-swap">After the swap
+</h3><p>User adds:</p>
+<pre tabindex="0"><code>Δy = +1000
+y₂ = 11000
+x₂ = 1,000,000 / 11000 ≈ 90.909
+Δx ≈ 9.091
+</code></pre><p>Average price ≈ 110
+Final price ≈ 121</p>
+<p>You observe:</p>
+<ol>
+<li>Average paid ≈ 110</li>
+<li>Final price ≈ 121</li>
+<li>Initial price = 100</li>
+</ol>
+<p>That feeling of:</p>
+<blockquote>
+<p>“I buy → the price jumps!”</p>
+</blockquote>
+<p>That is <strong>slippage</strong>.</p>
+<h2 id="5-slippage-not-a-fee-but-price-you-push-higher">5. Slippage: Not a Fee, But Price You Push Higher
+</h2><p>Slippage is not a fee:</p>
+<ul>
+<li>You moved the price by trading</li>
+</ul>
+<p>You are literally buying along the curve from cheap → expensive.
+Bigger trades cause more slippage.</p>
+<h2 id="6-why-bigger-pools-have-lower-slippage">6. Why Bigger Pools Have Lower Slippage?
+</h2><p>Compare:</p>
+<h3 id="small-pool-100--10000">Small pool: 100 / 10000
+</h3><p>Price moves 100 → 121</p>
+<h3 id="big-pool-1000--100000">Big pool: 1000 / 100000
+</h3><p>Price moves 100 → 102</p>
+<p>Conclusion:</p>
+<blockquote>
+<p>More liquidity → milder price curve → lower slippage</p>
+</blockquote>
+<p>It&rsquo;s like:</p>
+<ul>
+<li>a basin vs. a lake</li>
+<li>adding a bucket changes the level much more in a basin</li>
+</ul>
+<h2 id="7-what-exactly-is-liquidity">7. What Exactly Is Liquidity?
+</h2><p>Liquidity = actual asset amounts in the pool</p>
+<ul>
+<li>more liquidity → flatter curve → stable prices</li>
+<li>less liquidity → steep curve → price impact increases</li>
+</ul>
+<p>Anyone can provide liquidity, therefore:</p>
+<blockquote>
+<p>Market-making becomes open</p>
+</blockquote>
+<h2 id="8-how-do-you-join-as-a-liquidity-provider">8. How Do You Join as a Liquidity Provider?
+</h2><p>Pool state:</p>
+<pre tabindex="0"><code>x = 100 ETH
+y = 10000 USDT
+</code></pre><p>Price = 100 USDT/ETH</p>
+<p>To add liquidity, you must deposit <strong>proportionally</strong>:</p>
+<ul>
+<li>add 1 ETH</li>
+<li>plus 100 USDT</li>
+</ul>
+<p>Otherwise you change the price.</p>
+<p>You receive <strong>LP tokens</strong> representing your share.</p>
+<p>When you withdraw, you take <strong>a share of the pool</strong>, not exactly what you put in.</p>
+<p>This is important for understanding impermanent loss.</p>
+<h2 id="9-how-do-lps-earn-fees">9. How Do LPs Earn Fees?
+</h2><p>Each trade pays a small fee (e.g., 0.3%), and this fee:</p>
+<ul>
+<li>does NOT go to “the platform”</li>
+<li>goes into the pool</li>
+<li>distributed to LPs</li>
+</ul>
+<p>Think of it as:</p>
+<blockquote>
+<p>Traders use your assets, and you charge toll fees</p>
+</blockquote>
+<p>LP earnings:</p>
+<ul>
+<li>trading fees</li>
+<li>token incentives</li>
+</ul>
+<h2 id="10-impermanent-loss">10. Impermanent Loss
+</h2><p>LPs earn fees but face impermanent loss.</p>
+<p>Example pool:</p>
+<pre tabindex="0"><code>1 ETH + 100 USDT
+</code></pre><p>You add:</p>
+<pre tabindex="0"><code>1 ETH + 100 USDT
+</code></pre><p>Pool:</p>
+<pre tabindex="0"><code>2 ETH + 200 USDT
+(You own 50%)
+</code></pre><p>If ETH price falls, the pool becomes:</p>
+<pre tabindex="0"><code>4 ETH + 100 USDT
+</code></pre><p>You withdraw:</p>
+<pre tabindex="0"><code>2 ETH + 50 USDT = 100 USDT value
+</code></pre><p>You deposited value: 200
+You withdraw value: 100</p>
+<p>You lose value because:</p>
+<ul>
+<li>pool moved toward the depreciating asset</li>
+<li>arbitrage takes the increasing asset out</li>
+</ul>
+<p>The pool automatically rebalances toward cheaper assets.</p>
+<h2 id="11-what-problems-does-xyk-solve">11. What Problems Does XYK Solve?
+</h2><ol>
+<li>No order book</li>
+<li>Price determined algorithmically</li>
+<li>Anyone can become a market maker</li>
+<li>Infrastructure becomes public and open</li>
+</ol>
+<h2 id="12-limitations--evolution">12. Limitations &amp; Evolution
+</h2><h3 id="xyk-drawbacks">XYK drawbacks
+</h3><ol>
+<li>Large slippage
+→ specialized stable-swap curves (Curve)</li>
+<li>Poor capital efficiency
+→ concentrated liquidity (Uniswap v3)</li>
+<li>Impermanent loss
+→ LP bears volatility risk</li>
+</ol>
+<p>Still:</p>
+<blockquote>
+<p>XYK is the entrance door to AMM design</p>
+</blockquote>
+<p>Understanding XYK makes everything else easier.</p>
+<h2 id="13-the-one-simple-formula">13. The One Simple Formula
+</h2><p>Back to:</p>
+<pre tabindex="0"><code>x * y = k
+</code></pre><p>From this follows:</p>
+<ul>
+<li>price: <code>P = y / x</code></li>
+<li>slippage</li>
+<li>liquidity depth</li>
+<li>LP revenue</li>
+<li>impermanent loss</li>
+</ul>
+<p>XYK is the <strong>F = ma of DeFi</strong>:</p>
+<blockquote>
+<p>deceptively simple, yet the foundation of decentralized trading.</p>
+</blockquote>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/en/tags/blockchain/">BlockChain</a>
+        
+            <a href="/en/tags/amm/">AMM</a>
+        
+            <a href="/en/tags/xyk-model/">XYK Model</a>
+        
+            <a href="/en/tags/uniswap/">Uniswap</a>
+        
+            <a href="/en/tags/impermanent-loss/">Impermanent Loss</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'en',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 Yearsuns
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

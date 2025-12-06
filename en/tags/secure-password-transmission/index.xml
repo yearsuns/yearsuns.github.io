@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Secure Password Transmission on Ryan&#39;s Janky Website</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/secure-password-transmission/</link>
+        <description>Recent content in Secure Password Transmission on Ryan&#39;s Janky Website</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-US</language>
+        <copyright>Yearsuns</copyright>
+        <lastBuildDate>Sun, 29 Jun 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/tags/secure-password-transmission/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>How Passwords Should Be Safely Transmitted and Stored</title>
+        <link>https://yearsuns-github-io.vercel.app/en/p/how-passwords-should-be-safely-transmitted-and-stored/</link>
+        <pubDate>Sun, 29 Jun 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/p/how-passwords-should-be-safely-transmitted-and-stored/</guid>
+        <description>&lt;h2 id=&#34;1-introduction-passwords-are-the-last-line-of-defense-in-the-digital-world&#34;&gt;1. Introduction: Passwords Are the Last Line of Defense in the Digital World
+&lt;/h2&gt;&lt;p&gt;In the entire ecosystem of internet security, passwords are the most common yet also the most fragile component.
+Almost all services we use daily—email, online banking, social platforms, games, forums—rely on passwords to authenticate user identity.&lt;/p&gt;
+&lt;p&gt;A password is essentially a &lt;strong&gt;weak credential&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It cannot prove who the user really is—it only proves that they “know a certain secret.”&lt;/li&gt;
+&lt;li&gt;Once this secret is leaked, an attacker can completely impersonate you.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Modern cyberattacks are frequent and diverse. A single ordinary password leak often results in multiple accounts across different platforms being compromised.
+To defend against these threats, we must strengthen both the &lt;strong&gt;transmission stage&lt;/strong&gt; and the &lt;strong&gt;storage stage&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;This article builds from fundamental concepts and gradually develops a complete, modern password security system.&lt;/p&gt;
+&lt;h2 id=&#34;2-why-are-passwords-so-dangerous&#34;&gt;2. Why Are Passwords So Dangerous?
+&lt;/h2&gt;&lt;p&gt;At first glance, a password is just a string composed of characters.
+But the damage caused by a leaked password is far more severe than it seems, mainly for two reasons.&lt;/p&gt;
+&lt;h3 id=&#34;21-risk-1-leakage-during-transmission&#34;&gt;2.1 Risk 1: Leakage During Transmission
+&lt;/h3&gt;&lt;p&gt;From the moment a user enters a password until it reaches the server, the data passes through:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The browser&lt;/li&gt;
+&lt;li&gt;Local DNS resolution&lt;/li&gt;
+&lt;li&gt;OS network stack&lt;/li&gt;
+&lt;li&gt;Routers&lt;/li&gt;
+&lt;li&gt;ISP backbone&lt;/li&gt;
+&lt;li&gt;Server load balancers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If &lt;strong&gt;any&lt;/strong&gt; part of this chain is compromised, the password could be intercepted.&lt;/p&gt;
+&lt;p&gt;In theory, HTTPS solves the “eavesdropping problem.”
+But reality is more complex. Common risks include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Malware installing fake root certificates (classic MITM strategy)&lt;/li&gt;
+&lt;li&gt;Internal corporate/school networks performing TLS inspection&lt;/li&gt;
+&lt;li&gt;Public Wi-Fi conducting ARP spoofing and re-signing HTTPS certificates&lt;/li&gt;
+&lt;li&gt;Browser extensions injecting malicious scripts to read user input&lt;/li&gt;
+&lt;li&gt;“Network optimization” software adding hidden interception modules&lt;/li&gt;
+&lt;li&gt;Enterprise gateways performing SSL inspection (legal but unsafe)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In other words:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You cannot assume the user’s device or network environment is always secure.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Therefore, there is room to improve the security of transmission.&lt;/p&gt;
+&lt;h3 id=&#34;22-risk-2-server-side-leakage&#34;&gt;2.2 Risk 2: Server-side Leakage
+&lt;/h3&gt;&lt;p&gt;Most leaks occur on the server side. Common scenarios include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Database breaches (most common)&lt;/li&gt;
+&lt;li&gt;Passwords accidentally printed in logs&lt;/li&gt;
+&lt;li&gt;Developers outputting passwords during debugging&lt;/li&gt;
+&lt;li&gt;Unencrypted backups mistakenly exposed to the public&lt;/li&gt;
+&lt;li&gt;Third-party monitoring tools capturing sensitive fields&lt;/li&gt;
+&lt;li&gt;Vulnerabilities (SQL injection, RCE) exposing the database&lt;/li&gt;
+&lt;li&gt;Internal misuse of privileges by operations staff&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If the server stores &lt;strong&gt;plaintext passwords&lt;/strong&gt;, the consequences are catastrophic:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;All user passwords are exposed&lt;/li&gt;
+&lt;li&gt;Accounts on other websites are compromised due to password reuse&lt;/li&gt;
+&lt;li&gt;If attackers access a user’s email, the impact escalates further&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Therefore, the server must ensure that &lt;strong&gt;even if a breach occurs, attackers cannot obtain the real passwords&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;3-how-should-passwords-be-safely-transmitted-over-the-internet&#34;&gt;3. How Should Passwords Be Safely Transmitted Over the Internet?
+&lt;/h2&gt;&lt;h3 id=&#34;31-the-most-straightforward-approach-send-the-password-directly-over-https&#34;&gt;3.1 The Most Straightforward Approach: Send the Password Directly Over HTTPS
+&lt;/h3&gt;&lt;p&gt;This is the default method used by most websites today:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Browser ——HTTPS——&amp;gt; Server
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Advantages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Simple&lt;/li&gt;
+&lt;li&gt;Mature&lt;/li&gt;
+&lt;li&gt;Fast&lt;/li&gt;
+&lt;li&gt;Compatible with everything&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The drawback is:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;It places all risk on the reliability of TLS.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If TLS is compromised by a MITM attack, the password is exposed.&lt;/p&gt;
+&lt;p&gt;Thus, some propose hashing the password &lt;strong&gt;on the client side first&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;4-front-end-hashing-risks-reduced-and-risks-not-reduced&#34;&gt;4. Front-end Hashing: Risks Reduced and Risks Not Reduced
+&lt;/h2&gt;&lt;p&gt;The core idea of front-end hashing is:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Even if the transmission is intercepted, the attacker does not get the real password.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Assume:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;P  = user password
+H1 = hash(P)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The browser sends H1 instead of P.&lt;/p&gt;
+&lt;h3 id=&#34;41-what-can-front-end-hashing-protect-against&#34;&gt;4.1 What Can Front-end Hashing Protect Against?
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Prevents MITM from obtaining the real password&lt;/li&gt;
+&lt;li&gt;Prevents plaintext password leakage through server logs/monitoring&lt;/li&gt;
+&lt;li&gt;Attackers cannot use H1 to log in to the user’s accounts on &lt;strong&gt;other&lt;/strong&gt; websites&lt;/li&gt;
+&lt;li&gt;Even if users reuse passwords elsewhere, a breach of your site won’t cascade to others (very important)&lt;/li&gt;
+&lt;li&gt;The server never touches plaintext passwords (a simple form of zero-knowledge authentication)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Front-end hashing provides:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Even if your website is compromised, attackers still cannot learn users’ real passwords for other services.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Traditional approaches cannot offer this.&lt;/p&gt;
+&lt;h3 id=&#34;42-what-can-front-end-hashing-not-protect-against&#34;&gt;4.2 What Can Front-end Hashing &lt;em&gt;Not&lt;/em&gt; Protect Against?
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Attackers can directly use H1 to log in to &lt;strong&gt;your&lt;/strong&gt; website (you treat it as the credential)&lt;/li&gt;
+&lt;li&gt;Keyloggers / infected devices still capture P&lt;/li&gt;
+&lt;li&gt;Hashes without challenge are vulnerable to replay attacks&lt;/li&gt;
+&lt;li&gt;HTTPS is still required—hashes themselves must be encrypted&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In short:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Front-end hashing reduces damage but does not eliminate risk.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;43-is-front-end-hashing-necessary&#34;&gt;4.3 Is Front-end Hashing Necessary?
+&lt;/h3&gt;&lt;p&gt;In practice, it is an &lt;strong&gt;optional but clearly beneficial&lt;/strong&gt; enhancement.&lt;/p&gt;
+&lt;p&gt;When implemented properly (with challenges to prevent replay), front-end hashing creates a dual defense:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;TLS ensures transport security&lt;/li&gt;
+&lt;li&gt;Hashing reduces cross-site password reuse impact&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;High-security systems (banks, enterprise platforms, developer services) often use such mechanisms.&lt;/p&gt;
+&lt;h2 id=&#34;5-how-should-servers-store-passwords&#34;&gt;5. How Should Servers Store Passwords?
+&lt;/h2&gt;&lt;p&gt;Now to the core of password engineering:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Passwords must never appear in plaintext—even inside the server.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Industry standards involve three key elements:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Hash&lt;/li&gt;
+&lt;li&gt;Salt&lt;/li&gt;
+&lt;li&gt;Slow hash&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;51-hashing-making-it-irreversible&#34;&gt;5.1 Hashing: Making It Irreversible
+&lt;/h3&gt;&lt;p&gt;A good hashing function must:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Have extremely low collision probability&lt;/li&gt;
+&lt;li&gt;Change output drastically when input changes slightly (avalanche effect)&lt;/li&gt;
+&lt;li&gt;Make it impossible to reverse the input&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Servers store:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;H = hash(P)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If the database leaks, attackers cannot directly obtain the password.&lt;/p&gt;
+&lt;h3 id=&#34;52-salt-preventing-rainbow-tables-and-mass-cracking&#34;&gt;5.2 Salt: Preventing Rainbow Tables and Mass Cracking
+&lt;/h3&gt;&lt;p&gt;Without salt, users with the same weak passwords produce identical hashes. Attackers can:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use precomputed rainbow tables&lt;/li&gt;
+&lt;li&gt;Test common passwords once to crack many accounts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;By adding a random salt:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;H = hash(P + salt)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Two users with “123456” have completely different hashes&lt;/li&gt;
+&lt;li&gt;Rainbow tables become useless&lt;/li&gt;
+&lt;li&gt;Attackers must brute-force each user individually (massively increasing cost)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Salt must be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Long enough (≥16 bytes)&lt;/li&gt;
+&lt;li&gt;Random (CSPRNG)&lt;/li&gt;
+&lt;li&gt;Unique per user&lt;/li&gt;
+&lt;li&gt;Stored in plaintext (not encrypted)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;53-slow-hashing-truly-increasing-the-cost-of-attacks&#34;&gt;5.3 Slow Hashing: Truly Increasing the Cost of Attacks
+&lt;/h3&gt;&lt;p&gt;Algorithms like SHA256 are far too fast.
+Modern GPUs can compute billions of SHA256 hashes per second.&lt;/p&gt;
+&lt;p&gt;Meaning:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Even with salt, SHA256-stored passwords can often be cracked quickly.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Thus, we must use slow hashing algorithms designed specifically for password storage:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Algorithm&lt;/th&gt;
+          &lt;th&gt;Characteristics&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;bcrypt&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Classic, mature&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;scrypt&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;GPU-resistant, high memory use&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Argon2 (recommended)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Winner of password hashing competition; tunable CPU/memory/parallelism&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Slow hashing is not about “stronger hashing”; it&amp;rsquo;s about:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Making each guess expensive so attackers cannot perform massive brute-force attacks.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Login delays are negligible:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Users log in infrequently&lt;/li&gt;
+&lt;li&gt;Each slow-hash costs only tens of milliseconds&lt;/li&gt;
+&lt;li&gt;Attackers cannot scale up computations the same way&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;6-dual-protection-front-end-hash--back-end-slow-hash&#34;&gt;6. Dual Protection: Front-end Hash + Back-end Slow Hash
+&lt;/h2&gt;&lt;p&gt;Combined:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;P → H1 = hash1(P) → (transmission) → H2 = bcrypt(H1 + salt)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Dual-layer benefits:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;MITM capturing H1 cannot use it on other sites&lt;/li&gt;
+&lt;li&gt;Database leaks revealing H2 are still hard to crack&lt;/li&gt;
+&lt;li&gt;Server never touches plaintext passwords&lt;/li&gt;
+&lt;li&gt;Logs and monitoring systems cannot leak P&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This “front-end hash + back-end slow hash” model is used in high-security environments to reduce cascade risks.&lt;/p&gt;
+&lt;h2 id=&#34;7-the-replay-attack-problem-of-front-end-hashing-and-its-solution&#34;&gt;7. The Replay Attack Problem of Front-end Hashing and Its Solution
+&lt;/h2&gt;&lt;p&gt;If front-end hashing is simply:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;H1 = hash(P)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;An attacker who intercepts H1 can replay it indefinitely—almost identical to stealing the real password.&lt;/p&gt;
+&lt;h3 id=&#34;solution-use-a-random-challenge&#34;&gt;Solution: Use a &lt;strong&gt;random challenge&lt;/strong&gt;.
+&lt;/h3&gt;&lt;h3 id=&#34;71-complete-workflow&#34;&gt;7.1 Complete Workflow
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;User opens login page&lt;/strong&gt;
+The server generates a challenge:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;challenge = random string
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Browser computes:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;H1 = hash(P + challenge)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Server verifies:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;bcrypt(H1 + salt) == stored_hash
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;72-benefits&#34;&gt;7.2 Benefits
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;H1 is different every time (challenge varies)&lt;/li&gt;
+&lt;li&gt;Intercepted H1 cannot be reused&lt;/li&gt;
+&lt;li&gt;MITM value decreases&lt;/li&gt;
+&lt;li&gt;Server does not need to store challenge—just verify once and discard&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;73-common-engineering-issues&#34;&gt;7.3 Common Engineering Issues
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Challenge must not be cached (use no-cache)&lt;/li&gt;
+&lt;li&gt;Must be long enough (≥16 bytes)&lt;/li&gt;
+&lt;li&gt;Front-end must use secure hash (SHA256 or higher)&lt;/li&gt;
+&lt;li&gt;Still requires HTTPS (challenge itself can be intercepted otherwise)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;8-additional-important-practices-often-overlooked&#34;&gt;8. Additional Important Practices (Often Overlooked)
+&lt;/h2&gt;&lt;h3 id=&#34;81-never-email-users-their-passwords&#34;&gt;8.1 Never Email Users Their Passwords
+&lt;/h3&gt;&lt;p&gt;Sending a new password via email is extremely dangerous.
+Correct process:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Send a password reset link&lt;/li&gt;
+&lt;li&gt;Link contains a one-time token&lt;/li&gt;
+&lt;li&gt;User must set a new password&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;82-do-not-allow-weak-passwords&#34;&gt;8.2 Do Not Allow Weak Passwords
+&lt;/h3&gt;&lt;p&gt;Weak passwords are exponentially easier to crack:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;123456&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;password&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;qwerty&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;User phone numbers&lt;/li&gt;
+&lt;li&gt;User birthdays&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Use:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Blacklists of common passwords (top 10k)&lt;/li&gt;
+&lt;li&gt;Length policies (≥12 chars)&lt;/li&gt;
+&lt;li&gt;Encouragement of password managers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;83-multi-factor-authentication-mfa--2fa&#34;&gt;8.3 Multi-factor Authentication (MFA / 2FA)
+&lt;/h3&gt;&lt;p&gt;Passwords are only the first layer.
+A second factor dramatically reduces attack success rates:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;TOTP (Google Authenticator)&lt;/li&gt;
+&lt;li&gt;SMS codes (weaker, but still useful)&lt;/li&gt;
+&lt;li&gt;Hardware keys (FIDO2 / U2F)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;84-account-protection-features&#34;&gt;8.4 Account Protection Features
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Lockouts after multiple failed attempts&lt;/li&gt;
+&lt;li&gt;Suspicious-login email alerts&lt;/li&gt;
+&lt;li&gt;Unusual IP/UA verification steps&lt;/li&gt;
+&lt;li&gt;Recent login activity logs for user review&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;85-password-breach-checks-hibp-api&#34;&gt;8.5 Password Breach Checks (HIBP API)
+&lt;/h3&gt;&lt;p&gt;Many large websites check whether:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A user&amp;rsquo;s chosen password appears in known breach databases (like HaveIBeenPwned)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This significantly reduces risk from weak password reuse.&lt;/p&gt;
+&lt;h2 id=&#34;9-goals-of-a-modern-password-security-system&#34;&gt;9. Goals of a Modern Password Security System
+&lt;/h2&gt;&lt;p&gt;With all steps combined, a modern password system should ensure:&lt;/p&gt;
+&lt;h3 id=&#34;91-secure-transmission&#34;&gt;9.1 Secure Transmission
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Use HTTPS&lt;/li&gt;
+&lt;li&gt;Optional front-end hashing to prevent cascading leaks&lt;/li&gt;
+&lt;li&gt;Challenge-based anti-replay&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;92-secure-storage&#34;&gt;9.2 Secure Storage
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Never store plaintext passwords&lt;/li&gt;
+&lt;li&gt;Unique salt per user&lt;/li&gt;
+&lt;li&gt;Use slow hashing algorithms&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;93-account-protection&#34;&gt;9.3 Account Protection
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Strong password policies&lt;/li&gt;
+&lt;li&gt;MFA&lt;/li&gt;
+&lt;li&gt;Anomaly detection&lt;/li&gt;
+&lt;li&gt;Password leak comparison&lt;/li&gt;
+&lt;li&gt;No sensitive info in logs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The final objective:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Even if the entire server is compromised, attackers still cannot obtain any user&amp;rsquo;s real password.&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

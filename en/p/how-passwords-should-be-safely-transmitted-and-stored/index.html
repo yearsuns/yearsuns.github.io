@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="1. Introduction: Passwords Are the Last Line of Defense in the Digital World In the entire ecosystem of internet security, passwords are the most common yet also the most fragile component. Almost all services we use daily—email, online banking, social platforms, games, forums—rely on passwords to authenticate user identity.\nA password is essentially a weak credential:\nIt cannot prove who the user really is—it only proves that they “know a certain secret.” Once this secret is leaked, an attacker can completely impersonate you. Modern cyberattacks are frequent and diverse. A single ordinary password leak often results in multiple accounts across different platforms being compromised. To defend against these threats, we must strengthen both the transmission stage and the storage stage.\n">
+<meta name="keywords" content="IT, Password Security, Secure Password Transmission, Password Storage, MITM Attack Prevention"><title>How Passwords Should Be Safely Transmitted and Stored</title>
+
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/en/p/how-passwords-should-be-safely-transmitted-and-stored/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="How Passwords Should Be Safely Transmitted and Stored">
+<meta property='og:description' content="1. Introduction: Passwords Are the Last Line of Defense in the Digital World In the entire ecosystem of internet security, passwords are the most common yet also the most fragile component. Almost all services we use daily—email, online banking, social platforms, games, forums—rely on passwords to authenticate user identity.\nA password is essentially a weak credential:\nIt cannot prove who the user really is—it only proves that they “know a certain secret.” Once this secret is leaked, an attacker can completely impersonate you. Modern cyberattacks are frequent and diverse. A single ordinary password leak often results in multiple accounts across different platforms being compromised. To defend against these threats, we must strengthen both the transmission stage and the storage stage.\n">
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/en/p/how-passwords-should-be-safely-transmitted-and-stored/'>
+<meta property='og:site_name' content='Ryan&#39;s Janky Website'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='IT' /><meta property='article:tag' content='Password Security' /><meta property='article:tag' content='Secure Password Transmission' /><meta property='article:tag' content='Password Storage' /><meta property='article:tag' content='MITM Attack Prevention' /><meta property='article:published_time' content='2025-06-29T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-06-29T14:59:56&#43;08:00'/>
+<meta name="twitter:title" content="How Passwords Should Be Safely Transmitted and Stored">
+<meta name="twitter:description" content="1. Introduction: Passwords Are the Last Line of Defense in the Digital World In the entire ecosystem of internet security, passwords are the most common yet also the most fragile component. Almost all services we use daily—email, online banking, social platforms, games, forums—rely on passwords to authenticate user identity.\nA password is essentially a weak credential:\nIt cannot prove who the user really is—it only proves that they “know a certain secret.” Once this secret is leaked, an attacker can completely impersonate you. Modern cyberattacks are frequent and diverse. A single ordinary password leak often results in multiple accounts across different platforms being compromised. To defend against these threats, we must strengthen both the transmission stage and the storage stage.\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/en/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/en">Ryan&#39;s Janky Website</a></h1>
+            <h2 class="site-description">Crumble &amp; About to fall apart</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/en/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>Categories</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>Tags</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://toolify-app.vercel.app/' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>Tool</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" >中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" selected>English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-introduction-passwords-are-the-last-line-of-defense-in-the-digital-world">1. Introduction: Passwords Are the Last Line of Defense in the Digital World</a></li>
+    <li><a href="#2-why-are-passwords-so-dangerous">2. Why Are Passwords So Dangerous?</a>
+      <ul>
+        <li><a href="#21-risk-1-leakage-during-transmission">2.1 Risk 1: Leakage During Transmission</a></li>
+        <li><a href="#22-risk-2-server-side-leakage">2.2 Risk 2: Server-side Leakage</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-how-should-passwords-be-safely-transmitted-over-the-internet">3. How Should Passwords Be Safely Transmitted Over the Internet?</a>
+      <ul>
+        <li><a href="#31-the-most-straightforward-approach-send-the-password-directly-over-https">3.1 The Most Straightforward Approach: Send the Password Directly Over HTTPS</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-front-end-hashing-risks-reduced-and-risks-not-reduced">4. Front-end Hashing: Risks Reduced and Risks Not Reduced</a>
+      <ul>
+        <li><a href="#41-what-can-front-end-hashing-protect-against">4.1 What Can Front-end Hashing Protect Against?</a></li>
+        <li><a href="#42-what-can-front-end-hashing-not-protect-against">4.2 What Can Front-end Hashing <em>Not</em> Protect Against?</a></li>
+        <li><a href="#43-is-front-end-hashing-necessary">4.3 Is Front-end Hashing Necessary?</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-how-should-servers-store-passwords">5. How Should Servers Store Passwords?</a>
+      <ul>
+        <li><a href="#51-hashing-making-it-irreversible">5.1 Hashing: Making It Irreversible</a></li>
+        <li><a href="#52-salt-preventing-rainbow-tables-and-mass-cracking">5.2 Salt: Preventing Rainbow Tables and Mass Cracking</a></li>
+        <li><a href="#53-slow-hashing-truly-increasing-the-cost-of-attacks">5.3 Slow Hashing: Truly Increasing the Cost of Attacks</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-dual-protection-front-end-hash--back-end-slow-hash">6. Dual Protection: Front-end Hash + Back-end Slow Hash</a></li>
+    <li><a href="#7-the-replay-attack-problem-of-front-end-hashing-and-its-solution">7. The Replay Attack Problem of Front-end Hashing and Its Solution</a>
+      <ul>
+        <li><a href="#solution-use-a-random-challenge">Solution: Use a <strong>random challenge</strong>.</a></li>
+        <li><a href="#71-complete-workflow">7.1 Complete Workflow</a></li>
+        <li><a href="#72-benefits">7.2 Benefits</a></li>
+        <li><a href="#73-common-engineering-issues">7.3 Common Engineering Issues</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-additional-important-practices-often-overlooked">8. Additional Important Practices (Often Overlooked)</a>
+      <ul>
+        <li><a href="#81-never-email-users-their-passwords">8.1 Never Email Users Their Passwords</a></li>
+        <li><a href="#82-do-not-allow-weak-passwords">8.2 Do Not Allow Weak Passwords</a></li>
+        <li><a href="#83-multi-factor-authentication-mfa--2fa">8.3 Multi-factor Authentication (MFA / 2FA)</a></li>
+        <li><a href="#84-account-protection-features">8.4 Account Protection Features</a></li>
+        <li><a href="#85-password-breach-checks-hibp-api">8.5 Password Breach Checks (HIBP API)</a></li>
+      </ul>
+    </li>
+    <li><a href="#9-goals-of-a-modern-password-security-system">9. Goals of a Modern Password Security System</a>
+      <ul>
+        <li><a href="#91-secure-transmission">9.1 Secure Transmission</a></li>
+        <li><a href="#92-secure-storage">9.2 Secure Storage</a></li>
+        <li><a href="#93-account-protection">9.3 Account Protection</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/en/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/en/p/how-passwords-should-be-safely-transmitted-and-stored/">How Passwords Should Be Safely Transmitted and Stored</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 29, 2025</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    7 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+        <footer class="article-translations">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+            <div>
+                
+                    <a href="https://yearsuns-github-io.vercel.app/p/how-passwords-should-be-safely-transmitted-and-stored/" class="link">中文</a>
+                
+            </div>
+        </footer>
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-introduction-passwords-are-the-last-line-of-defense-in-the-digital-world">1. Introduction: Passwords Are the Last Line of Defense in the Digital World
+</h2><p>In the entire ecosystem of internet security, passwords are the most common yet also the most fragile component.
+Almost all services we use daily—email, online banking, social platforms, games, forums—rely on passwords to authenticate user identity.</p>
+<p>A password is essentially a <strong>weak credential</strong>:</p>
+<ul>
+<li>It cannot prove who the user really is—it only proves that they “know a certain secret.”</li>
+<li>Once this secret is leaked, an attacker can completely impersonate you.</li>
+</ul>
+<p>Modern cyberattacks are frequent and diverse. A single ordinary password leak often results in multiple accounts across different platforms being compromised.
+To defend against these threats, we must strengthen both the <strong>transmission stage</strong> and the <strong>storage stage</strong>.</p>
+<p>This article builds from fundamental concepts and gradually develops a complete, modern password security system.</p>
+<h2 id="2-why-are-passwords-so-dangerous">2. Why Are Passwords So Dangerous?
+</h2><p>At first glance, a password is just a string composed of characters.
+But the damage caused by a leaked password is far more severe than it seems, mainly for two reasons.</p>
+<h3 id="21-risk-1-leakage-during-transmission">2.1 Risk 1: Leakage During Transmission
+</h3><p>From the moment a user enters a password until it reaches the server, the data passes through:</p>
+<ul>
+<li>The browser</li>
+<li>Local DNS resolution</li>
+<li>OS network stack</li>
+<li>Routers</li>
+<li>ISP backbone</li>
+<li>Server load balancers</li>
+</ul>
+<p>If <strong>any</strong> part of this chain is compromised, the password could be intercepted.</p>
+<p>In theory, HTTPS solves the “eavesdropping problem.”
+But reality is more complex. Common risks include:</p>
+<ul>
+<li>Malware installing fake root certificates (classic MITM strategy)</li>
+<li>Internal corporate/school networks performing TLS inspection</li>
+<li>Public Wi-Fi conducting ARP spoofing and re-signing HTTPS certificates</li>
+<li>Browser extensions injecting malicious scripts to read user input</li>
+<li>“Network optimization” software adding hidden interception modules</li>
+<li>Enterprise gateways performing SSL inspection (legal but unsafe)</li>
+</ul>
+<p>In other words:</p>
+<blockquote>
+<p>You cannot assume the user’s device or network environment is always secure.</p>
+</blockquote>
+<p>Therefore, there is room to improve the security of transmission.</p>
+<h3 id="22-risk-2-server-side-leakage">2.2 Risk 2: Server-side Leakage
+</h3><p>Most leaks occur on the server side. Common scenarios include:</p>
+<ul>
+<li>Database breaches (most common)</li>
+<li>Passwords accidentally printed in logs</li>
+<li>Developers outputting passwords during debugging</li>
+<li>Unencrypted backups mistakenly exposed to the public</li>
+<li>Third-party monitoring tools capturing sensitive fields</li>
+<li>Vulnerabilities (SQL injection, RCE) exposing the database</li>
+<li>Internal misuse of privileges by operations staff</li>
+</ul>
+<p>If the server stores <strong>plaintext passwords</strong>, the consequences are catastrophic:</p>
+<ul>
+<li>All user passwords are exposed</li>
+<li>Accounts on other websites are compromised due to password reuse</li>
+<li>If attackers access a user’s email, the impact escalates further</li>
+</ul>
+<p>Therefore, the server must ensure that <strong>even if a breach occurs, attackers cannot obtain the real passwords</strong>.</p>
+<h2 id="3-how-should-passwords-be-safely-transmitted-over-the-internet">3. How Should Passwords Be Safely Transmitted Over the Internet?
+</h2><h3 id="31-the-most-straightforward-approach-send-the-password-directly-over-https">3.1 The Most Straightforward Approach: Send the Password Directly Over HTTPS
+</h3><p>This is the default method used by most websites today:</p>
+<pre tabindex="0"><code>Browser ——HTTPS——&gt; Server
+</code></pre><p>Advantages:</p>
+<ul>
+<li>Simple</li>
+<li>Mature</li>
+<li>Fast</li>
+<li>Compatible with everything</li>
+</ul>
+<p>The drawback is:</p>
+<p><strong>It places all risk on the reliability of TLS.</strong></p>
+<p>If TLS is compromised by a MITM attack, the password is exposed.</p>
+<p>Thus, some propose hashing the password <strong>on the client side first</strong>.</p>
+<h2 id="4-front-end-hashing-risks-reduced-and-risks-not-reduced">4. Front-end Hashing: Risks Reduced and Risks Not Reduced
+</h2><p>The core idea of front-end hashing is:</p>
+<blockquote>
+<p>Even if the transmission is intercepted, the attacker does not get the real password.</p>
+</blockquote>
+<p>Assume:</p>
+<pre tabindex="0"><code>P  = user password
+H1 = hash(P)
+</code></pre><p>The browser sends H1 instead of P.</p>
+<h3 id="41-what-can-front-end-hashing-protect-against">4.1 What Can Front-end Hashing Protect Against?
+</h3><ul>
+<li>Prevents MITM from obtaining the real password</li>
+<li>Prevents plaintext password leakage through server logs/monitoring</li>
+<li>Attackers cannot use H1 to log in to the user’s accounts on <strong>other</strong> websites</li>
+<li>Even if users reuse passwords elsewhere, a breach of your site won’t cascade to others (very important)</li>
+<li>The server never touches plaintext passwords (a simple form of zero-knowledge authentication)</li>
+</ul>
+<p>Front-end hashing provides:</p>
+<blockquote>
+<p>“Even if your website is compromised, attackers still cannot learn users’ real passwords for other services.”</p>
+</blockquote>
+<p>Traditional approaches cannot offer this.</p>
+<h3 id="42-what-can-front-end-hashing-not-protect-against">4.2 What Can Front-end Hashing <em>Not</em> Protect Against?
+</h3><ul>
+<li>Attackers can directly use H1 to log in to <strong>your</strong> website (you treat it as the credential)</li>
+<li>Keyloggers / infected devices still capture P</li>
+<li>Hashes without challenge are vulnerable to replay attacks</li>
+<li>HTTPS is still required—hashes themselves must be encrypted</li>
+</ul>
+<p>In short:</p>
+<blockquote>
+<p>Front-end hashing reduces damage but does not eliminate risk.</p>
+</blockquote>
+<h3 id="43-is-front-end-hashing-necessary">4.3 Is Front-end Hashing Necessary?
+</h3><p>In practice, it is an <strong>optional but clearly beneficial</strong> enhancement.</p>
+<p>When implemented properly (with challenges to prevent replay), front-end hashing creates a dual defense:</p>
+<ol>
+<li>TLS ensures transport security</li>
+<li>Hashing reduces cross-site password reuse impact</li>
+</ol>
+<p>High-security systems (banks, enterprise platforms, developer services) often use such mechanisms.</p>
+<h2 id="5-how-should-servers-store-passwords">5. How Should Servers Store Passwords?
+</h2><p>Now to the core of password engineering:</p>
+<p><strong>Passwords must never appear in plaintext—even inside the server.</strong></p>
+<p>Industry standards involve three key elements:</p>
+<ol>
+<li>Hash</li>
+<li>Salt</li>
+<li>Slow hash</li>
+</ol>
+<h3 id="51-hashing-making-it-irreversible">5.1 Hashing: Making It Irreversible
+</h3><p>A good hashing function must:</p>
+<ul>
+<li>Have extremely low collision probability</li>
+<li>Change output drastically when input changes slightly (avalanche effect)</li>
+<li>Make it impossible to reverse the input</li>
+</ul>
+<p>Servers store:</p>
+<pre tabindex="0"><code>H = hash(P)
+</code></pre><p>If the database leaks, attackers cannot directly obtain the password.</p>
+<h3 id="52-salt-preventing-rainbow-tables-and-mass-cracking">5.2 Salt: Preventing Rainbow Tables and Mass Cracking
+</h3><p>Without salt, users with the same weak passwords produce identical hashes. Attackers can:</p>
+<ul>
+<li>Use precomputed rainbow tables</li>
+<li>Test common passwords once to crack many accounts</li>
+</ul>
+<p>By adding a random salt:</p>
+<pre tabindex="0"><code>H = hash(P + salt)
+</code></pre><p>Now:</p>
+<ul>
+<li>Two users with “123456” have completely different hashes</li>
+<li>Rainbow tables become useless</li>
+<li>Attackers must brute-force each user individually (massively increasing cost)</li>
+</ul>
+<p>Salt must be:</p>
+<ul>
+<li>Long enough (≥16 bytes)</li>
+<li>Random (CSPRNG)</li>
+<li>Unique per user</li>
+<li>Stored in plaintext (not encrypted)</li>
+</ul>
+<h3 id="53-slow-hashing-truly-increasing-the-cost-of-attacks">5.3 Slow Hashing: Truly Increasing the Cost of Attacks
+</h3><p>Algorithms like SHA256 are far too fast.
+Modern GPUs can compute billions of SHA256 hashes per second.</p>
+<p>Meaning:</p>
+<blockquote>
+<p>Even with salt, SHA256-stored passwords can often be cracked quickly.</p>
+</blockquote>
+<p>Thus, we must use slow hashing algorithms designed specifically for password storage:</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Algorithm</th>
+          <th>Characteristics</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>bcrypt</strong></td>
+          <td>Classic, mature</td>
+      </tr>
+      <tr>
+          <td><strong>scrypt</strong></td>
+          <td>GPU-resistant, high memory use</td>
+      </tr>
+      <tr>
+          <td><strong>Argon2 (recommended)</strong></td>
+          <td>Winner of password hashing competition; tunable CPU/memory/parallelism</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>Slow hashing is not about “stronger hashing”; it&rsquo;s about:</p>
+<blockquote>
+<p>Making each guess expensive so attackers cannot perform massive brute-force attacks.</p>
+</blockquote>
+<p>Login delays are negligible:</p>
+<ul>
+<li>Users log in infrequently</li>
+<li>Each slow-hash costs only tens of milliseconds</li>
+<li>Attackers cannot scale up computations the same way</li>
+</ul>
+<h2 id="6-dual-protection-front-end-hash--back-end-slow-hash">6. Dual Protection: Front-end Hash + Back-end Slow Hash
+</h2><p>Combined:</p>
+<pre tabindex="0"><code>P → H1 = hash1(P) → (transmission) → H2 = bcrypt(H1 + salt)
+</code></pre><p>Dual-layer benefits:</p>
+<ol>
+<li>MITM capturing H1 cannot use it on other sites</li>
+<li>Database leaks revealing H2 are still hard to crack</li>
+<li>Server never touches plaintext passwords</li>
+<li>Logs and monitoring systems cannot leak P</li>
+</ol>
+<p>This “front-end hash + back-end slow hash” model is used in high-security environments to reduce cascade risks.</p>
+<h2 id="7-the-replay-attack-problem-of-front-end-hashing-and-its-solution">7. The Replay Attack Problem of Front-end Hashing and Its Solution
+</h2><p>If front-end hashing is simply:</p>
+<pre tabindex="0"><code>H1 = hash(P)
+</code></pre><p>An attacker who intercepts H1 can replay it indefinitely—almost identical to stealing the real password.</p>
+<h3 id="solution-use-a-random-challenge">Solution: Use a <strong>random challenge</strong>.
+</h3><h3 id="71-complete-workflow">7.1 Complete Workflow
+</h3><ol>
+<li>
+<p><strong>User opens login page</strong>
+The server generates a challenge:</p>
+<pre tabindex="0"><code>challenge = random string
+</code></pre></li>
+<li>
+<p><strong>Browser computes:</strong></p>
+<pre tabindex="0"><code>H1 = hash(P + challenge)
+</code></pre></li>
+<li>
+<p><strong>Server verifies:</strong></p>
+<pre tabindex="0"><code>bcrypt(H1 + salt) == stored_hash
+</code></pre></li>
+</ol>
+<h3 id="72-benefits">7.2 Benefits
+</h3><ul>
+<li>H1 is different every time (challenge varies)</li>
+<li>Intercepted H1 cannot be reused</li>
+<li>MITM value decreases</li>
+<li>Server does not need to store challenge—just verify once and discard</li>
+</ul>
+<h3 id="73-common-engineering-issues">7.3 Common Engineering Issues
+</h3><ul>
+<li>Challenge must not be cached (use no-cache)</li>
+<li>Must be long enough (≥16 bytes)</li>
+<li>Front-end must use secure hash (SHA256 or higher)</li>
+<li>Still requires HTTPS (challenge itself can be intercepted otherwise)</li>
+</ul>
+<h2 id="8-additional-important-practices-often-overlooked">8. Additional Important Practices (Often Overlooked)
+</h2><h3 id="81-never-email-users-their-passwords">8.1 Never Email Users Their Passwords
+</h3><p>Sending a new password via email is extremely dangerous.
+Correct process:</p>
+<ul>
+<li>Send a password reset link</li>
+<li>Link contains a one-time token</li>
+<li>User must set a new password</li>
+</ul>
+<h3 id="82-do-not-allow-weak-passwords">8.2 Do Not Allow Weak Passwords
+</h3><p>Weak passwords are exponentially easier to crack:</p>
+<ul>
+<li><code>123456</code></li>
+<li><code>password</code></li>
+<li><code>qwerty</code></li>
+<li>User phone numbers</li>
+<li>User birthdays</li>
+</ul>
+<p>Use:</p>
+<ul>
+<li>Blacklists of common passwords (top 10k)</li>
+<li>Length policies (≥12 chars)</li>
+<li>Encouragement of password managers</li>
+</ul>
+<h3 id="83-multi-factor-authentication-mfa--2fa">8.3 Multi-factor Authentication (MFA / 2FA)
+</h3><p>Passwords are only the first layer.
+A second factor dramatically reduces attack success rates:</p>
+<ul>
+<li>TOTP (Google Authenticator)</li>
+<li>SMS codes (weaker, but still useful)</li>
+<li>Hardware keys (FIDO2 / U2F)</li>
+</ul>
+<h3 id="84-account-protection-features">8.4 Account Protection Features
+</h3><ul>
+<li>Lockouts after multiple failed attempts</li>
+<li>Suspicious-login email alerts</li>
+<li>Unusual IP/UA verification steps</li>
+<li>Recent login activity logs for user review</li>
+</ul>
+<h3 id="85-password-breach-checks-hibp-api">8.5 Password Breach Checks (HIBP API)
+</h3><p>Many large websites check whether:</p>
+<ul>
+<li>A user&rsquo;s chosen password appears in known breach databases (like HaveIBeenPwned)</li>
+</ul>
+<p>This significantly reduces risk from weak password reuse.</p>
+<h2 id="9-goals-of-a-modern-password-security-system">9. Goals of a Modern Password Security System
+</h2><p>With all steps combined, a modern password system should ensure:</p>
+<h3 id="91-secure-transmission">9.1 Secure Transmission
+</h3><ul>
+<li>Use HTTPS</li>
+<li>Optional front-end hashing to prevent cascading leaks</li>
+<li>Challenge-based anti-replay</li>
+</ul>
+<h3 id="92-secure-storage">9.2 Secure Storage
+</h3><ul>
+<li>Never store plaintext passwords</li>
+<li>Unique salt per user</li>
+<li>Use slow hashing algorithms</li>
+</ul>
+<h3 id="93-account-protection">9.3 Account Protection
+</h3><ul>
+<li>Strong password policies</li>
+<li>MFA</li>
+<li>Anomaly detection</li>
+<li>Password leak comparison</li>
+<li>No sensitive info in logs</li>
+</ul>
+<p>The final objective:</p>
+<blockquote>
+<p>Even if the entire server is compromised, attackers still cannot obtain any user&rsquo;s real password.</p>
+</blockquote>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/en/tags/it/">IT</a>
+        
+            <a href="/en/tags/password-security/">Password Security</a>
+        
+            <a href="/en/tags/secure-password-transmission/">Secure Password Transmission</a>
+        
+            <a href="/en/tags/password-storage/">Password Storage</a>
+        
+            <a href="/en/tags/mitm-attack-prevention/">MITM Attack Prevention</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'en',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 Yearsuns
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
