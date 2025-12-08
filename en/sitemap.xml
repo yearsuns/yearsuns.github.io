@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://yearsuns-github-io.vercel.app/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/</loc>
+    <lastmod>2025-07-16T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-CN"
+                href="https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-US"
+                href="https://yearsuns-github-io.vercel.app/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/"
+                />
+  </url><url>
     <loc>https://yearsuns-github-io.vercel.app/en/tags/amm/</loc>
     <lastmod>2025-07-16T14:59:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -92,20 +106,6 @@
                 rel="alternate"
                 hreflang="en-US"
                 href="https://yearsuns-github-io.vercel.app/en/tags/"
-                />
-  </url><url>
-    <loc>https://yearsuns-github-io.vercel.app/en/p/the-fundamental-principles-of-the-xyk-model/</loc>
-    <lastmod>2025-07-16T14:59:56+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://yearsuns-github-io.vercel.app/p/the-fundamental-principles-of-the-xyk-model/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://yearsuns-github-io.vercel.app/en/p/the-fundamental-principles-of-the-xyk-model/"
                 />
   </url><url>
     <loc>https://yearsuns-github-io.vercel.app/en/tags/uniswap/</loc>

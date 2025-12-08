@@ -7,12 +7,445 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
         <copyright>王离谱</copyright>
-        <lastBuildDate>Wed, 16 Jul 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/uniswap/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>XYK模型的基本原理</title>
-        <link>https://yearsuns-github-io.vercel.app/p/the-fundamental-principles-of-the-xyk-model/</link>
+        <lastBuildDate>Sat, 02 Aug 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/uniswap/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>深入理解Uniswap的集中流动性基本原理</title>
+        <link>https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/</link>
+        <pubDate>Sat, 02 Aug 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/</guid>
+        <description>&lt;p&gt;如果你了解过 Uniswap V2，你一定知道它最大的优点是“完全自动化”，最大的问题也是“完全自动化”。资金一旦进入，都会机械地分布在从0到∞的整个价格区间。&lt;/p&gt;
+&lt;p&gt;这本来很公平，却非常低效：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;大多数时间，资产都在远离市场价格的位置“睡觉”，没有人交易到那里，也不产生手续费。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;于是，Uniswap V3 提出一个革命性的概念：集中流动性（Concentrated Liquidity）。&lt;/p&gt;
+&lt;p&gt;它让 LP 可以把资金“集中”在自己认为合适的价格范围内，让“活钱干活”。&lt;/p&gt;
+&lt;h2 id=&#34;一什么是集中流动性背景与要解决的问题&#34;&gt;&lt;strong&gt;一、什么是集中流动性：背景与要解决的问题&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;去中心化交易合约 Uniswap 采用自动做市商（AMM）模型，用户无需挂单，也无需寻找对手方，只要向池子中注入两种代币，就可以成为流动性提供者。这种模式非常简洁，但也带来了一个不易察觉的问题：大部分流动性并没有发挥作用。&lt;/p&gt;
+&lt;p&gt;为了说明这一点，我们需要先回顾 Uniswap v2 的机制。&lt;/p&gt;
+&lt;h3 id=&#34;1-传统-amm恒定乘积与全价格区间&#34;&gt;&lt;strong&gt;1. 传统 AMM：恒定乘积与“全价格区间”&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;在 v2 的恒定乘积模型中，交易池中维持一个恒定公式：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;x · y = k&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这里的 x 和 y，是池中两种资产的数量，k 是常数。无论市场价格如何波动，这个公式总是成立。&lt;/p&gt;
+&lt;p&gt;但这个模型隐含一个设定：&lt;strong&gt;池子的流动性分布在从 0 到 ∞ 的整个价格范围上&lt;/strong&gt;。理论上无论价格涨到多高、跌到多低，这个池子都“准备好”提供流动性。&lt;/p&gt;
+&lt;p&gt;问题是：&lt;strong&gt;真实市场的价格从来不会走到 0 或无穷大&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;换句话说，流动性被被动地散布在一个几乎永远用不上的超级宽区间里。&lt;/p&gt;
+&lt;h3 id=&#34;2-流动性利用率的问题&#34;&gt;&lt;strong&gt;2. 流动性利用率的问题&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;如果流动性分布在一个过大的范围上，会造成一个非常直接的后果：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;绝大部分资金是在“睡觉”。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;现实中，价格通常在一个较窄范围内波动，因此真正参与交易的，只是这个范围以内的资金。而其他资金只是静静地躺着，却仍然需要占用资本。&lt;/p&gt;
+&lt;p&gt;于是就出现两个影响：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;对交易者来说，主动成交的深度有限，滑点高；&lt;/li&gt;
+&lt;li&gt;对 LP 来说，明明投入很多资金，收益却并不成比例。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;换句话说：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;资金利用率低。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;3-为什么需要集中流动性&#34;&gt;&lt;strong&gt;3. 为什么需要集中流动性&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Uniswap 在 v3 版本提出集中流动性（Concentrated Liquidity），核心思想非常直接：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;流动性应当放在实际会发生交易的价格区间里。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果价格长期在一个区域波动，那 LP 就可以把流动性集中在这个区域，不再浪费在可能根本不会出现的极端价格上。&lt;/p&gt;
+&lt;p&gt;这样带来的效果是显著的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;同样的资金，提供更深的流动性&lt;/li&gt;
+&lt;li&gt;对大额交易的价格冲击减小&lt;/li&gt;
+&lt;li&gt;手续费收入提高&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这实际上把 AMM 从“广泛分布”改成了“局部有效分布”。&lt;/p&gt;
+&lt;h3 id=&#34;4-集中流动性的定义&#34;&gt;&lt;strong&gt;4. 集中流动性的定义&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;严格来说，集中流动性是指：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LP 只在自己设定的价格区间 \([P_{lower}, P_{upper}]\) 内提供流动性，一旦价格超出范围，就不再参与交易，也不再赚费。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这意味着，每一个 LP 不再是一个简单的资金池，而变成一个“带有条件的流动性头寸”。&lt;/p&gt;
+&lt;p&gt;从合约的角度看，是把一个大池子拆成很多小区间，把流动性分别放入这些区间，交易发生在哪个区间，哪个区间的 LP 就得到手续费。&lt;/p&gt;
+&lt;h3 id=&#34;5-它解决的到底是什么问题&#34;&gt;&lt;strong&gt;5. 它解决的到底是什么问题&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;如果用一句话概括：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用同样的资本，获得更高的有效深度。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;但具体来说，它带来三项核心改进：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;提高资本效率&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;降低滑点&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;提高 LP 的费收益率&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这些优点都来自同一个事实：流动性终于可以集中，而不是无边界地稀释。&lt;/p&gt;
+&lt;h3 id=&#34;6-但它并不是免费的优化&#34;&gt;&lt;strong&gt;6. 但它并不是免费的优化&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;集中流动性并没有改变 AMM 的基本逻辑，而是引入一个新的维度：&lt;strong&gt;价格区间&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;这让 LP 的岗位变得更像需要判断价格趋势的“策略性角色”。因此，集中流动性同时带来了一个新的风险：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果价格突破区间，头寸会变成单边资产，并停止产生收益。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;为了获得更高的收益，需要承担更多管理与判断成本。这是一种典型的“收益与风险互换”关系。&lt;/p&gt;
+&lt;h2 id=&#34;二集中流动性是如何运行的&#34;&gt;&lt;strong&gt;二、集中流动性是如何运行的&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-提供流动性需要输入什么&#34;&gt;&lt;strong&gt;1. 提供流动性需要输入什么&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;假设我们向 ETH/USDC 池子提供流动性，合约会要求我们输入：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;币对：ETH / USDC&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;价格区间&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;lower price 例：2000 USDC/ETH&lt;/li&gt;
+&lt;li&gt;upper price 例：3000 USDC/ETH&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;想提供多少 ETH 或多少 USDC&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;也就是说，我们其实是在告诉合约三件事：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;我想参与 ETH / USDC 交易对的做市&lt;/li&gt;
+&lt;li&gt;在 2000～3000 这个区间&lt;/li&gt;
+&lt;li&gt;我愿意提供多少币&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-需要提供什么代币&#34;&gt;&lt;strong&gt;2. 需要提供什么代币&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;假设当前 ETH/USDC 价格是 2500，那么系统判断为：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2000 &amp;lt; 2500 &amp;lt; 3000
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;也就是“价格在区间内”。&lt;/p&gt;
+&lt;p&gt;这个判断非常重要，因为它直接影响我们需要提供的资产结构：&lt;/p&gt;
+&lt;h4 id=&#34;三种情况&#34;&gt;三种情况
+&lt;/h4&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;当前价格&lt;/th&gt;
+          &lt;th&gt;需要提供&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;在区间内&lt;/td&gt;
+          &lt;td&gt;需要同时提供 ETH 和 USDC&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;当前价格低于区间&lt;/td&gt;
+          &lt;td&gt;只会用到 USDC&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;当前价格高于区间&lt;/td&gt;
+          &lt;td&gt;只会用到 ETH&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;为什么会这样？它不是策略，而是数学决定的：&lt;strong&gt;AMM 会在不同价格状态下，自动将持仓偏向一种资产，这由模型决定，不是策略行为。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;简单地理解就是，物以稀为贵。当价格较低时，交易池需要更多的 USDC，当价格较高时，交易池需要更多的 ETH。&lt;/p&gt;
+&lt;h3 id=&#34;3-理解流动性&#34;&gt;&lt;strong&gt;3. 理解流动性&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;虽然我们给的是资产（ETH/USDC），但合约内部记录的是一个抽象量 L（流动性单位）。&lt;/p&gt;
+&lt;p&gt;理解要点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;我们投入的是资产&lt;/li&gt;
+&lt;li&gt;合约记录的是 L&lt;/li&gt;
+&lt;li&gt;我们未来赚的钱与 L 成正比&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;更直观说：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;L 就像我们在这个价格区间的“份额大小”。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而 ETH / USDC 的数量，会随着价格变化自动调整。&lt;/p&gt;
+&lt;h3 id=&#34;4-价格区间离散化&#34;&gt;&lt;strong&gt;4. 价格区间离散化&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;我们给的区间是连续价格（比如 2000→3000），但合约内部用 tick 记录价格。&lt;/p&gt;
+&lt;p&gt;合约会把它们转成：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;\(tick_{Lower}\)&lt;/li&gt;
+&lt;li&gt;\(tick_{Upper}\)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;tick 是一个离散价格，用来标记区间边界。&lt;/p&gt;
+&lt;p&gt;这一步之后，合约会为这个区间范围增加相应的流动性，实际记录方式为只记录边界状态：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在 \(tick_{Lower}\) 位置把流动性 +L&lt;/li&gt;
+&lt;li&gt;在 \(tick_{Upper}\) 位置把流动性 -L&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这样，当前活跃的流动性等于所有当前价格以下的净流动性之和：&lt;/p&gt;
+\[
+   activeLiquidity = \sum (netLiquidity &lt; \text{current tick})
+\]&lt;p&gt;比如 \(tick_{Lower}=100\), \(tick_{Upper}=200\)，合约会记录为&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;netLiquidity[100] += 10
+netLiquidity[200] -= 10
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果当前价格 tick 是 150，那么 activeLiquidity 等于所有 tick &amp;lt; 150 的 netLiquidity 之和，也就是10&lt;/p&gt;
+&lt;p&gt;如果当前价格 tick 是 205，那么 activeLiquidity 等于所有 tick &amp;lt; 205 的 netLiquidity 之和，也就是0&lt;/p&gt;
+&lt;p&gt;所以，当价格穿过这些 tick 时，系统就知道应该在什么时候开始、什么时候结束使用我们的流动性。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;为什么在存储区间时，要对价格进行离散处理？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果用线性划分，当 ETH/USDC 的价格在 2000～3000 区间时，简单切 1000 段，每段 1USDC，当然可以，看起来也很自然。&lt;/p&gt;
+&lt;p&gt;但是如果价格区间变为 0.2~0.3 或者更低呢？还是按照切 1000 段，就会导致每段区间过小，整体刻度是极不均匀的。&lt;/p&gt;
+&lt;p&gt;而且真实情况下，不同代币的价格可能跨越几个数量级，从 0.0000001 到 10000000 都可能，因此也无法为所有的币统一刻度。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如何进行离散处理呢？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我们设定每个刻度对应的价格是前一个刻度对应价格的固定倍数 \(r\)，那么对于tick+1刻度的价格 \(P_{tick+1}\) 有以下公式&lt;/p&gt;
+&lt;blockquote&gt;
+\[
+   P_{tick+1} = P_{tick} \times r
+  \]&lt;/blockquote&gt;
+&lt;p&gt;由此就很容易推导出以下公式&lt;/p&gt;
+&lt;blockquote&gt;
+\[
+   P_{tick} = P_0 \times r^{tick}
+  \]&lt;/blockquote&gt;
+&lt;p&gt;如果设定初始值 \(P_0=1\)，常量 \(r=1.0001\)，则可以得到&lt;/p&gt;
+&lt;blockquote&gt;
+\[
+   P_{tick} = 1.0001^{tick}
+  \]&lt;/blockquote&gt;
+&lt;p&gt;这意味着每次 tick 移动，价格变 0.01%。&lt;/p&gt;
+&lt;p&gt;现在我们就可以将任意价格使用tick表示&lt;/p&gt;
+&lt;blockquote&gt;
+\[
+   tick = log_{1.0001}P
+  \]&lt;/blockquote&gt;
+&lt;p&gt;比如&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;\(P=0.25\) 对应的 \(tick\approx-13864\)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;\(P=2500\) 对应的 \(tick\approx78244\)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;那么我们的均匀刻度就设计好了，它可以适用于任意价格的代币（只要价格不是负数🤪）&lt;/p&gt;
+&lt;h3 id=&#34;5-保存流动性状态&#34;&gt;&lt;strong&gt;5. 保存流动性状态&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;当我们添加流动性时，系统会给我们分配一个 NFT，它记录：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;选择的区间（2000～3000）&lt;/li&gt;
+&lt;li&gt;L 的大小&lt;/li&gt;
+&lt;li&gt;已经累计能够领取的手续费&lt;/li&gt;
+&lt;li&gt;后续计算手续费需要用到的当前 fee 状态&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因此：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;做市行为不再是池子的一部分，而是一个 NFT 记录的独立头寸。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;6-持仓变化&#34;&gt;&lt;strong&gt;6. 持仓变化&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;当价格在区间内：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;同时持有 ETH 和 USDC&lt;/li&gt;
+&lt;li&gt;随着交易发生，两者互相转换&lt;/li&gt;
+&lt;li&gt;参与撮合并赚手续费&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果价格跌破 &lt;strong&gt;2000&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;头寸会变成全部 USDC&lt;/li&gt;
+&lt;li&gt;不再参与做市，也停止赚手续费&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果价格突破 &lt;strong&gt;3000&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;头寸会变成全部 ETH&lt;/li&gt;
+&lt;li&gt;同样退出做市&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;换句话说：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ETH 涨，头寸更偏 ETH；ETH 跌，头寸更偏 USDC。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这个行为不是策略，而是 AMM 自动完成的结果。&lt;/p&gt;
+&lt;h3 id=&#34;7-手续费结算&#34;&gt;&lt;strong&gt;7. 手续费结算&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;交易发生在区间内（2500在内），就会累积手续费。合约内部会把手续费累计到该区间的 feeGrowth 中。&lt;/p&gt;
+&lt;p&gt;提现时合约会做两件事：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;返回当前持仓（可能是 ETH+USDC，可能是单币）&lt;/li&gt;
+&lt;li&gt;返回累计所得手续费&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;不需要手动领，提现时自动结算。&lt;/p&gt;
+&lt;h2 id=&#34;三主要公式推导&#34;&gt;&lt;strong&gt;三、主要公式推导&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-官方白皮书&#34;&gt;&lt;strong&gt;1. 官方白皮书&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;v2链接： &lt;a class=&#34;link&#34; href=&#34;https://docs.uniswap.org/whitepaper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://docs.uniswap.org/whitepaper.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;v3链接： &lt;a class=&#34;link&#34; href=&#34;https://app.uniswap.org/whitepaper-v3.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://app.uniswap.org/whitepaper-v3.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;v4链接： &lt;a class=&#34;link&#34; href=&#34;https://app.uniswap.org/whitepaper-v4.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://app.uniswap.org/whitepaper-v4.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-基础公式&#34;&gt;&lt;strong&gt;2. 基础公式&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;虚拟资金池曲线（交易模型）&lt;/p&gt;
+\[
+   x \times y = k \tag{1}
+\]&lt;p&gt;流动性&lt;/p&gt;
+\[
+   L = \sqrt{xy} \tag{2}
+\]&lt;p&gt;价格&lt;/p&gt;
+\[
+   P = \frac{y}{x} \tag{3}
+\]&lt;p&gt;有效资金池曲线&lt;/p&gt;
+\[
+   (x+\dfrac{L}{\sqrt{p_{b}}})(y+L\sqrt{p_{a}})=L^{2} \tag{4}
+\]&lt;h3 id=&#34;2-有效资金池曲线推导&#34;&gt;&lt;strong&gt;2. 有效资金池曲线推导&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves.png&#34;
+	width=&#34;1880&#34;
+	height=&#34;1466&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves_hu_7f2418a223292b52.png 480w, https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves_hu_577fb5efdb443dce.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;图1 虚拟资金池&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;128&#34;
+		data-flex-basis=&#34;307px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;根据上图1所示，当前价格在 c 点，假设实际价格的波动范围为 [a,b]&lt;/p&gt;
+&lt;p&gt;那么当价格从 c 点向 a 点滑动时，资金池的消耗最大为 \(y_{real}\) ，同理，当价格由 c 点向 b 点滑动时，资金池的消耗最大为 \(x_{real}\)&lt;/p&gt;
+&lt;p&gt;因此，理论上只需要提供 \(x_{real}\) 和 \(y_{real}\) 就够了，其余的资金是永远都用不上的，这也说明了为什么xyk基础模型的资金利用率低&lt;/p&gt;
+&lt;p&gt;那么问题来了，实际有效的资金池曲线应该是什么样的呢？&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves.png&#34;
+	width=&#34;720&#34;
+	height=&#34;592&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves_hu_7e45aaaa6c8583ea.png 480w, https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves_hu_d0a3c978ce198002.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;图2 有效资金池&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;121&#34;
+		data-flex-basis=&#34;291px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;如上图2所示，我们开始推导这个有效资金池曲线公式&lt;/p&gt;
+\[
+   L^2 = xy \\
+   P = \frac{y}{x}
+\]&lt;p&gt;对于攻读过初中数学学位的人来说，将等式两边相乘和相除就可以轻松推导出以下公式&lt;/p&gt;
+\[
+\begin{aligned}
+   x=\dfrac{L}{\sqrt{P}} \\
+   y=L\sqrt{P} \tag{4}
+\end{aligned}
+\]&lt;p&gt;由图1可知&lt;/p&gt;
+\[
+   x=x_{real}+x_b \\
+   y=y_{real}+y_a
+\]&lt;p&gt;代入公式 (1) 的 xyk 模型可得&lt;/p&gt;
+\[
+   (x_{real}+x_b)(y_{real}+y_a)=k=L^2
+\]&lt;p&gt;再根据公式 (4) 将 \(x_b, y_a\) 替换可得&lt;/p&gt;
+\[
+   (x_{real}+\dfrac{L}{\sqrt{P_{b}}})(y_{real}+L\sqrt{P_{a}})=L^{2}
+\]&lt;p&gt;这就是最终的有效资金池曲线了&lt;/p&gt;
+&lt;h3 id=&#34;3-计算流动性变化&#34;&gt;&lt;strong&gt;3. 计算流动性变化&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;我们提供流动性后，合约开始进行各种交易行为，那么要如何计算当前我们提供的流动性中资产是如何分配的？&lt;/p&gt;
+&lt;p&gt;根据上面的公式(4)：&lt;/p&gt;
+\[
+\begin{aligned}
+   x=\dfrac{L}{\sqrt{p}} \\
+   y=L\sqrt{P} \tag{4}
+\end{aligned}
+\]&lt;p&gt;令：&lt;/p&gt;
+\[
+\begin{aligned}
+   S = \sqrt{P}
+\end{aligned}
+\]&lt;p&gt;则：&lt;/p&gt;
+\[
+\begin{aligned}
+   x=\dfrac{L}{S} \\
+   y=LS
+\end{aligned}
+\]&lt;p&gt;因为 L 不变，对 S 求微分：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对 x：&lt;/strong&gt;&lt;/p&gt;
+\[
+x = \frac{L}{S}
+\Rightarrow dx = -L \frac{1}{S^2} dS
+\]&lt;p&gt;&lt;strong&gt;对 y：&lt;/strong&gt;&lt;/p&gt;
+\[
+y = L S
+\Rightarrow dy = L dS
+\]&lt;p&gt;所以有两条很重要的微分关系：&lt;/p&gt;
+\[
+dx = -L \frac{1}{S^2} dS,\qquad dy = L dS
+\]&lt;p&gt;假设一个 LP 的有效价格区间是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;下界价格：\(P_a\)，对应 \(S_a = \sqrt{P_a}\)&lt;/li&gt;
+&lt;li&gt;上界价格：\(P_b\)，对应 \(S_b = \sqrt{P_b}\)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;只看 \(token_y\) 的变化&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在区间内，S 从 (S_a) 增长到 (S_b) 时：&lt;/p&gt;
+\[
+dy = L dS
+\]&lt;p&gt;对 S 从 (S_a) 到 (S_b) 积分：&lt;/p&gt;
+\[
+\Delta y = \int_{S_a}^{S_b} L, dS
+= L (S_b - S_a)
+= L(\sqrt{P_b} - \sqrt{P_a})
+\]&lt;p&gt;这就是 &lt;strong&gt;在整个 \([P_a, P_b]\) 区间里对应的 \(token_y\) 数量&lt;/strong&gt;：&lt;/p&gt;
+\[
+amount_y = L(\sqrt{P_b} - \sqrt{P_a})
+\]&lt;p&gt;&lt;strong&gt;只看 \(token_x\)的变化&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;对 \(token_x\)：&lt;/p&gt;
+\[
+dx = -L \frac{1}{S^2} dS
+\]&lt;p&gt;注意：
+x 和 S 方向相反（价格上升 → \(token_x\) 减少），
+我们要的是区间内总共的 \(token_x\) 数量，取绝对值来算：&lt;/p&gt;
+\[
+\Delta x = \int_{S_a}^{S_b} L \frac{1}{S^2} dS
+\]&lt;p&gt;计算：&lt;/p&gt;
+\[
+\int \frac{1}{S^2} dS = -\frac{1}{S}
+\]&lt;p&gt;所以：&lt;/p&gt;
+\[
+\Delta x
+= L\left[-\frac{1}{S}\right]_{S_a}^{S_b}
+= L\left(-\frac{1}{S_b} + \frac{1}{S_a}\right)
+= L\left(\frac{1}{S_a} - \frac{1}{S_b}\right)
+\]&lt;p&gt;代回 \(S = \sqrt{P}\)：&lt;/p&gt;
+\[
+amount_x = L\left(\frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}}\right)
+\]&lt;p&gt;这就是 \(token_x\) 的区间公式。&lt;/p&gt;
+&lt;p&gt;上面推导的是整个 \([P_a, P_b]\) 区间的总 x/y。
+但实际情况取决于当前价格 (P) 在区间里的位置：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;情况 A：当前价格在区间内部（\(P_a &lt; P &lt; P_b\)）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这时的头寸是“部分在 token0，部分在 token1”：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;对 \(token_x\)，有效区间是 [P, Pb]
+（高价端还没被换走的 \(token_x\)）&lt;/p&gt;
+\[
+  amount_x = L\left(\frac{1}{\sqrt{P}} - \frac{1}{\sqrt{P_b}}\right)
+  \]&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对 \(token_y\)，有效区间是 [Pa, P]
+（从下界到现在已经变成 \(token_y\) 的部分）&lt;/p&gt;
+&lt;p&gt;[
+amount_y = L(\sqrt{P} - \sqrt{P_a})
+]&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;情况 B：价格低于区间（\(P \le P_a\)）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;还没开始“向上走”，流动性全部在 \(token_x\) 形态：&lt;/p&gt;
+\[
+amount_x = L\left(\frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}}\right) \\
+\quad amount_y = 0
+\]&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;情况 C：价格高于区间（\(P \ge P_b\)）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;已经“完全向上走完”，全部变成 \(token_y\)：&lt;/p&gt;
+\[
+amount_x = 0 \\
+\quad amount_y = L(\sqrt{P_b} - \sqrt{P_a})
+\]&lt;h3 id=&#34;4-计算实际交易价格&#34;&gt;&lt;strong&gt;4. 计算实际交易价格&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;我们已经知道了交易原理和基本公式，那么当我们准备通过交易池兑换代币时，因为我们投入的资产也会影响交易池的资产比例，\(P=\dfrac{y}{x}\) 只是理论价格，那么应该如何计算实际交易价格呢？比如说1个 ETH 能换多少 USDC ？&lt;/p&gt;
+&lt;p&gt;当我们往池子里投入 \(\Delta x\) 个 ETH 时，池中的 USDC 会减少 \(\Delta y\)，对应的价格也会从 \(P_0\) 下跌到 \(P_1\)，于是有以下关系&lt;/p&gt;
+\[
+\begin{aligned}
+\Delta x &amp;= L\left(\frac{1}{\sqrt{P_1}} - \frac{1}{\sqrt{P_0}}\right) = L\left(\frac{1}{S_1} - \frac{1}{S_0}\right) 
+\Rightarrow 
+S_1 = \frac{1}{\dfrac{\Delta x}{L} + \dfrac{1}{S_0}} \\
+\Delta y &amp;= L(\sqrt{P_0} - \sqrt{P_1}) = L(S_0 - S_1) = 
+L\left(S_0 - \frac{1}{\dfrac{\Delta x}{L} + \dfrac{1}{S_0}}\right)
+\end{aligned}
+\]&lt;p&gt;其中，L为当前区间的流动性。&lt;/p&gt;
+&lt;p&gt;如果交易量很大、会跨 tick，就把区间拆成多段，对每一段用同样的方法算一段，然后把每一段的 Δy 累加起来即可。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>深入理解Uniswap的XYK模型基本原理</title>
+        <link>https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/</link>
         <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
         
-        <guid>https://yearsuns-github-io.vercel.app/p/the-fundamental-principles-of-the-xyk-model/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/</guid>
         <description>&lt;blockquote&gt;
 &lt;p&gt;XYK 就是：把一对资产放进一个“水池”，规定池里两种资产数量的乘积始终相等 &lt;code&gt;x * y = k&lt;/code&gt;；
 所有交易都必须沿着这条规则移动，于是&lt;strong&gt;价格、滑点、收益、风险&lt;/strong&gt;都从这个公式里自然长出来。&lt;/p&gt;

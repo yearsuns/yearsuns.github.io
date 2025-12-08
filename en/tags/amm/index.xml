@@ -8,11 +8,11 @@
         <language>en-US</language>
         <copyright>Yearsuns</copyright>
         <lastBuildDate>Wed, 16 Jul 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/tags/amm/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>The Fundamental Principles of the XYK Model</title>
-        <link>https://yearsuns-github-io.vercel.app/en/p/the-fundamental-principles-of-the-xyk-model/</link>
+        <title>A Deep Dive into the Fundamental Principles of Uniswap’s XYK Model</title>
+        <link>https://yearsuns-github-io.vercel.app/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/</link>
         <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>
         
-        <guid>https://yearsuns-github-io.vercel.app/en/p/the-fundamental-principles-of-the-xyk-model/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/</guid>
         <description>&lt;blockquote&gt;
 &lt;p&gt;XYK means: put a pair of assets into a “pool”, and require that the product of the two asset amounts always stays equal: &lt;code&gt;x * y = k&lt;/code&gt;.
 All swaps must follow this rule, and therefore &lt;strong&gt;price, slippage, yield and risk&lt;/strong&gt; all naturally come from this formula.&lt;/p&gt;

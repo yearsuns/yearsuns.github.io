@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="如果你了解过 Uniswap V2，你一定知道它最大的优点是“完全自动化”，最大的问题也是“完全自动化”。资金一旦进入，都会机械地分布在从0到∞的整个价格区间。\n">
+<meta name="keywords" content="区块链, AMM, XYK模型, 集中流动性, Uniswap"><title>深入理解Uniswap的集中流动性基本原理</title>
+
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="深入理解Uniswap的集中流动性基本原理">
+<meta property='og:description' content="如果你了解过 Uniswap V2，你一定知道它最大的优点是“完全自动化”，最大的问题也是“完全自动化”。资金一旦进入，都会机械地分布在从0到∞的整个价格区间。\n">
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/'>
+<meta property='og:site_name' content='王离谱的小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='区块链' /><meta property='article:tag' content='AMM' /><meta property='article:tag' content='XYK模型' /><meta property='article:tag' content='集中流动性' /><meta property='article:tag' content='Uniswap' /><meta property='article:published_time' content='2025-08-02T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-08-02T14:59:56&#43;08:00'/>
+<meta name="twitter:title" content="深入理解Uniswap的集中流动性基本原理">
+<meta name="twitter:description" content="如果你了解过 Uniswap V2，你一定知道它最大的优点是“完全自动化”，最大的问题也是“完全自动化”。资金一旦进入，都会机械地分布在从0到∞的整个价格区间。\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王离谱的小破站</a></h1>
+            <h2 class="site-description">破破烂烂</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>分类</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://tools.yearsuns.com' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>工具</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" selected>中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#一什么是集中流动性背景与要解决的问题"><strong>一、什么是集中流动性：背景与要解决的问题</strong></a>
+      <ul>
+        <li><a href="#1-传统-amm恒定乘积与全价格区间"><strong>1. 传统 AMM：恒定乘积与“全价格区间”</strong></a></li>
+        <li><a href="#2-流动性利用率的问题"><strong>2. 流动性利用率的问题</strong></a></li>
+        <li><a href="#3-为什么需要集中流动性"><strong>3. 为什么需要集中流动性</strong></a></li>
+        <li><a href="#4-集中流动性的定义"><strong>4. 集中流动性的定义</strong></a></li>
+        <li><a href="#5-它解决的到底是什么问题"><strong>5. 它解决的到底是什么问题</strong></a></li>
+        <li><a href="#6-但它并不是免费的优化"><strong>6. 但它并不是免费的优化</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#二集中流动性是如何运行的"><strong>二、集中流动性是如何运行的</strong></a>
+      <ul>
+        <li><a href="#1-提供流动性需要输入什么"><strong>1. 提供流动性需要输入什么</strong></a></li>
+        <li><a href="#2-需要提供什么代币"><strong>2. 需要提供什么代币</strong></a></li>
+        <li><a href="#3-理解流动性"><strong>3. 理解流动性</strong></a></li>
+        <li><a href="#4-价格区间离散化"><strong>4. 价格区间离散化</strong></a></li>
+        <li><a href="#5-保存流动性状态"><strong>5. 保存流动性状态</strong></a></li>
+        <li><a href="#6-持仓变化"><strong>6. 持仓变化</strong></a></li>
+        <li><a href="#7-手续费结算"><strong>7. 手续费结算</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#三主要公式推导"><strong>三、主要公式推导</strong></a>
+      <ul>
+        <li><a href="#1-官方白皮书"><strong>1. 官方白皮书</strong></a></li>
+        <li><a href="#2-基础公式"><strong>2. 基础公式</strong></a></li>
+        <li><a href="#2-有效资金池曲线推导"><strong>2. 有效资金池曲线推导</strong></a></li>
+        <li><a href="#3-计算流动性变化"><strong>3. 计算流动性变化</strong></a></li>
+        <li><a href="#4-计算实际交易价格"><strong>4. 计算实际交易价格</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/">深入理解Uniswap的集中流动性基本原理</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025年08月02日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 9 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>如果你了解过 Uniswap V2，你一定知道它最大的优点是“完全自动化”，最大的问题也是“完全自动化”。资金一旦进入，都会机械地分布在从0到∞的整个价格区间。</p>
+<p>这本来很公平，却非常低效：</p>
+<blockquote>
+<p>大多数时间，资产都在远离市场价格的位置“睡觉”，没有人交易到那里，也不产生手续费。</p>
+</blockquote>
+<p>于是，Uniswap V3 提出一个革命性的概念：集中流动性（Concentrated Liquidity）。</p>
+<p>它让 LP 可以把资金“集中”在自己认为合适的价格范围内，让“活钱干活”。</p>
+<h2 id="一什么是集中流动性背景与要解决的问题"><strong>一、什么是集中流动性：背景与要解决的问题</strong>
+</h2><p>去中心化交易合约 Uniswap 采用自动做市商（AMM）模型，用户无需挂单，也无需寻找对手方，只要向池子中注入两种代币，就可以成为流动性提供者。这种模式非常简洁，但也带来了一个不易察觉的问题：大部分流动性并没有发挥作用。</p>
+<p>为了说明这一点，我们需要先回顾 Uniswap v2 的机制。</p>
+<h3 id="1-传统-amm恒定乘积与全价格区间"><strong>1. 传统 AMM：恒定乘积与“全价格区间”</strong>
+</h3><p>在 v2 的恒定乘积模型中，交易池中维持一个恒定公式：</p>
+<blockquote>
+<p>x · y = k</p>
+</blockquote>
+<p>这里的 x 和 y，是池中两种资产的数量，k 是常数。无论市场价格如何波动，这个公式总是成立。</p>
+<p>但这个模型隐含一个设定：<strong>池子的流动性分布在从 0 到 ∞ 的整个价格范围上</strong>。理论上无论价格涨到多高、跌到多低，这个池子都“准备好”提供流动性。</p>
+<p>问题是：<strong>真实市场的价格从来不会走到 0 或无穷大</strong>。</p>
+<p>换句话说，流动性被被动地散布在一个几乎永远用不上的超级宽区间里。</p>
+<h3 id="2-流动性利用率的问题"><strong>2. 流动性利用率的问题</strong>
+</h3><p>如果流动性分布在一个过大的范围上，会造成一个非常直接的后果：</p>
+<p><strong>绝大部分资金是在“睡觉”。</strong></p>
+<p>现实中，价格通常在一个较窄范围内波动，因此真正参与交易的，只是这个范围以内的资金。而其他资金只是静静地躺着，却仍然需要占用资本。</p>
+<p>于是就出现两个影响：</p>
+<ul>
+<li>对交易者来说，主动成交的深度有限，滑点高；</li>
+<li>对 LP 来说，明明投入很多资金，收益却并不成比例。</li>
+</ul>
+<p>换句话说：</p>
+<blockquote>
+<p>资金利用率低。</p>
+</blockquote>
+<h3 id="3-为什么需要集中流动性"><strong>3. 为什么需要集中流动性</strong>
+</h3><p>Uniswap 在 v3 版本提出集中流动性（Concentrated Liquidity），核心思想非常直接：</p>
+<blockquote>
+<p>流动性应当放在实际会发生交易的价格区间里。</p>
+</blockquote>
+<p>如果价格长期在一个区域波动，那 LP 就可以把流动性集中在这个区域，不再浪费在可能根本不会出现的极端价格上。</p>
+<p>这样带来的效果是显著的：</p>
+<ul>
+<li>同样的资金，提供更深的流动性</li>
+<li>对大额交易的价格冲击减小</li>
+<li>手续费收入提高</li>
+</ul>
+<p>这实际上把 AMM 从“广泛分布”改成了“局部有效分布”。</p>
+<h3 id="4-集中流动性的定义"><strong>4. 集中流动性的定义</strong>
+</h3><p>严格来说，集中流动性是指：</p>
+<blockquote>
+<p>LP 只在自己设定的价格区间 \([P_{lower}, P_{upper}]\) 内提供流动性，一旦价格超出范围，就不再参与交易，也不再赚费。</p>
+</blockquote>
+<p>这意味着，每一个 LP 不再是一个简单的资金池，而变成一个“带有条件的流动性头寸”。</p>
+<p>从合约的角度看，是把一个大池子拆成很多小区间，把流动性分别放入这些区间，交易发生在哪个区间，哪个区间的 LP 就得到手续费。</p>
+<h3 id="5-它解决的到底是什么问题"><strong>5. 它解决的到底是什么问题</strong>
+</h3><p>如果用一句话概括：</p>
+<blockquote>
+<p>用同样的资本，获得更高的有效深度。</p>
+</blockquote>
+<p>但具体来说，它带来三项核心改进：</p>
+<ol>
+<li><strong>提高资本效率</strong></li>
+<li><strong>降低滑点</strong></li>
+<li><strong>提高 LP 的费收益率</strong></li>
+</ol>
+<p>这些优点都来自同一个事实：流动性终于可以集中，而不是无边界地稀释。</p>
+<h3 id="6-但它并不是免费的优化"><strong>6. 但它并不是免费的优化</strong>
+</h3><p>集中流动性并没有改变 AMM 的基本逻辑，而是引入一个新的维度：<strong>价格区间</strong>。</p>
+<p>这让 LP 的岗位变得更像需要判断价格趋势的“策略性角色”。因此，集中流动性同时带来了一个新的风险：</p>
+<ul>
+<li>如果价格突破区间，头寸会变成单边资产，并停止产生收益。</li>
+</ul>
+<p>为了获得更高的收益，需要承担更多管理与判断成本。这是一种典型的“收益与风险互换”关系。</p>
+<h2 id="二集中流动性是如何运行的"><strong>二、集中流动性是如何运行的</strong>
+</h2><h3 id="1-提供流动性需要输入什么"><strong>1. 提供流动性需要输入什么</strong>
+</h3><p>假设我们向 ETH/USDC 池子提供流动性，合约会要求我们输入：</p>
+<ol>
+<li>
+<p>币对：ETH / USDC</p>
+</li>
+<li>
+<p>价格区间</p>
+<ul>
+<li>lower price 例：2000 USDC/ETH</li>
+<li>upper price 例：3000 USDC/ETH</li>
+</ul>
+</li>
+<li>
+<p>想提供多少 ETH 或多少 USDC</p>
+</li>
+</ol>
+<p>也就是说，我们其实是在告诉合约三件事：</p>
+<ul>
+<li>我想参与 ETH / USDC 交易对的做市</li>
+<li>在 2000～3000 这个区间</li>
+<li>我愿意提供多少币</li>
+</ul>
+<h3 id="2-需要提供什么代币"><strong>2. 需要提供什么代币</strong>
+</h3><p>假设当前 ETH/USDC 价格是 2500，那么系统判断为：</p>
+<pre tabindex="0"><code>2000 &lt; 2500 &lt; 3000
+</code></pre><p>也就是“价格在区间内”。</p>
+<p>这个判断非常重要，因为它直接影响我们需要提供的资产结构：</p>
+<h4 id="三种情况">三种情况
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>当前价格</th>
+          <th>需要提供</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>在区间内</td>
+          <td>需要同时提供 ETH 和 USDC</td>
+      </tr>
+      <tr>
+          <td>当前价格低于区间</td>
+          <td>只会用到 USDC</td>
+      </tr>
+      <tr>
+          <td>当前价格高于区间</td>
+          <td>只会用到 ETH</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>为什么会这样？它不是策略，而是数学决定的：<strong>AMM 会在不同价格状态下，自动将持仓偏向一种资产，这由模型决定，不是策略行为。</strong></p>
+<p>简单地理解就是，物以稀为贵。当价格较低时，交易池需要更多的 USDC，当价格较高时，交易池需要更多的 ETH。</p>
+<h3 id="3-理解流动性"><strong>3. 理解流动性</strong>
+</h3><p>虽然我们给的是资产（ETH/USDC），但合约内部记录的是一个抽象量 L（流动性单位）。</p>
+<p>理解要点：</p>
+<ul>
+<li>我们投入的是资产</li>
+<li>合约记录的是 L</li>
+<li>我们未来赚的钱与 L 成正比</li>
+</ul>
+<p>更直观说：</p>
+<blockquote>
+<p>L 就像我们在这个价格区间的“份额大小”。</p>
+</blockquote>
+<p>而 ETH / USDC 的数量，会随着价格变化自动调整。</p>
+<h3 id="4-价格区间离散化"><strong>4. 价格区间离散化</strong>
+</h3><p>我们给的区间是连续价格（比如 2000→3000），但合约内部用 tick 记录价格。</p>
+<p>合约会把它们转成：</p>
+<ul>
+<li>\(tick_{Lower}\)</li>
+<li>\(tick_{Upper}\)</li>
+</ul>
+<p>tick 是一个离散价格，用来标记区间边界。</p>
+<p>这一步之后，合约会为这个区间范围增加相应的流动性，实际记录方式为只记录边界状态：</p>
+<ul>
+<li>在 \(tick_{Lower}\) 位置把流动性 +L</li>
+<li>在 \(tick_{Upper}\) 位置把流动性 -L</li>
+</ul>
+<p>这样，当前活跃的流动性等于所有当前价格以下的净流动性之和：</p>
+\[
+   activeLiquidity = \sum (netLiquidity < \text{current tick})
+\]<p>比如 \(tick_{Lower}=100\), \(tick_{Upper}=200\)，合约会记录为</p>
+<pre tabindex="0"><code>netLiquidity[100] += 10
+netLiquidity[200] -= 10
+</code></pre><p>如果当前价格 tick 是 150，那么 activeLiquidity 等于所有 tick &lt; 150 的 netLiquidity 之和，也就是10</p>
+<p>如果当前价格 tick 是 205，那么 activeLiquidity 等于所有 tick &lt; 205 的 netLiquidity 之和，也就是0</p>
+<p>所以，当价格穿过这些 tick 时，系统就知道应该在什么时候开始、什么时候结束使用我们的流动性。</p>
+<p><strong>为什么在存储区间时，要对价格进行离散处理？</strong></p>
+<p>如果用线性划分，当 ETH/USDC 的价格在 2000～3000 区间时，简单切 1000 段，每段 1USDC，当然可以，看起来也很自然。</p>
+<p>但是如果价格区间变为 0.2~0.3 或者更低呢？还是按照切 1000 段，就会导致每段区间过小，整体刻度是极不均匀的。</p>
+<p>而且真实情况下，不同代币的价格可能跨越几个数量级，从 0.0000001 到 10000000 都可能，因此也无法为所有的币统一刻度。</p>
+<p><strong>如何进行离散处理呢？</strong></p>
+<p>我们设定每个刻度对应的价格是前一个刻度对应价格的固定倍数 \(r\)，那么对于tick+1刻度的价格 \(P_{tick+1}\) 有以下公式</p>
+<blockquote>
+\[
+   P_{tick+1} = P_{tick} \times r
+  \]</blockquote>
+<p>由此就很容易推导出以下公式</p>
+<blockquote>
+\[
+   P_{tick} = P_0 \times r^{tick}
+  \]</blockquote>
+<p>如果设定初始值 \(P_0=1\)，常量 \(r=1.0001\)，则可以得到</p>
+<blockquote>
+\[
+   P_{tick} = 1.0001^{tick}
+  \]</blockquote>
+<p>这意味着每次 tick 移动，价格变 0.01%。</p>
+<p>现在我们就可以将任意价格使用tick表示</p>
+<blockquote>
+\[
+   tick = log_{1.0001}P
+  \]</blockquote>
+<p>比如</p>
+<blockquote>
+<p>\(P=0.25\) 对应的 \(tick\approx-13864\)</p>
+</blockquote>
+<blockquote>
+<p>\(P=2500\) 对应的 \(tick\approx78244\)</p>
+</blockquote>
+<p>那么我们的均匀刻度就设计好了，它可以适用于任意价格的代币（只要价格不是负数🤪）</p>
+<h3 id="5-保存流动性状态"><strong>5. 保存流动性状态</strong>
+</h3><p>当我们添加流动性时，系统会给我们分配一个 NFT，它记录：</p>
+<ul>
+<li>选择的区间（2000～3000）</li>
+<li>L 的大小</li>
+<li>已经累计能够领取的手续费</li>
+<li>后续计算手续费需要用到的当前 fee 状态</li>
+</ul>
+<p>因此：</p>
+<blockquote>
+<p>做市行为不再是池子的一部分，而是一个 NFT 记录的独立头寸。</p>
+</blockquote>
+<h3 id="6-持仓变化"><strong>6. 持仓变化</strong>
+</h3><p>当价格在区间内：</p>
+<ul>
+<li>同时持有 ETH 和 USDC</li>
+<li>随着交易发生，两者互相转换</li>
+<li>参与撮合并赚手续费</li>
+</ul>
+<p>如果价格跌破 <strong>2000</strong>：</p>
+<ul>
+<li>头寸会变成全部 USDC</li>
+<li>不再参与做市，也停止赚手续费</li>
+</ul>
+<p>如果价格突破 <strong>3000</strong>：</p>
+<ul>
+<li>头寸会变成全部 ETH</li>
+<li>同样退出做市</li>
+</ul>
+<p>换句话说：</p>
+<blockquote>
+<p>ETH 涨，头寸更偏 ETH；ETH 跌，头寸更偏 USDC。</p>
+</blockquote>
+<p>这个行为不是策略，而是 AMM 自动完成的结果。</p>
+<h3 id="7-手续费结算"><strong>7. 手续费结算</strong>
+</h3><p>交易发生在区间内（2500在内），就会累积手续费。合约内部会把手续费累计到该区间的 feeGrowth 中。</p>
+<p>提现时合约会做两件事：</p>
+<ul>
+<li>返回当前持仓（可能是 ETH+USDC，可能是单币）</li>
+<li>返回累计所得手续费</li>
+</ul>
+<p>不需要手动领，提现时自动结算。</p>
+<h2 id="三主要公式推导"><strong>三、主要公式推导</strong>
+</h2><h3 id="1-官方白皮书"><strong>1. 官方白皮书</strong>
+</h3><p>v2链接： <a class="link" href="https://docs.uniswap.org/whitepaper.pdf"  target="_blank" rel="noopener"
+    >https://docs.uniswap.org/whitepaper.pdf</a></p>
+<p>v3链接： <a class="link" href="https://app.uniswap.org/whitepaper-v3.pdf"  target="_blank" rel="noopener"
+    >https://app.uniswap.org/whitepaper-v3.pdf</a></p>
+<p>v4链接： <a class="link" href="https://app.uniswap.org/whitepaper-v4.pdf"  target="_blank" rel="noopener"
+    >https://app.uniswap.org/whitepaper-v4.pdf</a></p>
+<h3 id="2-基础公式"><strong>2. 基础公式</strong>
+</h3><p>虚拟资金池曲线（交易模型）</p>
+\[
+   x \times y = k \tag{1}
+\]<p>流动性</p>
+\[
+   L = \sqrt{xy} \tag{2}
+\]<p>价格</p>
+\[
+   P = \frac{y}{x} \tag{3}
+\]<p>有效资金池曲线</p>
+\[
+   (x+\dfrac{L}{\sqrt{p_{b}}})(y+L\sqrt{p_{a}})=L^{2} \tag{4}
+\]<h3 id="2-有效资金池曲线推导"><strong>2. 有效资金池曲线推导</strong>
+</h3><p><img src="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves.png"
+	width="1880"
+	height="1466"
+	srcset="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves_hu_7f2418a223292b52.png 480w, /p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves_hu_577fb5efdb443dce.png 1024w"
+	loading="lazy"
+	
+		alt="图1 虚拟资金池"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="128"
+		data-flex-basis="307px"
+	
+></p>
+<p>根据上图1所示，当前价格在 c 点，假设实际价格的波动范围为 [a,b]</p>
+<p>那么当价格从 c 点向 a 点滑动时，资金池的消耗最大为 \(y_{real}\) ，同理，当价格由 c 点向 b 点滑动时，资金池的消耗最大为 \(x_{real}\)</p>
+<p>因此，理论上只需要提供 \(x_{real}\) 和 \(y_{real}\) 就够了，其余的资金是永远都用不上的，这也说明了为什么xyk基础模型的资金利用率低</p>
+<p>那么问题来了，实际有效的资金池曲线应该是什么样的呢？</p>
+<p><img src="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves.png"
+	width="720"
+	height="592"
+	srcset="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves_hu_7e45aaaa6c8583ea.png 480w, /p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves_hu_d0a3c978ce198002.png 1024w"
+	loading="lazy"
+	
+		alt="图2 有效资金池"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="121"
+		data-flex-basis="291px"
+	
+></p>
+<p>如上图2所示，我们开始推导这个有效资金池曲线公式</p>
+\[
+   L^2 = xy \\
+   P = \frac{y}{x}
+\]<p>对于攻读过初中数学学位的人来说，将等式两边相乘和相除就可以轻松推导出以下公式</p>
+\[
+\begin{aligned}
+   x=\dfrac{L}{\sqrt{P}} \\
+   y=L\sqrt{P} \tag{4}
+\end{aligned}
+\]<p>由图1可知</p>
+\[
+   x=x_{real}+x_b \\
+   y=y_{real}+y_a
+\]<p>代入公式 (1) 的 xyk 模型可得</p>
+\[
+   (x_{real}+x_b)(y_{real}+y_a)=k=L^2
+\]<p>再根据公式 (4) 将 \(x_b, y_a\) 替换可得</p>
+\[
+   (x_{real}+\dfrac{L}{\sqrt{P_{b}}})(y_{real}+L\sqrt{P_{a}})=L^{2}
+\]<p>这就是最终的有效资金池曲线了</p>
+<h3 id="3-计算流动性变化"><strong>3. 计算流动性变化</strong>
+</h3><p>我们提供流动性后，合约开始进行各种交易行为，那么要如何计算当前我们提供的流动性中资产是如何分配的？</p>
+<p>根据上面的公式(4)：</p>
+\[
+\begin{aligned}
+   x=\dfrac{L}{\sqrt{p}} \\
+   y=L\sqrt{P} \tag{4}
+\end{aligned}
+\]<p>令：</p>
+\[
+\begin{aligned}
+   S = \sqrt{P}
+\end{aligned}
+\]<p>则：</p>
+\[
+\begin{aligned}
+   x=\dfrac{L}{S} \\
+   y=LS
+\end{aligned}
+\]<p>因为 L 不变，对 S 求微分：</p>
+<p><strong>对 x：</strong></p>
+\[
+x = \frac{L}{S}
+\Rightarrow dx = -L \frac{1}{S^2} dS
+\]<p><strong>对 y：</strong></p>
+\[
+y = L S
+\Rightarrow dy = L dS
+\]<p>所以有两条很重要的微分关系：</p>
+\[
+dx = -L \frac{1}{S^2} dS,\qquad dy = L dS
+\]<p>假设一个 LP 的有效价格区间是：</p>
+<ul>
+<li>下界价格：\(P_a\)，对应 \(S_a = \sqrt{P_a}\)</li>
+<li>上界价格：\(P_b\)，对应 \(S_b = \sqrt{P_b}\)</li>
+</ul>
+<p><strong>只看 \(token_y\) 的变化</strong></p>
+<p>在区间内，S 从 (S_a) 增长到 (S_b) 时：</p>
+\[
+dy = L dS
+\]<p>对 S 从 (S_a) 到 (S_b) 积分：</p>
+\[
+\Delta y = \int_{S_a}^{S_b} L, dS
+= L (S_b - S_a)
+= L(\sqrt{P_b} - \sqrt{P_a})
+\]<p>这就是 <strong>在整个 \([P_a, P_b]\) 区间里对应的 \(token_y\) 数量</strong>：</p>
+\[
+amount_y = L(\sqrt{P_b} - \sqrt{P_a})
+\]<p><strong>只看 \(token_x\)的变化</strong></p>
+<p>对 \(token_x\)：</p>
+\[
+dx = -L \frac{1}{S^2} dS
+\]<p>注意：
+x 和 S 方向相反（价格上升 → \(token_x\) 减少），
+我们要的是区间内总共的 \(token_x\) 数量，取绝对值来算：</p>
+\[
+\Delta x = \int_{S_a}^{S_b} L \frac{1}{S^2} dS
+\]<p>计算：</p>
+\[
+\int \frac{1}{S^2} dS = -\frac{1}{S}
+\]<p>所以：</p>
+\[
+\Delta x
+= L\left[-\frac{1}{S}\right]_{S_a}^{S_b}
+= L\left(-\frac{1}{S_b} + \frac{1}{S_a}\right)
+= L\left(\frac{1}{S_a} - \frac{1}{S_b}\right)
+\]<p>代回 \(S = \sqrt{P}\)：</p>
+\[
+amount_x = L\left(\frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}}\right)
+\]<p>这就是 \(token_x\) 的区间公式。</p>
+<p>上面推导的是整个 \([P_a, P_b]\) 区间的总 x/y。
+但实际情况取决于当前价格 (P) 在区间里的位置：</p>
+<p><strong>情况 A：当前价格在区间内部（\(P_a < P < P_b\)）</strong></p>
+<p>这时的头寸是“部分在 token0，部分在 token1”：</p>
+<ul>
+<li>
+<p>对 \(token_x\)，有效区间是 [P, Pb]
+（高价端还没被换走的 \(token_x\)）</p>
+\[
+  amount_x = L\left(\frac{1}{\sqrt{P}} - \frac{1}{\sqrt{P_b}}\right)
+  \]</li>
+<li>
+<p>对 \(token_y\)，有效区间是 [Pa, P]
+（从下界到现在已经变成 \(token_y\) 的部分）</p>
+<p>[
+amount_y = L(\sqrt{P} - \sqrt{P_a})
+]</p>
+</li>
+</ul>
+<hr>
+<p><strong>情况 B：价格低于区间（\(P \le P_a\)）</strong></p>
+<p>还没开始“向上走”，流动性全部在 \(token_x\) 形态：</p>
+\[
+amount_x = L\left(\frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}}\right) \\
+\quad amount_y = 0
+\]<hr>
+<p><strong>情况 C：价格高于区间（\(P \ge P_b\)）</strong></p>
+<p>已经“完全向上走完”，全部变成 \(token_y\)：</p>
+\[
+amount_x = 0 \\
+\quad amount_y = L(\sqrt{P_b} - \sqrt{P_a})
+\]<h3 id="4-计算实际交易价格"><strong>4. 计算实际交易价格</strong>
+</h3><p>我们已经知道了交易原理和基本公式，那么当我们准备通过交易池兑换代币时，因为我们投入的资产也会影响交易池的资产比例，\(P=\dfrac{y}{x}\) 只是理论价格，那么应该如何计算实际交易价格呢？比如说1个 ETH 能换多少 USDC ？</p>
+<p>当我们往池子里投入 \(\Delta x\) 个 ETH 时，池中的 USDC 会减少 \(\Delta y\)，对应的价格也会从 \(P_0\) 下跌到 \(P_1\)，于是有以下关系</p>
+\[
+\begin{aligned}
+\Delta x &= L\left(\frac{1}{\sqrt{P_1}} - \frac{1}{\sqrt{P_0}}\right) = L\left(\frac{1}{S_1} - \frac{1}{S_0}\right) 
+\Rightarrow 
+S_1 = \frac{1}{\dfrac{\Delta x}{L} + \dfrac{1}{S_0}} \\
+\Delta y &= L(\sqrt{P_0} - \sqrt{P_1}) = L(S_0 - S_1) = 
+L\left(S_0 - \frac{1}{\dfrac{\Delta x}{L} + \dfrac{1}{S_0}}\right)
+\end{aligned}
+\]<p>其中，L为当前区间的流动性。</p>
+<p>如果交易量很大、会跨 tick，就把区间拆成多段，对每一段用同样的方法算一段，然后把每一段的 Δy 累加起来即可。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/">区块链</a>
+        
+            <a href="/tags/amm/">AMM</a>
+        
+            <a href="/tags/xyk%E6%A8%A1%E5%9E%8B/">XYK模型</a>
+        
+            <a href="/tags/%E9%9B%86%E4%B8%AD%E6%B5%81%E5%8A%A8%E6%80%A7/">集中流动性</a>
+        
+            <a href="/tags/uniswap/">Uniswap</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">深入理解Uniswap的XYK模型基本原理</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'zh-CN',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 王离谱
+    </section>
+    
+    <section class="powerby">
+        
+            <a href="https://beian.miit.gov.cn/">粤ICP备2022043168号</a> <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
