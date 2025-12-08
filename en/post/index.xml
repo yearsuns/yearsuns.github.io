@@ -7,7 +7,426 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>en-US</language>
         <copyright>Yearsuns</copyright>
-        <lastBuildDate>Wed, 16 Jul 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 02 Aug 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>A Deep Understanding of the Fundamental Principles of Uniswap’s Concentrated Liquidity</title>
+        <link>https://yearsuns-github-io.vercel.app/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/</link>
+        <pubDate>Sat, 02 Aug 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/</guid>
+        <description>&lt;p&gt;If you know about Uniswap V2, you definitely know that its biggest advantage is “fully automated,” and its biggest problem is also “fully automated.” Once funds enter, they are mechanically distributed across the entire price range from 0 to ∞.&lt;/p&gt;
+&lt;p&gt;This is supposed to be fair, but extremely inefficient:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Most of the time, assets are “sleeping” far away from the current market price, nobody trades there, and no fees are generated.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Therefore, Uniswap V3 proposed a revolutionary concept: Concentrated Liquidity.&lt;/p&gt;
+&lt;p&gt;It allows LPs to “concentrate” capital within the price range they consider appropriate so that “active money actually works.”&lt;/p&gt;
+&lt;h2 id=&#34;i-what-is-concentrated-liquidity-background-and-the-problem-it-solves&#34;&gt;&lt;strong&gt;I. What is Concentrated Liquidity: Background and the Problem It Solves&lt;/strong&gt;
+&lt;/h2&gt;&lt;p&gt;The decentralized trading protocol Uniswap uses the automated market maker (AMM) model. Users don’t need to place orders or find counterparties — simply deposit two tokens into a pool to become a liquidity provider. This model is very simple, but it also brings an unnoticed problem: most liquidity does not actually work.&lt;/p&gt;
+&lt;p&gt;To illustrate this, we need to review the mechanism of Uniswap v2.&lt;/p&gt;
+&lt;h3 id=&#34;1-traditional-amm-constant-product-and-full-price-range&#34;&gt;&lt;strong&gt;1. Traditional AMM: Constant Product and “Full Price Range”&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;In v2’s constant product model, a trading pool maintains a formula:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;x · y = k&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Here, x and y are the quantities of two assets in the pool, and k is a constant. No matter how the price fluctuates, this formula always holds.&lt;/p&gt;
+&lt;p&gt;But the model implicitly assumes:&lt;br&gt;
+&lt;strong&gt;The liquidity of the pool is distributed across the entire price range from 0 to ∞.&lt;/strong&gt;&lt;br&gt;
+Theoretically, no matter how high or low the price goes, the pool is “ready” to provide liquidity.&lt;/p&gt;
+&lt;p&gt;The problem: &lt;strong&gt;real prices never go to 0 or infinity&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In other words, liquidity is passively spread across a ridiculously wide range that will almost never be used.&lt;/p&gt;
+&lt;h3 id=&#34;2-liquidity-utilization-problems&#34;&gt;&lt;strong&gt;2. Liquidity Utilization Problems&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Distributing liquidity across an overly wide range results in a very direct consequence:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Most capital is sleeping.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;In reality, prices tend to fluctuate within a narrow band, so only funds inside that range actually participate in trades. Other funds are just lying around, consuming capital efficiency.&lt;/p&gt;
+&lt;p&gt;This leads to two impacts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For traders, active depth is limited, causing higher slippage&lt;/li&gt;
+&lt;li&gt;For LPs, although much capital is locked, the return is not proportional&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In other words:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Capital utilization is low.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;3-why-concentrated-liquidity-is-needed&#34;&gt;&lt;strong&gt;3. Why Concentrated Liquidity Is Needed&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Uniswap v3 introduces Concentrated Liquidity, with the following core idea:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Liquidity should be placed where actual trading happens.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;If the price stays in a certain region for a long time, LPs can concentrate liquidity in that region instead of wasting it on extreme prices that might never occur.&lt;/p&gt;
+&lt;p&gt;The effects are significant:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The same capital provides deeper liquidity&lt;/li&gt;
+&lt;li&gt;Price impact for large orders is reduced&lt;/li&gt;
+&lt;li&gt;Fee revenue increases&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This essentially changes the AMM from “broad distribution” to “locally effective distribution.”&lt;/p&gt;
+&lt;h3 id=&#34;4-definition-of-concentrated-liquidity&#34;&gt;&lt;strong&gt;4. Definition of Concentrated Liquidity&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Strictly speaking, Concentrated Liquidity means:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LPs only provide liquidity within a self-defined price range \([P_{lower}, P_{upper}]\). Once price moves outside the range, the LP stops participating and stops earning fees.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;That means each LP is no longer just part of a pool, but becomes a “conditional liquidity position.”&lt;/p&gt;
+&lt;p&gt;From the contract’s perspective, the large pool is divided into many segments, and liquidity is placed into each range. Whichever range trades happen within, LPs of that segment earn fees.&lt;/p&gt;
+&lt;h3 id=&#34;5-what-problem-does-it-actually-solve&#34;&gt;&lt;strong&gt;5. What Problem Does It Actually Solve&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;In one sentence:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Use the same capital to obtain deeper effective liquidity.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;But specifically, it improves three things:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Capital Efficiency&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Lower Slippage&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Higher Fee Yield&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;These all come from one fact: liquidity can finally be concentrated rather than being infinitely diluted.&lt;/p&gt;
+&lt;h3 id=&#34;6-but-its-not-a-free-optimization&#34;&gt;&lt;strong&gt;6. But It’s Not a Free Optimization&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Concentrated liquidity does not change the basic AMM logic but introduces a new dimension: &lt;strong&gt;price range&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;This makes the LP role more strategic, similar to predicting price movement. Therefore, it also introduces a new risk:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If price moves out of the chosen range, the position becomes single-sided and stops earning.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To earn more, LPs must take on more management and judgement — a typical risk-return tradeoff.&lt;/p&gt;
+&lt;h2 id=&#34;ii-how-concentrated-liquidity-works&#34;&gt;&lt;strong&gt;II. How Concentrated Liquidity Works&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-inputs-required-to-provide-liquidity&#34;&gt;&lt;strong&gt;1. Inputs Required to Provide Liquidity&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Suppose we provide liquidity into an ETH/USDC pool, the contract requires:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Token pair: ETH / USDC&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Price range&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;lower price example: 2000 USDC/ETH&lt;/li&gt;
+&lt;li&gt;upper price example: 3000 USDC/ETH&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Amount of ETH or USDC provided&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;In other words, we’re telling the contract three things:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;I want to LP for ETH/USDC&lt;/li&gt;
+&lt;li&gt;Within 2000–3000&lt;/li&gt;
+&lt;li&gt;I’m willing to deposit this amount of tokens&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-which-tokens-must-be-deposited&#34;&gt;&lt;strong&gt;2. Which Token(s) Must Be Deposited&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Suppose current ETH/USDC price is 2500, then the system checks:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;
+2000 &amp;lt; 2500 &amp;lt; 3000
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Meaning “price is inside the range.”&lt;/p&gt;
+&lt;p&gt;This is extremely important because it determines which assets we need to provide:&lt;/p&gt;
+&lt;h4 id=&#34;three-situations&#34;&gt;Three situations
+&lt;/h4&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Current Price&lt;/th&gt;
+          &lt;th&gt;Required Deposit&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Inside range&lt;/td&gt;
+          &lt;td&gt;Provide both ETH and USDC&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Below range&lt;/td&gt;
+          &lt;td&gt;Only USDC&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Above range&lt;/td&gt;
+          &lt;td&gt;Only ETH&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Why? Not strategy — &lt;strong&gt;pure math&lt;/strong&gt;: AMM models automatically bias towards one asset depending on price.&lt;/p&gt;
+&lt;p&gt;Simply put, scarcity determines demand. At low price, the pool needs more USDC; at high price, more ETH.&lt;/p&gt;
+&lt;h3 id=&#34;3-understanding-liquidity-l&#34;&gt;&lt;strong&gt;3. Understanding Liquidity (L)&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Although we deposit ETH/USDC, the contract records a variable L (liquidity unit).&lt;/p&gt;
+&lt;p&gt;Key points:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;We deposit assets&lt;/li&gt;
+&lt;li&gt;Contract records L&lt;/li&gt;
+&lt;li&gt;Earnings are proportional to L&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In short:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;L is our “position size” in that price range.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The amounts of ETH/USDC adjust automatically with price.&lt;/p&gt;
+&lt;h3 id=&#34;4-price-range-discretization&#34;&gt;&lt;strong&gt;4. Price Range Discretization&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;We enter ranges in continuous price (e.g., 2000–3000), but internally the contract uses ticks.&lt;/p&gt;
+&lt;p&gt;It converts them to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;\(tick_{Lower}\)&lt;/li&gt;
+&lt;li&gt;\(tick_{Upper}\)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ticks discretize price boundaries.&lt;/p&gt;
+&lt;p&gt;The contract then stores only boundary updates:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;add +L at \(tick_{Lower}\)&lt;/li&gt;
+&lt;li&gt;subtract –L at \(tick_{Upper}\)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Active liquidity at current price equals the sum of all netLiquidity values below the current tick.&lt;/p&gt;
+&lt;p&gt;For example, if \(tick_{Lower}=100\) and \(tick_{Upper}=200\), the contract records:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;netLiquidity[100] += 10
+netLiquidity[200] -= 10
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If the current price tick is 150, the activeLiquidity equals the sum of all netLiquidity where tick &amp;lt; 150, which is 10.&lt;/p&gt;
+&lt;p&gt;If the current price tick is 205, then activeLiquidity equals the sum of all netLiquidity where tick &amp;lt; 205, which is 0.&lt;/p&gt;
+&lt;p&gt;Therefore, when the price crosses these ticks, the system knows when to start and when to stop using our liquidity.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Why do we need to discretize price when storing ranges?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If we simply used linear segmentation, such as slicing the 2000–3000 range into 1000 parts, each worth 1 USDC, it would seem natural.&lt;/p&gt;
+&lt;p&gt;But what if the price range becomes 0.2–0.3 or even lower? If we still slice it into 1000 segments, each segment would become extremely small, and the overall scale would be highly uneven.&lt;/p&gt;
+&lt;p&gt;Furthermore, real token prices can span multiple orders of magnitude, from 0.0000001 to 10,000,000, making uniform segmentation impossible.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;How do we perform discretization?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;We define that each tick corresponds to a price that is a fixed multiple \(r\) of the previous tick. Then, for \(tick+1\), the price \(P_{tick+1}\) satisfies:&lt;/p&gt;
+\[
+   P_{tick+1} = P_{tick} \times r
+\]&lt;p&gt;From which we derive:&lt;/p&gt;
+\[
+   P_{tick} = P_0 \times r^{tick}
+\]&lt;p&gt;If we set \(P_0 = 1\) and \(r=1.0001\), then:&lt;/p&gt;
+\[
+   P_{tick} = 1.0001^{tick}
+\]&lt;p&gt;This means each tick movement corresponds to a 0.01% price change.&lt;/p&gt;
+&lt;p&gt;Now we can represent any price using ticks:&lt;/p&gt;
+\[
+   tick = \log_{1.0001}(P)
+\]&lt;p&gt;For example:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;\(P = 0.25\) corresponds to \(tick \approx -13864\)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;\(P = 2500\) corresponds to \(tick \approx 78244\)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Thus, we obtain a uniform tick scale that works for arbitrary token prices (as long as they’re not negative 🤪)&lt;/p&gt;
+&lt;h3 id=&#34;5-storing-liquidity-state&#34;&gt;&lt;strong&gt;5. Storing Liquidity State&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;When we add liquidity, the system issues an NFT that records:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;chosen price range (2000–3000)&lt;/li&gt;
+&lt;li&gt;size of L&lt;/li&gt;
+&lt;li&gt;accumulated fees claimable&lt;/li&gt;
+&lt;li&gt;current fee status required for future fee calculations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Therefore:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The LP action is no longer part of the pool itself, but an independent position recorded as an NFT.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;6-position-changes&#34;&gt;&lt;strong&gt;6. Position Changes&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;When price is within the range:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;holds both ETH and USDC&lt;/li&gt;
+&lt;li&gt;converts between the two as trades occur&lt;/li&gt;
+&lt;li&gt;participates in matching and earns fees&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If price falls below &lt;strong&gt;2000&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;position becomes entirely USDC&lt;/li&gt;
+&lt;li&gt;no longer provides liquidity or earns fees&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If price exceeds &lt;strong&gt;3000&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;position becomes entirely ETH&lt;/li&gt;
+&lt;li&gt;also exits liquidity&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In other words:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When ETH rises, the position becomes ETH-heavy; when ETH falls, it becomes USDC-heavy.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This behavior is not a strategy — it is automatically done by the AMM logic.&lt;/p&gt;
+&lt;h3 id=&#34;7-fee-settlement&#34;&gt;&lt;strong&gt;7. Fee Settlement&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;When trades occur inside the range (2500 is inside), fees accumulate. Internally, the contract records fees in the feeGrowth variable.&lt;/p&gt;
+&lt;p&gt;When withdrawing, the contract does two things:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;returns current holdings (could be ETH+USDC or single-token)&lt;/li&gt;
+&lt;li&gt;returns accumulated fees&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;No need to manually claim—withdrawal automatically settles everything.&lt;/p&gt;
+&lt;h2 id=&#34;iii-main-formula-derivations&#34;&gt;&lt;strong&gt;III. Main Formula Derivations&lt;/strong&gt;
+&lt;/h2&gt;&lt;h3 id=&#34;1-official-whitepapers&#34;&gt;&lt;strong&gt;1. Official Whitepapers&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;v2: &lt;a class=&#34;link&#34; href=&#34;https://docs.uniswap.org/whitepaper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://docs.uniswap.org/whitepaper.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;v3: &lt;a class=&#34;link&#34; href=&#34;https://app.uniswap.org/whitepaper-v3.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://app.uniswap.org/whitepaper-v3.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;v4: &lt;a class=&#34;link&#34; href=&#34;https://app.uniswap.org/whitepaper-v4.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://app.uniswap.org/whitepaper-v4.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-basic-formulas&#34;&gt;&lt;strong&gt;2. Basic Formulas&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Virtual reserve curve (trading model):&lt;/p&gt;
+\[
+   x \times y = k \tag{1}
+\]&lt;p&gt;Liquidity:&lt;/p&gt;
+\[
+   L = \sqrt{xy} \tag{2}
+\]&lt;p&gt;Price:&lt;/p&gt;
+\[
+   P = \frac{y}{x} \tag{3}
+\]&lt;p&gt;Effective reserve curve:&lt;/p&gt;
+\[
+   (x+\dfrac{L}{\sqrt{p_{b}}})(y+L\sqrt{p_{a}})=L^{2} \tag{4}
+\]&lt;h3 id=&#34;2-derivation-of-the-effective-reserve-curve&#34;&gt;&lt;strong&gt;2. Derivation of the Effective Reserve Curve&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves.png&#34;
+	width=&#34;1880&#34;
+	height=&#34;1466&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves_hu_7f2418a223292b52.png 480w, https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves_hu_577fb5efdb443dce.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Figure 1 Virtual reserves&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;128&#34;
+		data-flex-basis=&#34;307px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;As shown in Figure 1, the current price is at point c. Suppose the actual price movement range is \([a,b]\).&lt;/p&gt;
+&lt;p&gt;When the price moves from c to a, the maximum pool consumption for token \(y\) is \(y_{real}\). Likewise, when price moves from c to b, the maximum pool consumption for token \(x\) is \(x_{real}\).&lt;/p&gt;
+&lt;p&gt;Therefore, in theory, only \(x_{real}\) and \(y_{real}\) are required. All other funds are permanently unused, which also explains why the original xyk model has low capital efficiency.&lt;/p&gt;
+&lt;p&gt;So the question is: what should the effective reserve curve actually look like?&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves.png&#34;
+	width=&#34;720&#34;
+	height=&#34;592&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves_hu_7e45aaaa6c8583ea.png 480w, https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves_hu_d0a3c978ce198002.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Figure 2 Effective reserves&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;121&#34;
+		data-flex-basis=&#34;291px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;As shown in Figure 2, we begin deriving the effective reserve curve.&lt;/p&gt;
+&lt;p&gt;From the following formulas:&lt;/p&gt;
+\[
+   L^2 = xy \\
+   P = \frac{y}{x}
+\]&lt;p&gt;For anyone who has attended junior high school mathematics, multiplying and dividing both sides of the equations easily yields:&lt;/p&gt;
+\[
+\begin{aligned}
+   x = \dfrac{L}{\sqrt{P}} \\
+   y = L\sqrt{P} \tag{4}
+\end{aligned}
+\]&lt;p&gt;From Figure 1 we know:&lt;/p&gt;
+\[
+   x = x_{real} + x_b \\
+   y = y_{real} + y_a
+\]&lt;p&gt;Substituting into the xyk model (1):&lt;/p&gt;
+\[
+   (x_{real}+x_b)(y_{real}+y_a) = k = L^2
+\]&lt;p&gt;Then substituting \(x_b, y_a\) using formula (4):&lt;/p&gt;
+\[
+   (x_{real}+\dfrac{L}{\sqrt{P_{b}}})(y_{real}+L\sqrt{P_{a}})=L^{2}
+\]&lt;p&gt;This is the final formula of the effective reserve curve.&lt;/p&gt;
+&lt;h3 id=&#34;3-calculating-liquidity-composition-changes&#34;&gt;&lt;strong&gt;3. Calculating Liquidity Composition Changes&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;After we provide liquidity, the contract starts performing trades. So how do we calculate the current allocation of assets inside our provided liquidity?&lt;/p&gt;
+&lt;p&gt;Based on formula (4):&lt;/p&gt;
+\[
+\begin{aligned}
+   x=\dfrac{L}{\sqrt{p}} \\
+   y=L\sqrt{P} \tag{4}
+\end{aligned}
+\]&lt;p&gt;Let:&lt;/p&gt;
+\[
+\begin{aligned}
+   S = \sqrt{P}
+\end{aligned}
+\]&lt;p&gt;Then:&lt;/p&gt;
+\[
+\begin{aligned}
+   x = \dfrac{L}{S} \\
+   y = L S
+\end{aligned}
+\]&lt;p&gt;Since L remains constant, differentiate with respect to S:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;For x:&lt;/strong&gt;&lt;/p&gt;
+\[
+x = \frac{L}{S}
+\Rightarrow dx = -L \frac{1}{S^2} dS
+\]&lt;p&gt;&lt;strong&gt;For y:&lt;/strong&gt;&lt;/p&gt;
+\[
+y = L S
+\Rightarrow dy = L dS
+\]&lt;p&gt;So we have two important differential relationships:&lt;/p&gt;
+\[
+dx = -L \frac{1}{S^2} dS,\qquad dy = L dS
+\]&lt;p&gt;Suppose an LP’s effective price range is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lower price: \(P_a\), corresponding to \(S_a = \sqrt{P_a}\)&lt;/li&gt;
+&lt;li&gt;Upper price: \(P_b\), corresponding to \(S_b = \sqrt{P_b}\)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Consider only the \(token_y\) change&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Inside the range, when S increases from \(S_a\) to \(S_b\):&lt;/p&gt;
+\[
+dy = L dS
+\]&lt;p&gt;Integrate S from \(S_a\) to \(S_b\):&lt;/p&gt;
+\[
+\Delta y = \int_{S_a}^{S_b} L\, dS
+= L (S_b - S_a)
+= L(\sqrt{P_b} - \sqrt{P_a})
+\]&lt;p&gt;This is &lt;strong&gt;the total amount of \(token_y\) corresponding to the entire interval \([P_a, P_b]\)&lt;/strong&gt;:&lt;/p&gt;
+\[
+amount_y = L(\sqrt{P_b} - \sqrt{P_a})
+\]&lt;p&gt;&lt;strong&gt;Consider only \(token_x\)&lt;/strong&gt;&lt;/p&gt;
+\[
+dx = -L \frac{1}{S^2} dS
+\]&lt;p&gt;Note that x decreases as S increases (price rises → token_x decreases). We want the total amount in absolute value:&lt;/p&gt;
+\[
+\Delta x = \int_{S_a}^{S_b} L \frac{1}{S^2} dS
+\]&lt;p&gt;Compute:&lt;/p&gt;
+\[
+\int \frac{1}{S^2} dS = -\frac{1}{S}
+\]&lt;p&gt;Thus:&lt;/p&gt;
+\[
+\Delta x
+= L\left[-\frac{1}{S}\right]_{S_a}^{S_b}
+= L\left(-\frac{1}{S_b} + \frac{1}{S_a}\right)
+= L\left(\frac{1}{S_a} - \frac{1}{S_b}\right)
+\]&lt;p&gt;Substitute \(S = \sqrt{P}\):&lt;/p&gt;
+\[
+amount_x = L\left(\frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}}\right)
+\]&lt;p&gt;This is the interval formula for \(token_x\).&lt;/p&gt;
+&lt;p&gt;The above derivation covers total x/y in the entire interval \([P_a, P_b]\).
+But the actual situation depends on where the current price lies:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Case A: Current price inside the range \((P_a &lt; P &lt; P_b)\)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The position holds “part token0 and part token1”:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;For \(token_x\), effective interval is [P, P_b]:&lt;/p&gt;
+\[
+  amount_x = L\left(\frac{1}{\sqrt{P}} - \frac{1}{\sqrt{P_b}}\right)
+  \]&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For \(token_y\), effective interval is [P_a, P]:&lt;/p&gt;
+\[
+  amount_y = L(\sqrt{P} - \sqrt{P_a})
+  \]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Case B: Price below the range \((P \le P_a)\)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The position has not “moved upward yet,” and is entirely in \(token_x\):&lt;/p&gt;
+\[
+amount_x = L\left(\frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}}\right) \\
+amount_y = 0
+\]&lt;p&gt;&lt;strong&gt;Case C: Price above the range \((P \ge P_b)\)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The position has “fully moved upward,” and is entirely \(token_y\):&lt;/p&gt;
+\[
+amount_x = 0 \\
+amount_y = L(\sqrt{P_b} - \sqrt{P_a})
+\]&lt;h3 id=&#34;4-calculating-the-actual-trading-price&#34;&gt;&lt;strong&gt;4. Calculating the Actual Trading Price&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;Now that we understand the trading principle and core formulas, when preparing to swap tokens through the pool, the assets we input will also affect the ratio between pool assets. Since \(P=\dfrac{y}{x}\) is only a theoretical price, how do we calculate the actual execution price? For example, how many USDC can 1 ETH be swapped for?&lt;/p&gt;
+&lt;p&gt;When we put \(\Delta x\) ETH into the pool, USDC in the pool decreases by \(\Delta y\), and the corresponding price moves from \(P_0\) down to \(P_1\). So we have:&lt;/p&gt;
+\[
+\begin{aligned}
+\Delta x &amp;= L\left(\frac{1}{\sqrt{P_1}} - \frac{1}{\sqrt{P_0}}\right) = L\left(\frac{1}{S_1} - \frac{1}{S_0}\right) 
+\Rightarrow 
+S_1 = \frac{1}{\dfrac{\Delta x}{L} + \dfrac{1}{S_0}} \\
+\Delta y &amp;= L(\sqrt{P_0} - \sqrt{P_1}) = L(S_0 - S_1) = 
+L\left(S_0 - \frac{1}{\dfrac{\Delta x}{L} + \dfrac{1}{S_0}}\right)
+\end{aligned}
+\]&lt;p&gt;where L is the active liquidity in the current price segment.&lt;/p&gt;
+&lt;p&gt;If the trade size is large and crosses multiple ticks, split the swap into segments and apply the same method for each interval, summing all the Δy values across each segment.&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>A Deep Dive into the Fundamental Principles of Uniswap’s XYK Model</title>
         <link>https://yearsuns-github-io.vercel.app/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/</link>
         <pubDate>Wed, 16 Jul 2025 14:59:56 +0800</pubDate>

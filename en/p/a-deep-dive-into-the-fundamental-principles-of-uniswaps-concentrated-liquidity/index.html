@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="If you know about Uniswap V2, you definitely know that its biggest advantage is “fully automated,” and its biggest problem is also “fully automated.” Once funds enter, they are mechanically distributed across the entire price range from 0 to ∞.\nThis is supposed to be fair, but extremely inefficient:\nMost of the time, assets are “sleeping” far away from the current market price, nobody trades there, and no fees are generated.\n">
+<meta name="keywords" content="Blockchain, AMM, XYK Model, Concentrated Liquidity, Uniswap"><title>A Deep Understanding of the Fundamental Principles of Uniswap’s Concentrated Liquidity</title>
+
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="A Deep Understanding of the Fundamental Principles of Uniswap’s Concentrated Liquidity">
+<meta property='og:description' content="If you know about Uniswap V2, you definitely know that its biggest advantage is “fully automated,” and its biggest problem is also “fully automated.” Once funds enter, they are mechanically distributed across the entire price range from 0 to ∞.\nThis is supposed to be fair, but extremely inefficient:\nMost of the time, assets are “sleeping” far away from the current market price, nobody trades there, and no fees are generated.\n">
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/'>
+<meta property='og:site_name' content='Ryan&#39;s Janky Website'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Blockchain' /><meta property='article:tag' content='AMM' /><meta property='article:tag' content='XYK Model' /><meta property='article:tag' content='Concentrated Liquidity' /><meta property='article:tag' content='Uniswap' /><meta property='article:published_time' content='2025-08-02T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-08-02T14:59:56&#43;08:00'/>
+<meta name="twitter:title" content="A Deep Understanding of the Fundamental Principles of Uniswap’s Concentrated Liquidity">
+<meta name="twitter:description" content="If you know about Uniswap V2, you definitely know that its biggest advantage is “fully automated,” and its biggest problem is also “fully automated.” Once funds enter, they are mechanically distributed across the entire price range from 0 to ∞.\nThis is supposed to be fair, but extremely inefficient:\nMost of the time, assets are “sleeping” far away from the current market price, nobody trades there, and no fees are generated.\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/en/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/en">Ryan&#39;s Janky Website</a></h1>
+            <h2 class="site-description">Crumble &amp; About to fall apart</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/en/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>Categories</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>Tags</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://toolify-app.vercel.app/' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>Tool</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/en/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" >中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" selected>English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#i-what-is-concentrated-liquidity-background-and-the-problem-it-solves"><strong>I. What is Concentrated Liquidity: Background and the Problem It Solves</strong></a>
+      <ul>
+        <li><a href="#1-traditional-amm-constant-product-and-full-price-range"><strong>1. Traditional AMM: Constant Product and “Full Price Range”</strong></a></li>
+        <li><a href="#2-liquidity-utilization-problems"><strong>2. Liquidity Utilization Problems</strong></a></li>
+        <li><a href="#3-why-concentrated-liquidity-is-needed"><strong>3. Why Concentrated Liquidity Is Needed</strong></a></li>
+        <li><a href="#4-definition-of-concentrated-liquidity"><strong>4. Definition of Concentrated Liquidity</strong></a></li>
+        <li><a href="#5-what-problem-does-it-actually-solve"><strong>5. What Problem Does It Actually Solve</strong></a></li>
+        <li><a href="#6-but-its-not-a-free-optimization"><strong>6. But It’s Not a Free Optimization</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#ii-how-concentrated-liquidity-works"><strong>II. How Concentrated Liquidity Works</strong></a>
+      <ul>
+        <li><a href="#1-inputs-required-to-provide-liquidity"><strong>1. Inputs Required to Provide Liquidity</strong></a></li>
+        <li><a href="#2-which-tokens-must-be-deposited"><strong>2. Which Token(s) Must Be Deposited</strong></a></li>
+        <li><a href="#3-understanding-liquidity-l"><strong>3. Understanding Liquidity (L)</strong></a></li>
+        <li><a href="#4-price-range-discretization"><strong>4. Price Range Discretization</strong></a></li>
+        <li><a href="#5-storing-liquidity-state"><strong>5. Storing Liquidity State</strong></a></li>
+        <li><a href="#6-position-changes"><strong>6. Position Changes</strong></a></li>
+        <li><a href="#7-fee-settlement"><strong>7. Fee Settlement</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#iii-main-formula-derivations"><strong>III. Main Formula Derivations</strong></a>
+      <ul>
+        <li><a href="#1-official-whitepapers"><strong>1. Official Whitepapers</strong></a></li>
+        <li><a href="#2-basic-formulas"><strong>2. Basic Formulas</strong></a></li>
+        <li><a href="#2-derivation-of-the-effective-reserve-curve"><strong>2. Derivation of the Effective Reserve Curve</strong></a></li>
+        <li><a href="#3-calculating-liquidity-composition-changes"><strong>3. Calculating Liquidity Composition Changes</strong></a></li>
+        <li><a href="#4-calculating-the-actual-trading-price"><strong>4. Calculating the Actual Trading Price</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/en/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/">A Deep Understanding of the Fundamental Principles of Uniswap’s Concentrated Liquidity</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Aug 02, 2025</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    11 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+        <footer class="article-translations">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+            <div>
+                
+                    <a href="https://yearsuns-github-io.vercel.app/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/" class="link">中文</a>
+                
+            </div>
+        </footer>
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>If you know about Uniswap V2, you definitely know that its biggest advantage is “fully automated,” and its biggest problem is also “fully automated.” Once funds enter, they are mechanically distributed across the entire price range from 0 to ∞.</p>
+<p>This is supposed to be fair, but extremely inefficient:</p>
+<blockquote>
+<p>Most of the time, assets are “sleeping” far away from the current market price, nobody trades there, and no fees are generated.</p>
+</blockquote>
+<p>Therefore, Uniswap V3 proposed a revolutionary concept: Concentrated Liquidity.</p>
+<p>It allows LPs to “concentrate” capital within the price range they consider appropriate so that “active money actually works.”</p>
+<h2 id="i-what-is-concentrated-liquidity-background-and-the-problem-it-solves"><strong>I. What is Concentrated Liquidity: Background and the Problem It Solves</strong>
+</h2><p>The decentralized trading protocol Uniswap uses the automated market maker (AMM) model. Users don’t need to place orders or find counterparties — simply deposit two tokens into a pool to become a liquidity provider. This model is very simple, but it also brings an unnoticed problem: most liquidity does not actually work.</p>
+<p>To illustrate this, we need to review the mechanism of Uniswap v2.</p>
+<h3 id="1-traditional-amm-constant-product-and-full-price-range"><strong>1. Traditional AMM: Constant Product and “Full Price Range”</strong>
+</h3><p>In v2’s constant product model, a trading pool maintains a formula:</p>
+<blockquote>
+<p>x · y = k</p>
+</blockquote>
+<p>Here, x and y are the quantities of two assets in the pool, and k is a constant. No matter how the price fluctuates, this formula always holds.</p>
+<p>But the model implicitly assumes:<br>
+<strong>The liquidity of the pool is distributed across the entire price range from 0 to ∞.</strong><br>
+Theoretically, no matter how high or low the price goes, the pool is “ready” to provide liquidity.</p>
+<p>The problem: <strong>real prices never go to 0 or infinity</strong>.</p>
+<p>In other words, liquidity is passively spread across a ridiculously wide range that will almost never be used.</p>
+<h3 id="2-liquidity-utilization-problems"><strong>2. Liquidity Utilization Problems</strong>
+</h3><p>Distributing liquidity across an overly wide range results in a very direct consequence:</p>
+<p><strong>Most capital is sleeping.</strong></p>
+<p>In reality, prices tend to fluctuate within a narrow band, so only funds inside that range actually participate in trades. Other funds are just lying around, consuming capital efficiency.</p>
+<p>This leads to two impacts:</p>
+<ul>
+<li>For traders, active depth is limited, causing higher slippage</li>
+<li>For LPs, although much capital is locked, the return is not proportional</li>
+</ul>
+<p>In other words:</p>
+<blockquote>
+<p>Capital utilization is low.</p>
+</blockquote>
+<h3 id="3-why-concentrated-liquidity-is-needed"><strong>3. Why Concentrated Liquidity Is Needed</strong>
+</h3><p>Uniswap v3 introduces Concentrated Liquidity, with the following core idea:</p>
+<blockquote>
+<p>Liquidity should be placed where actual trading happens.</p>
+</blockquote>
+<p>If the price stays in a certain region for a long time, LPs can concentrate liquidity in that region instead of wasting it on extreme prices that might never occur.</p>
+<p>The effects are significant:</p>
+<ul>
+<li>The same capital provides deeper liquidity</li>
+<li>Price impact for large orders is reduced</li>
+<li>Fee revenue increases</li>
+</ul>
+<p>This essentially changes the AMM from “broad distribution” to “locally effective distribution.”</p>
+<h3 id="4-definition-of-concentrated-liquidity"><strong>4. Definition of Concentrated Liquidity</strong>
+</h3><p>Strictly speaking, Concentrated Liquidity means:</p>
+<blockquote>
+<p>LPs only provide liquidity within a self-defined price range \([P_{lower}, P_{upper}]\). Once price moves outside the range, the LP stops participating and stops earning fees.</p>
+</blockquote>
+<p>That means each LP is no longer just part of a pool, but becomes a “conditional liquidity position.”</p>
+<p>From the contract’s perspective, the large pool is divided into many segments, and liquidity is placed into each range. Whichever range trades happen within, LPs of that segment earn fees.</p>
+<h3 id="5-what-problem-does-it-actually-solve"><strong>5. What Problem Does It Actually Solve</strong>
+</h3><p>In one sentence:</p>
+<blockquote>
+<p>Use the same capital to obtain deeper effective liquidity.</p>
+</blockquote>
+<p>But specifically, it improves three things:</p>
+<ol>
+<li><strong>Capital Efficiency</strong></li>
+<li><strong>Lower Slippage</strong></li>
+<li><strong>Higher Fee Yield</strong></li>
+</ol>
+<p>These all come from one fact: liquidity can finally be concentrated rather than being infinitely diluted.</p>
+<h3 id="6-but-its-not-a-free-optimization"><strong>6. But It’s Not a Free Optimization</strong>
+</h3><p>Concentrated liquidity does not change the basic AMM logic but introduces a new dimension: <strong>price range</strong>.</p>
+<p>This makes the LP role more strategic, similar to predicting price movement. Therefore, it also introduces a new risk:</p>
+<ul>
+<li>If price moves out of the chosen range, the position becomes single-sided and stops earning.</li>
+</ul>
+<p>To earn more, LPs must take on more management and judgement — a typical risk-return tradeoff.</p>
+<h2 id="ii-how-concentrated-liquidity-works"><strong>II. How Concentrated Liquidity Works</strong>
+</h2><h3 id="1-inputs-required-to-provide-liquidity"><strong>1. Inputs Required to Provide Liquidity</strong>
+</h3><p>Suppose we provide liquidity into an ETH/USDC pool, the contract requires:</p>
+<ol>
+<li>
+<p>Token pair: ETH / USDC</p>
+</li>
+<li>
+<p>Price range</p>
+<ul>
+<li>lower price example: 2000 USDC/ETH</li>
+<li>upper price example: 3000 USDC/ETH</li>
+</ul>
+</li>
+<li>
+<p>Amount of ETH or USDC provided</p>
+</li>
+</ol>
+<p>In other words, we’re telling the contract three things:</p>
+<ul>
+<li>I want to LP for ETH/USDC</li>
+<li>Within 2000–3000</li>
+<li>I’m willing to deposit this amount of tokens</li>
+</ul>
+<h3 id="2-which-tokens-must-be-deposited"><strong>2. Which Token(s) Must Be Deposited</strong>
+</h3><p>Suppose current ETH/USDC price is 2500, then the system checks:</p>
+<pre tabindex="0"><code>
+2000 &lt; 2500 &lt; 3000
+</code></pre><p>Meaning “price is inside the range.”</p>
+<p>This is extremely important because it determines which assets we need to provide:</p>
+<h4 id="three-situations">Three situations
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Current Price</th>
+          <th>Required Deposit</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Inside range</td>
+          <td>Provide both ETH and USDC</td>
+      </tr>
+      <tr>
+          <td>Below range</td>
+          <td>Only USDC</td>
+      </tr>
+      <tr>
+          <td>Above range</td>
+          <td>Only ETH</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>Why? Not strategy — <strong>pure math</strong>: AMM models automatically bias towards one asset depending on price.</p>
+<p>Simply put, scarcity determines demand. At low price, the pool needs more USDC; at high price, more ETH.</p>
+<h3 id="3-understanding-liquidity-l"><strong>3. Understanding Liquidity (L)</strong>
+</h3><p>Although we deposit ETH/USDC, the contract records a variable L (liquidity unit).</p>
+<p>Key points:</p>
+<ul>
+<li>We deposit assets</li>
+<li>Contract records L</li>
+<li>Earnings are proportional to L</li>
+</ul>
+<p>In short:</p>
+<blockquote>
+<p>L is our “position size” in that price range.</p>
+</blockquote>
+<p>The amounts of ETH/USDC adjust automatically with price.</p>
+<h3 id="4-price-range-discretization"><strong>4. Price Range Discretization</strong>
+</h3><p>We enter ranges in continuous price (e.g., 2000–3000), but internally the contract uses ticks.</p>
+<p>It converts them to:</p>
+<ul>
+<li>\(tick_{Lower}\)</li>
+<li>\(tick_{Upper}\)</li>
+</ul>
+<p>Ticks discretize price boundaries.</p>
+<p>The contract then stores only boundary updates:</p>
+<ul>
+<li>add +L at \(tick_{Lower}\)</li>
+<li>subtract –L at \(tick_{Upper}\)</li>
+</ul>
+<p>Active liquidity at current price equals the sum of all netLiquidity values below the current tick.</p>
+<p>For example, if \(tick_{Lower}=100\) and \(tick_{Upper}=200\), the contract records:</p>
+<pre tabindex="0"><code>netLiquidity[100] += 10
+netLiquidity[200] -= 10
+</code></pre><p>If the current price tick is 150, the activeLiquidity equals the sum of all netLiquidity where tick &lt; 150, which is 10.</p>
+<p>If the current price tick is 205, then activeLiquidity equals the sum of all netLiquidity where tick &lt; 205, which is 0.</p>
+<p>Therefore, when the price crosses these ticks, the system knows when to start and when to stop using our liquidity.</p>
+<p><strong>Why do we need to discretize price when storing ranges?</strong></p>
+<p>If we simply used linear segmentation, such as slicing the 2000–3000 range into 1000 parts, each worth 1 USDC, it would seem natural.</p>
+<p>But what if the price range becomes 0.2–0.3 or even lower? If we still slice it into 1000 segments, each segment would become extremely small, and the overall scale would be highly uneven.</p>
+<p>Furthermore, real token prices can span multiple orders of magnitude, from 0.0000001 to 10,000,000, making uniform segmentation impossible.</p>
+<p><strong>How do we perform discretization?</strong></p>
+<p>We define that each tick corresponds to a price that is a fixed multiple \(r\) of the previous tick. Then, for \(tick+1\), the price \(P_{tick+1}\) satisfies:</p>
+\[
+   P_{tick+1} = P_{tick} \times r
+\]<p>From which we derive:</p>
+\[
+   P_{tick} = P_0 \times r^{tick}
+\]<p>If we set \(P_0 = 1\) and \(r=1.0001\), then:</p>
+\[
+   P_{tick} = 1.0001^{tick}
+\]<p>This means each tick movement corresponds to a 0.01% price change.</p>
+<p>Now we can represent any price using ticks:</p>
+\[
+   tick = \log_{1.0001}(P)
+\]<p>For example:</p>
+<blockquote>
+<p>\(P = 0.25\) corresponds to \(tick \approx -13864\)</p>
+</blockquote>
+<blockquote>
+<p>\(P = 2500\) corresponds to \(tick \approx 78244\)</p>
+</blockquote>
+<p>Thus, we obtain a uniform tick scale that works for arbitrary token prices (as long as they’re not negative 🤪)</p>
+<h3 id="5-storing-liquidity-state"><strong>5. Storing Liquidity State</strong>
+</h3><p>When we add liquidity, the system issues an NFT that records:</p>
+<ul>
+<li>chosen price range (2000–3000)</li>
+<li>size of L</li>
+<li>accumulated fees claimable</li>
+<li>current fee status required for future fee calculations</li>
+</ul>
+<p>Therefore:</p>
+<blockquote>
+<p>The LP action is no longer part of the pool itself, but an independent position recorded as an NFT.</p>
+</blockquote>
+<h3 id="6-position-changes"><strong>6. Position Changes</strong>
+</h3><p>When price is within the range:</p>
+<ul>
+<li>holds both ETH and USDC</li>
+<li>converts between the two as trades occur</li>
+<li>participates in matching and earns fees</li>
+</ul>
+<p>If price falls below <strong>2000</strong>:</p>
+<ul>
+<li>position becomes entirely USDC</li>
+<li>no longer provides liquidity or earns fees</li>
+</ul>
+<p>If price exceeds <strong>3000</strong>:</p>
+<ul>
+<li>position becomes entirely ETH</li>
+<li>also exits liquidity</li>
+</ul>
+<p>In other words:</p>
+<blockquote>
+<p>When ETH rises, the position becomes ETH-heavy; when ETH falls, it becomes USDC-heavy.</p>
+</blockquote>
+<p>This behavior is not a strategy — it is automatically done by the AMM logic.</p>
+<h3 id="7-fee-settlement"><strong>7. Fee Settlement</strong>
+</h3><p>When trades occur inside the range (2500 is inside), fees accumulate. Internally, the contract records fees in the feeGrowth variable.</p>
+<p>When withdrawing, the contract does two things:</p>
+<ul>
+<li>returns current holdings (could be ETH+USDC or single-token)</li>
+<li>returns accumulated fees</li>
+</ul>
+<p>No need to manually claim—withdrawal automatically settles everything.</p>
+<h2 id="iii-main-formula-derivations"><strong>III. Main Formula Derivations</strong>
+</h2><h3 id="1-official-whitepapers"><strong>1. Official Whitepapers</strong>
+</h3><p>v2: <a class="link" href="https://docs.uniswap.org/whitepaper.pdf"  target="_blank" rel="noopener"
+    >https://docs.uniswap.org/whitepaper.pdf</a></p>
+<p>v3: <a class="link" href="https://app.uniswap.org/whitepaper-v3.pdf"  target="_blank" rel="noopener"
+    >https://app.uniswap.org/whitepaper-v3.pdf</a></p>
+<p>v4: <a class="link" href="https://app.uniswap.org/whitepaper-v4.pdf"  target="_blank" rel="noopener"
+    >https://app.uniswap.org/whitepaper-v4.pdf</a></p>
+<h3 id="2-basic-formulas"><strong>2. Basic Formulas</strong>
+</h3><p>Virtual reserve curve (trading model):</p>
+\[
+   x \times y = k \tag{1}
+\]<p>Liquidity:</p>
+\[
+   L = \sqrt{xy} \tag{2}
+\]<p>Price:</p>
+\[
+   P = \frac{y}{x} \tag{3}
+\]<p>Effective reserve curve:</p>
+\[
+   (x+\dfrac{L}{\sqrt{p_{b}}})(y+L\sqrt{p_{a}})=L^{2} \tag{4}
+\]<h3 id="2-derivation-of-the-effective-reserve-curve"><strong>2. Derivation of the Effective Reserve Curve</strong>
+</h3><p><img src="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves.png"
+	width="1880"
+	height="1466"
+	srcset="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves_hu_7f2418a223292b52.png 480w, /p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/virtual_reserves_hu_577fb5efdb443dce.png 1024w"
+	loading="lazy"
+	
+		alt="Figure 1 Virtual reserves"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="128"
+		data-flex-basis="307px"
+	
+></p>
+<p>As shown in Figure 1, the current price is at point c. Suppose the actual price movement range is \([a,b]\).</p>
+<p>When the price moves from c to a, the maximum pool consumption for token \(y\) is \(y_{real}\). Likewise, when price moves from c to b, the maximum pool consumption for token \(x\) is \(x_{real}\).</p>
+<p>Therefore, in theory, only \(x_{real}\) and \(y_{real}\) are required. All other funds are permanently unused, which also explains why the original xyk model has low capital efficiency.</p>
+<p>So the question is: what should the effective reserve curve actually look like?</p>
+<p><img src="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves.png"
+	width="720"
+	height="592"
+	srcset="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves_hu_7e45aaaa6c8583ea.png 480w, /p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/effective_reserves_hu_d0a3c978ce198002.png 1024w"
+	loading="lazy"
+	
+		alt="Figure 2 Effective reserves"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="121"
+		data-flex-basis="291px"
+	
+></p>
+<p>As shown in Figure 2, we begin deriving the effective reserve curve.</p>
+<p>From the following formulas:</p>
+\[
+   L^2 = xy \\
+   P = \frac{y}{x}
+\]<p>For anyone who has attended junior high school mathematics, multiplying and dividing both sides of the equations easily yields:</p>
+\[
+\begin{aligned}
+   x = \dfrac{L}{\sqrt{P}} \\
+   y = L\sqrt{P} \tag{4}
+\end{aligned}
+\]<p>From Figure 1 we know:</p>
+\[
+   x = x_{real} + x_b \\
+   y = y_{real} + y_a
+\]<p>Substituting into the xyk model (1):</p>
+\[
+   (x_{real}+x_b)(y_{real}+y_a) = k = L^2
+\]<p>Then substituting \(x_b, y_a\) using formula (4):</p>
+\[
+   (x_{real}+\dfrac{L}{\sqrt{P_{b}}})(y_{real}+L\sqrt{P_{a}})=L^{2}
+\]<p>This is the final formula of the effective reserve curve.</p>
+<h3 id="3-calculating-liquidity-composition-changes"><strong>3. Calculating Liquidity Composition Changes</strong>
+</h3><p>After we provide liquidity, the contract starts performing trades. So how do we calculate the current allocation of assets inside our provided liquidity?</p>
+<p>Based on formula (4):</p>
+\[
+\begin{aligned}
+   x=\dfrac{L}{\sqrt{p}} \\
+   y=L\sqrt{P} \tag{4}
+\end{aligned}
+\]<p>Let:</p>
+\[
+\begin{aligned}
+   S = \sqrt{P}
+\end{aligned}
+\]<p>Then:</p>
+\[
+\begin{aligned}
+   x = \dfrac{L}{S} \\
+   y = L S
+\end{aligned}
+\]<p>Since L remains constant, differentiate with respect to S:</p>
+<p><strong>For x:</strong></p>
+\[
+x = \frac{L}{S}
+\Rightarrow dx = -L \frac{1}{S^2} dS
+\]<p><strong>For y:</strong></p>
+\[
+y = L S
+\Rightarrow dy = L dS
+\]<p>So we have two important differential relationships:</p>
+\[
+dx = -L \frac{1}{S^2} dS,\qquad dy = L dS
+\]<p>Suppose an LP’s effective price range is:</p>
+<ul>
+<li>Lower price: \(P_a\), corresponding to \(S_a = \sqrt{P_a}\)</li>
+<li>Upper price: \(P_b\), corresponding to \(S_b = \sqrt{P_b}\)</li>
+</ul>
+<p><strong>Consider only the \(token_y\) change</strong></p>
+<p>Inside the range, when S increases from \(S_a\) to \(S_b\):</p>
+\[
+dy = L dS
+\]<p>Integrate S from \(S_a\) to \(S_b\):</p>
+\[
+\Delta y = \int_{S_a}^{S_b} L\, dS
+= L (S_b - S_a)
+= L(\sqrt{P_b} - \sqrt{P_a})
+\]<p>This is <strong>the total amount of \(token_y\) corresponding to the entire interval \([P_a, P_b]\)</strong>:</p>
+\[
+amount_y = L(\sqrt{P_b} - \sqrt{P_a})
+\]<p><strong>Consider only \(token_x\)</strong></p>
+\[
+dx = -L \frac{1}{S^2} dS
+\]<p>Note that x decreases as S increases (price rises → token_x decreases). We want the total amount in absolute value:</p>
+\[
+\Delta x = \int_{S_a}^{S_b} L \frac{1}{S^2} dS
+\]<p>Compute:</p>
+\[
+\int \frac{1}{S^2} dS = -\frac{1}{S}
+\]<p>Thus:</p>
+\[
+\Delta x
+= L\left[-\frac{1}{S}\right]_{S_a}^{S_b}
+= L\left(-\frac{1}{S_b} + \frac{1}{S_a}\right)
+= L\left(\frac{1}{S_a} - \frac{1}{S_b}\right)
+\]<p>Substitute \(S = \sqrt{P}\):</p>
+\[
+amount_x = L\left(\frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}}\right)
+\]<p>This is the interval formula for \(token_x\).</p>
+<p>The above derivation covers total x/y in the entire interval \([P_a, P_b]\).
+But the actual situation depends on where the current price lies:</p>
+<p><strong>Case A: Current price inside the range \((P_a < P < P_b)\)</strong></p>
+<p>The position holds “part token0 and part token1”:</p>
+<ul>
+<li>
+<p>For \(token_x\), effective interval is [P, P_b]:</p>
+\[
+  amount_x = L\left(\frac{1}{\sqrt{P}} - \frac{1}{\sqrt{P_b}}\right)
+  \]</li>
+<li>
+<p>For \(token_y\), effective interval is [P_a, P]:</p>
+\[
+  amount_y = L(\sqrt{P} - \sqrt{P_a})
+  \]</li>
+</ul>
+<p><strong>Case B: Price below the range \((P \le P_a)\)</strong></p>
+<p>The position has not “moved upward yet,” and is entirely in \(token_x\):</p>
+\[
+amount_x = L\left(\frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}}\right) \\
+amount_y = 0
+\]<p><strong>Case C: Price above the range \((P \ge P_b)\)</strong></p>
+<p>The position has “fully moved upward,” and is entirely \(token_y\):</p>
+\[
+amount_x = 0 \\
+amount_y = L(\sqrt{P_b} - \sqrt{P_a})
+\]<h3 id="4-calculating-the-actual-trading-price"><strong>4. Calculating the Actual Trading Price</strong>
+</h3><p>Now that we understand the trading principle and core formulas, when preparing to swap tokens through the pool, the assets we input will also affect the ratio between pool assets. Since \(P=\dfrac{y}{x}\) is only a theoretical price, how do we calculate the actual execution price? For example, how many USDC can 1 ETH be swapped for?</p>
+<p>When we put \(\Delta x\) ETH into the pool, USDC in the pool decreases by \(\Delta y\), and the corresponding price moves from \(P_0\) down to \(P_1\). So we have:</p>
+\[
+\begin{aligned}
+\Delta x &= L\left(\frac{1}{\sqrt{P_1}} - \frac{1}{\sqrt{P_0}}\right) = L\left(\frac{1}{S_1} - \frac{1}{S_0}\right) 
+\Rightarrow 
+S_1 = \frac{1}{\dfrac{\Delta x}{L} + \dfrac{1}{S_0}} \\
+\Delta y &= L(\sqrt{P_0} - \sqrt{P_1}) = L(S_0 - S_1) = 
+L\left(S_0 - \frac{1}{\dfrac{\Delta x}{L} + \dfrac{1}{S_0}}\right)
+\end{aligned}
+\]<p>where L is the active liquidity in the current price segment.</p>
+<p>If the trade size is large and crosses multiple ticks, split the swap into segments and apply the same method for each interval, summing all the Δy values across each segment.</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/en/tags/blockchain/">Blockchain</a>
+        
+            <a href="/en/tags/amm/">AMM</a>
+        
+            <a href="/en/tags/xyk-model/">XYK Model</a>
+        
+            <a href="/en/tags/concentrated-liquidity/">Concentrated Liquidity</a>
+        
+            <a href="/en/tags/uniswap/">Uniswap</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/en/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">A Deep Dive into the Fundamental Principles of Uniswap’s XYK Model</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'en',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 Yearsuns
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
