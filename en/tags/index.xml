@@ -7,7 +7,55 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>en-US</language>
         <copyright>Yearsuns</copyright>
-        <lastBuildDate>Sat, 02 Aug 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 20 Sep 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Block Chain</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/block-chain/</link>
+        <pubDate>Sat, 20 Sep 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/block-chain/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Evm</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/evm/</link>
+        <pubDate>Sat, 20 Sep 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/evm/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Gas Optimization</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/gas-optimization/</link>
+        <pubDate>Sat, 20 Sep 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/gas-optimization/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Smart Contract</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/smart-contract/</link>
+        <pubDate>Sat, 20 Sep 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/smart-contract/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Solidity</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/solidity/</link>
+        <pubDate>Sat, 20 Sep 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/solidity/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Web3</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/web3/</link>
+        <pubDate>Sat, 20 Sep 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/tags/web3/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>AMM</title>
         <link>https://yearsuns-github-io.vercel.app/en/tags/amm/</link>
         <pubDate>Sat, 02 Aug 2025 14:59:56 +0800</pubDate>

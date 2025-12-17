@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="1. 为什么需要 Gas 优化 在以太坊上开发智能合约时，Gas 是一个绕不开的概念。 它既不是单纯的“手续费”，也不仅仅是网络拥堵时的临时成本，而是对合约设计质量的一种长期约束。\n">
+<meta name="keywords" content="web3, evm, solidity, gas优化, 区块链, 智能合约"><title>Solidity中的Gas优化最佳实践</title>
+
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/p/best-practices-for-gas-optimization-in-solidity/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="Solidity中的Gas优化最佳实践">
+<meta property='og:description' content="1. 为什么需要 Gas 优化 在以太坊上开发智能合约时，Gas 是一个绕不开的概念。 它既不是单纯的“手续费”，也不仅仅是网络拥堵时的临时成本，而是对合约设计质量的一种长期约束。\n">
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/p/best-practices-for-gas-optimization-in-solidity/'>
+<meta property='og:site_name' content='王离谱的小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='web3' /><meta property='article:tag' content='evm' /><meta property='article:tag' content='solidity' /><meta property='article:tag' content='gas优化' /><meta property='article:tag' content='区块链' /><meta property='article:tag' content='智能合约' /><meta property='article:published_time' content='2025-09-20T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-09-20T14:59:56&#43;08:00'/>
+<meta name="twitter:title" content="Solidity中的Gas优化最佳实践">
+<meta name="twitter:description" content="1. 为什么需要 Gas 优化 在以太坊上开发智能合约时，Gas 是一个绕不开的概念。 它既不是单纯的“手续费”，也不仅仅是网络拥堵时的临时成本，而是对合约设计质量的一种长期约束。\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王离谱的小破站</a></h1>
+            <h2 class="site-description">破破烂烂</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:yearsuns@yeah.net'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>分类</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://tools.yearsuns.com' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>工具</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" selected>中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-为什么需要-gas-优化">1. 为什么需要 Gas 优化</a>
+      <ul>
+        <li><a href="#11-gas-的两层含义">1.1 Gas 的两层含义</a></li>
+        <li><a href="#12-为什么功能正确并不等于成本合理">1.2 为什么“功能正确”并不等于“成本合理”</a></li>
+        <li><a href="#13-gas-优化的目标是什么">1.3 Gas 优化的目标是什么</a></li>
+        <li><a href="#14-何时不应该过度优化">1.4 何时不应该过度优化</a></li>
+        <li><a href="#15-接下来要做什么">1.5 接下来要做什么</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-gas-成本模型">2. Gas 成本模型</a>
+      <ul>
+        <li><a href="#21-什么是指令级收费">2.1 什么是指令级收费</a></li>
+        <li><a href="#22-成本层级">2.2 成本层级</a></li>
+        <li><a href="#23-storage-是什么为什么这么贵">2.3 Storage 是什么，为什么这么贵</a></li>
+        <li><a href="#24-读取-storage-的真实成本">2.4 读取 storage 的真实成本</a></li>
+        <li><a href="#25-为什么写-storage-是最贵的操作之一">2.5 为什么写 storage 是最贵的操作之一</a></li>
+        <li><a href="#26-一行-solidity-代码背后的真实执行过程">2.6 一行 Solidity 代码背后的真实执行过程</a></li>
+        <li><a href="#27-建立一个关键直觉">2.7 建立一个关键直觉</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-减少-storage-读写">3. 减少 Storage 读写</a>
+      <ul>
+        <li><a href="#31-为什么-storage-优化具有最高性价比">3.1 为什么 Storage 优化具有最高性价比</a></li>
+        <li><a href="#32-缓存多次读取把多次-sload-变成一次">3.2 缓存多次读取：把多次 SLOAD 变成一次</a></li>
+        <li><a href="#33-合并多次写入避免重复的-sstore">3.3 合并多次写入：避免重复的 SSTORE</a></li>
+        <li><a href="#34-循环中的-storage-读写陷阱">3.4 循环中的 storage 读写陷阱</a></li>
+        <li><a href="#35-避免在循环中写-storage-的设计思路">3.5 避免在循环中写 storage 的设计思路</a></li>
+        <li><a href="#36-用-mapping-替代数组">3.6 用 mapping 替代数组</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-数据位置与函数接口设计">4. 数据位置与函数接口设计</a>
+      <ul>
+        <li><a href="#41-三种数据位置的成本直觉">4.1 三种数据位置的成本直觉</a></li>
+        <li><a href="#42-external-函数与-calldata">4.2 external 函数与 calldata</a></li>
+        <li><a href="#43-什么时候必须使用-memory">4.3 什么时候必须使用 memory</a></li>
+        <li><a href="#44-函数可见性的-gas-含义">4.4 函数可见性的 Gas 含义</a></li>
+        <li><a href="#45-external-入口--internal-实现">4.5 external 入口 + internal 实现</a></li>
+        <li><a href="#46-为什么要避免-this-调用当前合约">4.6 为什么要避免 this 调用当前合约</a></li>
+        <li><a href="#47-一个对比示例">4.7 一个对比示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-状态布局设计storage-packing">5. 状态布局设计：Storage Packing</a>
+      <ul>
+        <li><a href="#51-storage-slot-与-32-字节对齐">5.1 Storage slot 与 32 字节对齐</a></li>
+        <li><a href="#52-一个最基础的打包示例">5.2 一个最基础的打包示例</a></li>
+        <li><a href="#53-为什么-slot-数量直接影响-gas">5.3 为什么 slot 数量直接影响 Gas</a></li>
+        <li><a href="#54-小类型并不总是越小越好">5.4 小类型并不总是“越小越好”</a></li>
+        <li><a href="#55-什么时候应该关心-storage-packing">5.5 什么时候应该关心 storage packing</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-循环与批处理">6. 循环与批处理</a>
+      <ul>
+        <li><a href="#61-为什么循环容易成为-gas-黑洞">6.1 为什么循环容易成为 Gas 黑洞</a></li>
+        <li><a href="#62-缓存数组-length-与中间结果">6.2 缓存数组 length 与中间结果</a></li>
+        <li><a href="#63-避免在循环中直接写-storage">6.3 避免在循环中直接写 storage</a></li>
+        <li><a href="#64-在安全前提下使用-unchecked">6.4 在安全前提下使用 unchecked</a></li>
+        <li><a href="#65-避免无上限循环">6.5 避免无上限循环</a></li>
+        <li><a href="#66-批处理batch设计的取舍">6.6 批处理（Batch）设计的取舍</a></li>
+        <li><a href="#67-一个批处理示例">6.7 一个批处理示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-错误处理与字节码体积优化">7. 错误处理与字节码体积优化</a>
+      <ul>
+        <li><a href="#71-revert-本身并不是免费的">7.1 revert 本身并不是“免费”的</a></li>
+        <li><a href="#72-requirestring-的真实代价">7.2 require(string) 的真实代价</a></li>
+        <li><a href="#73-使用-custom-error-的动机">7.3 使用 custom error 的动机</a></li>
+        <li><a href="#74-对比示例">7.4 对比示例</a></li>
+        <li><a href="#75-错误信息该写多详细">7.5 错误信息该写多“详细”</a></li>
+        <li><a href="#76-字节码体积为什么值得关注">7.6 字节码体积为什么值得关注</a></li>
+        <li><a href="#77-错误处理与可读性的平衡">7.7 错误处理与可读性的平衡</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-事件与返回值设计">8. 事件与返回值设计</a>
+      <ul>
+        <li><a href="#81-事件的作用边界">8.1 事件的作用边界</a></li>
+        <li><a href="#82-事件的-gas-成本构成">8.2 事件的 Gas 成本构成</a></li>
+        <li><a href="#83-indexed-的合理使用">8.3 indexed 的合理使用</a></li>
+        <li><a href="#84-避免在事件中携带大数据">8.4 避免在事件中携带大数据</a></li>
+        <li><a href="#85-避免在链上返回大数组">8.5 避免在链上返回大数组</a></li>
+        <li><a href="#86-用分页与游标来替代一次性返回">8.6 用分页与游标来替代一次性返回</a></li>
+        <li><a href="#87-一个事件设计对比示例">8.7 一个事件设计对比示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#9-紧凑表示与低级优化谨慎使用">9. 紧凑表示与低级优化（谨慎使用）</a>
+      <ul>
+        <li><a href="#91-位运算与-bitmap">9.1 位运算与 bitmap</a></li>
+        <li><a href="#92-bitmap-的适用边界">9.2 bitmap 的适用边界</a></li>
+        <li><a href="#93-紧凑编码与省-slot思维">9.3 紧凑编码与“省 slot”思维</a></li>
+        <li><a href="#94-关于-assembly">9.4 关于 assembly</a></li>
+        <li><a href="#95-assembly-什么时候才值得用">9.5 assembly 什么时候才值得用</a></li>
+        <li><a href="#96-进阶优化的真实收益评估">9.6 进阶优化的真实收益评估</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-如何验证优化是否有效">10. 如何验证优化是否有效</a>
+      <ul>
+        <li><a href="#101-为什么不能凭感觉判断-gas">10.1 为什么不能凭感觉判断 Gas</a></li>
+        <li><a href="#102-什么是有效的-gas-优化">10.2 什么是“有效的 Gas 优化”</a></li>
+        <li><a href="#103-基准测试的基本思路">10.3 基准测试的基本思路</a></li>
+        <li><a href="#104-一个概念级的对比示例">10.4 一个概念级的对比示例</a></li>
+        <li><a href="#105-关注最坏情况而不仅是平均值">10.5 关注“最坏情况”，而不仅是平均值</a></li>
+        <li><a href="#106-工具并不重要方法才重要">10.6 工具并不重要，方法才重要</a></li>
+        <li><a href="#107-什么时候应该停止优化">10.7 什么时候应该停止优化</a></li>
+      </ul>
+    </li>
+    <li><a href="#11-一份可执行的-gas-优化清单">11. 一份可执行的 Gas 优化清单</a>
+      <ul>
+        <li><a href="#111-设计阶段优先检查项">11.1 设计阶段优先检查项</a></li>
+        <li><a href="#112-storage-相关检查项最高优先级">11.2 Storage 相关检查项（最高优先级）</a></li>
+        <li><a href="#113-函数接口与参数检查项">11.3 函数接口与参数检查项</a></li>
+        <li><a href="#114-循环与批处理检查项">11.4 循环与批处理检查项</a></li>
+        <li><a href="#115-错误处理与字节码体积">11.5 错误处理与字节码体积</a></li>
+        <li><a href="#116-事件与返回值设计">11.6 事件与返回值设计</a></li>
+        <li><a href="#117-进阶优化谨慎项">11.7 进阶优化（谨慎项）</a></li>
+        <li><a href="#118-用数据驱动最终决策">11.8 用数据驱动最终决策</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/best-practices-for-gas-optimization-in-solidity/">Solidity中的Gas优化最佳实践</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025年09月20日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 26 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+        <footer class="article-translations">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+            <div>
+                
+                    <a href="https://yearsuns-github-io.vercel.app/en/p/best-practices-for-gas-optimization-in-solidity/" class="link">English</a>
+                
+            </div>
+        </footer>
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-为什么需要-gas-优化">1. 为什么需要 Gas 优化
+</h2><p>在以太坊上开发智能合约时，Gas 是一个绕不开的概念。
+它既不是单纯的“手续费”，也不仅仅是网络拥堵时的临时成本，而是<strong>对合约设计质量的一种长期约束</strong>。</p>
+<p>很多开发者第一次关注 Gas，往往是在以下场景中：</p>
+<ul>
+<li>合约部署费用异常高</li>
+<li>用户调用某个函数时频繁 Out of Gas</li>
+<li>同样的功能，不同实现方式的成本差异明显</li>
+</ul>
+<p>这些问题通常并非出现在业务逻辑上，而是源于<strong>对 EVM 成本模型缺乏直觉</strong>。</p>
+<h3 id="11-gas-的两层含义">1.1 Gas 的两层含义
+</h3><p>在讨论优化之前，必须先区分两个容易混淆的概念：</p>
+<ul>
+<li><strong>gas used</strong>：执行一笔交易实际消耗的 Gas 单位数量</li>
+<li><strong>gas price</strong>：你愿意为每个 Gas 单位支付的价格</li>
+</ul>
+<p>合约代码本身只能影响 <strong>gas used</strong>，而无法控制 gas price。</p>
+<p>这意味着：</p>
+<ul>
+<li>网络拥堵会推高 gas price，但不会改变合约的 gas used</li>
+<li>一个设计不佳的合约，在任何网络环境下都会更贵</li>
+<li>在 gas price 较高的时期，低效设计的成本差距会被进一步放大</li>
+</ul>
+<p>因此，Gas 优化并不是为了“赌网络状况”，而是为了<strong>让每次执行尽可能少地消耗 Gas 单位</strong>。</p>
+<h3 id="12-为什么功能正确并不等于成本合理">1.2 为什么“功能正确”并不等于“成本合理”
+</h3><p>在传统软件中，只要程序运行正确，性能问题往往可以后置优化。
+但在智能合约中，<strong>性能就是成本</strong>。</p>
+<p>一个合约即使：</p>
+<ul>
+<li>没有安全漏洞</li>
+<li>功能完全符合预期</li>
+<li>能通过所有测试</li>
+</ul>
+<p>仍然可能因为以下原因变得难以使用：</p>
+<ul>
+<li>某些函数在链上执行成本过高</li>
+<li>高峰期交易失败率上升</li>
+<li>长期来看，用户为相同功能支付了不必要的费用</li>
+</ul>
+<p>这类问题往往不是“写错了代码”，而是<strong>在设计阶段忽略了 Gas 的结构性成本</strong>。</p>
+<h3 id="13-gas-优化的目标是什么">1.3 Gas 优化的目标是什么
+</h3><p>Gas 优化并不是追求“极致便宜”，而是服务于三个更现实的目标：</p>
+<ol>
+<li>
+<p><strong>降低长期使用成本</strong>
+高频调用的函数，哪怕节省几百 Gas，长期也会累积显著差异。</p>
+</li>
+<li>
+<p><strong>提高交易成功率</strong>
+Gas 消耗越可控，越不容易在复杂路径中触发 Out of Gas。</p>
+</li>
+<li>
+<p><strong>提升成本的可预测性</strong>
+让调用者更容易估算所需 Gas，减少不确定性。</p>
+</li>
+</ol>
+<p>这也是为什么 Gas 优化通常应当优先作用在：</p>
+<ul>
+<li>高频路径</li>
+<li>核心业务逻辑</li>
+<li>用户直接支付成本的函数</li>
+</ul>
+<h3 id="14-何时不应该过度优化">1.4 何时不应该过度优化
+</h3><p>需要明确的是，<strong>Gas 优化有明显的边际递减效应</strong>。</p>
+<p>以下情况通常不值得：</p>
+<ul>
+<li>为了节省极少量 Gas，引入复杂且晦涩的写法</li>
+<li>在低频、冷路径上做大量微优化</li>
+<li>牺牲安全检查或可读性来换取微小收益</li>
+</ul>
+<p>合理的原则是：</p>
+<blockquote>
+<p><strong>先写出安全、清晰、可维护的代码，再在“真正昂贵的地方”做优化。</strong></p>
+</blockquote>
+<p>在大多数情况下，理解并避免高成本结构，比记住零散技巧更重要。</p>
+<h3 id="15-接下来要做什么">1.5 接下来要做什么
+</h3><p>接下来的章节将从最基础的问题开始：</p>
+<ul>
+<li>EVM 到底在为什么操作收费</li>
+<li>哪些指令最贵，哪些几乎可以忽略</li>
+<li>为什么 storage 读写是 Gas 成本的核心</li>
+</ul>
+<p>理解这些原理之后，后续的所有优化实践都会变得自然，而不是依赖记忆规则。</p>
+<h2 id="2-gas-成本模型">2. Gas 成本模型
+</h2><p>在讨论具体的优化技巧之前，有必要先建立一个清晰的成本直觉：<strong>EVM 并不是所有操作都同样昂贵</strong>。
+很多看起来“简单”的 Solidity 代码，之所以 Gas 消耗很高，原因往往不在业务逻辑本身，而在于它触发了高成本的底层指令。</p>
+<p>理解这一节内容的目标只有一个：
+<strong>知道哪些操作值得被重点避免或合并，哪些操作几乎可以忽略不计。</strong></p>
+<h3 id="21-什么是指令级收费">2.1 什么是指令级收费
+</h3><p>EVM 是一台基于栈的虚拟机。Solidity 代码在部署或调用前，会被编译为一系列 EVM 指令（opcode），例如：</p>
+<ul>
+<li>ADD、SUB、LT 等算术或比较指令</li>
+<li>MLOAD、MSTORE 等内存操作</li>
+<li>SLOAD、SSTORE 等 storage 操作</li>
+<li>CALL、DELEGATECALL 等外部调用</li>
+</ul>
+<p><strong>Gas 的计算完全发生在指令层面</strong>，而不是在 Solidity 语法层面。这意味着：</p>
+<ul>
+<li>一行 Solidity 代码可能对应多条指令</li>
+<li>不同写法即使“看起来一样”，编译后的指令序列也可能不同</li>
+<li>Gas 的差异，来自指令类型和数量，而不是代码长度</li>
+</ul>
+<p>因此，Gas 优化本质上是在做一件事：
+<strong>让高成本指令执行得更少。</strong></p>
+<h3 id="22-成本层级">2.2 成本层级
+</h3><p>从成本角度，可以粗略把 EVM 中的操作分为几个层级（从低到高）：</p>
+<ul>
+<li>纯计算（算术、比较、位运算）</li>
+<li>内存（memory）读写</li>
+<li>calldata 读取</li>
+<li>storage 读取（SLOAD）</li>
+<li>storage 写入（SSTORE）</li>
+<li>外部调用与返回大量数据</li>
+</ul>
+<p>其中最重要的一点是：</p>
+<blockquote>
+<p><strong>storage 操作的成本，远高于绝大多数计算操作。</strong></p>
+</blockquote>
+<p>这也是为什么很多 Gas 优化最终都会指向同一个方向：
+<strong>减少 storage 的访问次数。</strong></p>
+<h3 id="23-storage-是什么为什么这么贵">2.3 Storage 是什么，为什么这么贵
+</h3><p>在 Solidity 中，所有状态变量都会存储在 storage 中。
+从 EVM 的视角来看，storage 是一张巨大的键值表：</p>
+<ul>
+<li>key：storage slot 的位置</li>
+<li>value：32 字节的数据</li>
+</ul>
+<p>storage 的特点是：</p>
+<ul>
+<li>数据是永久存在的</li>
+<li>会影响全局状态树</li>
+<li>所有全节点都必须对其状态达成共识</li>
+</ul>
+<p>每一次 storage 的写入，都意味着对整个系统状态的一次修改，这正是它昂贵的根本原因。</p>
+<h3 id="24-读取-storage-的真实成本">2.4 读取 storage 的真实成本
+</h3><p>当你读取一个状态变量时，例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">uint256</span> x <span style="color:#f92672">=</span> count;
+</span></span></code></pre></div><p>编译后的关键指令是 <code>SLOAD</code>。</p>
+<p>自 EIP-2929 之后，SLOAD 的成本分为两种情况：</p>
+<ul>
+<li><strong>冷访问（cold access）</strong>：
+在一次交易中，第一次访问某个 storage slot</li>
+<li><strong>热访问（warm access）</strong>：
+在同一交易中，再次访问已经读过的 slot</li>
+</ul>
+<p>直觉上可以理解为：</p>
+<ul>
+<li>第一次读取某个状态变量，EVM 需要“把它带进来”</li>
+<li>后续再读同一个变量，成本会降低，但仍然不便宜</li>
+</ul>
+<p>即使是热访问，SLOAD 的成本也明显高于内存或算术操作。</p>
+<h3 id="25-为什么写-storage-是最贵的操作之一">2.5 为什么写 storage 是最贵的操作之一
+</h3><p>当你修改一个状态变量时，例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span>count <span style="color:#f92672">=</span> count <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span></code></pre></div><p>这并不是一次简单的“加一”，而是一个完整的读–改–写过程：</p>
+<ol>
+<li>SLOAD：读取原始值</li>
+<li>执行加法</li>
+<li>SSTORE：写入新值</li>
+</ol>
+<p>SSTORE 的成本取决于写入前后的状态，例如：</p>
+<ul>
+<li>从 0 写成非 0：成本最高</li>
+<li>从非 0 改为非 0：次之</li>
+<li>从非 0 改为 0：成本较低，并可能获得退款</li>
+</ul>
+<p>这些规则的存在，本质上是为了鼓励合约释放不再使用的状态。</p>
+<h3 id="26-一行-solidity-代码背后的真实执行过程">2.6 一行 Solidity 代码背后的真实执行过程
+</h3><p>来看一个非常常见的写法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span>count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+</span></span></code></pre></div><p>从 Solidity 的角度看，它只是一次简单的自增。
+但从 EVM 的角度看，它通常意味着：</p>
+<ul>
+<li>一次 SLOAD</li>
+<li>一次加法指令</li>
+<li>一次 SSTORE</li>
+</ul>
+<p>如果在同一个函数中多次写出类似代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span>count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+</span></span></code></pre></div><p>你并不是做了三次加法，而是触发了：</p>
+<ul>
+<li>3 次 SLOAD</li>
+<li>3 次 SSTORE</li>
+</ul>
+<p>这正是 Gas 消耗迅速放大的原因。</p>
+<h3 id="27-建立一个关键直觉">2.7 建立一个关键直觉
+</h3><p>到这里，可以总结出一个非常重要的直觉：</p>
+<ul>
+<li>算术和逻辑运算通常不是 Gas 的瓶颈</li>
+<li>storage 的读写，才是 Gas 成本的核心来源</li>
+<li>多次重复访问同一个 storage slot，是最常见也最容易忽视的浪费</li>
+</ul>
+<p>一旦你建立起这个直觉，后续关于缓存变量、合并写入、storage packing 等优化方式，都会显得顺理成章，而不是技巧堆砌。</p>
+<h2 id="3-减少-storage-读写">3. 减少 Storage 读写
+</h2><p>在理解了 EVM 的成本模型之后，Gas 优化的优先级其实已经非常清晰：
+<strong>只要能减少 storage 的读写次数，几乎一定能获得显著的 Gas 收益。</strong></p>
+<p>所有的gas优化技巧大多围绕一个核心目标展开：
+<strong>让 SLOAD 和 SSTORE 尽可能少地执行。</strong></p>
+<h3 id="31-为什么-storage-优化具有最高性价比">3.1 为什么 Storage 优化具有最高性价比
+</h3><p>前面我们讨论过：</p>
+<ul>
+<li>算术运算非常便宜</li>
+<li>内存操作成本中等</li>
+<li>storage 写入是最昂贵的操作之一</li>
+</ul>
+<p>这意味着：</p>
+<ul>
+<li>省掉一次 SSTORE，往往比优化十几行计算代码更有价值</li>
+<li>优化 storage 访问，收益通常是数量级上的</li>
+</ul>
+<p>因此，在实际工程中，Gas 优化的顺序应当是：</p>
+<ol>
+<li>先看是否能减少 storage 读写</li>
+<li>再考虑循环、参数、位运算等次级优化</li>
+</ol>
+<h3 id="32-缓存多次读取把多次-sload-变成一次">3.2 缓存多次读取：把多次 SLOAD 变成一次
+</h3><p>最常见、也最容易忽视的低效写法，是在同一个函数中多次读取同一个状态变量。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">increment</span>() <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    require(count <span style="color:#f92672">&lt;</span> max, <span style="color:#e6db74">&#34;too large&#34;</span>);
+</span></span><span style="display:flex;"><span>    count <span style="color:#f92672">=</span> count <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    emit Updated(count);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>在这段代码中，<code>count</code> 实际上被读取了多次：</p>
+<ul>
+<li><code>require</code> 中读取一次</li>
+<li>自增时读取一次</li>
+<li>事件参数中再读取一次</li>
+</ul>
+<p>更高效的写法是先将其缓存到局部变量：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">increment</span>() <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> c <span style="color:#f92672">=</span> count;
+</span></span><span style="display:flex;"><span>    require(c <span style="color:#f92672">&lt;</span> max, <span style="color:#e6db74">&#34;too large&#34;</span>);
+</span></span><span style="display:flex;"><span>    c <span style="color:#f92672">=</span> c <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    count <span style="color:#f92672">=</span> c;
+</span></span><span style="display:flex;"><span>    emit Updated(c);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这样做的结果是：</p>
+<ul>
+<li>storage 只读一次</li>
+<li>storage 只写一次</li>
+<li>后续操作都在内存中完成</li>
+</ul>
+<p>这种改动几乎不影响可读性，却能显著减少 Gas。</p>
+<h3 id="33-合并多次写入避免重复的-sstore">3.3 合并多次写入：避免重复的 SSTORE
+</h3><p>另一类常见问题，是在同一个函数中多次写入同一个状态变量。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">update</span>(<span style="color:#66d9ef">uint256</span> x) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    value <span style="color:#f92672">+=</span> x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> threshold) {
+</span></span><span style="display:flex;"><span>        value <span style="color:#f92672">+=</span> bonus;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>表面上看，这段代码逻辑清晰，但它可能会对 <code>value</code> 执行多次 SSTORE。</p>
+<p>更合理的写法是先在内存中完成所有计算：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">update</span>(<span style="color:#66d9ef">uint256</span> x) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> v <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>    v <span style="color:#f92672">+=</span> x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> threshold) {
+</span></span><span style="display:flex;"><span>        v <span style="color:#f92672">+=</span> bonus;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    value <span style="color:#f92672">=</span> v;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>原则可以总结为一句话：</p>
+<blockquote>
+<p><strong>不要在逻辑分支中反复写 storage，先算清楚，再一次性写回。</strong></p>
+</blockquote>
+<h3 id="34-循环中的-storage-读写陷阱">3.4 循环中的 storage 读写陷阱
+</h3><p>循环是 storage 读写最容易被放大的地方。</p>
+<p>考虑下面的写法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">sum</span>(<span style="color:#66d9ef">uint256</span>[] calldata arr) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> arr.length; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        total <span style="color:#f92672">+=</span> arr[i];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>在这个循环中：</p>
+<ul>
+<li>每次迭代都会读取并写入 <code>total</code></li>
+<li>如果数组长度为 n，就会触发 n 次 SLOAD 和 n 次 SSTORE</li>
+</ul>
+<p>更高效的写法是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">sum</span>(<span style="color:#66d9ef">uint256</span>[] calldata arr) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> t <span style="color:#f92672">=</span> total;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> len <span style="color:#f92672">=</span> arr.length;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        t <span style="color:#f92672">+=</span> arr[i];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    total <span style="color:#f92672">=</span> t;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这种写法的改动非常小，但对 Gas 的影响会随着数组长度线性放大。</p>
+<h3 id="35-避免在循环中写-storage-的设计思路">3.5 避免在循环中写 storage 的设计思路
+</h3><p>在设计合约时，应当尽量避免以下模式：</p>
+<ul>
+<li>在不受限的循环中写 storage</li>
+<li>每次迭代都更新状态</li>
+<li>循环次数由外部输入完全控制</li>
+</ul>
+<p>更好的替代方案包括：</p>
+<ul>
+<li>先在内存中计算，再一次性写回</li>
+<li>设计批处理接口，但限制每次调用的最大数量</li>
+<li>将复杂计算移到链下，只在链上验证结果</li>
+</ul>
+<p>这些并不是“写法技巧”，而是<strong>设计阶段就应当考虑的结构性问题</strong>。</p>
+<h3 id="36-用-mapping-替代数组">3.6 用 mapping 替代数组
+</h3><p>在合约里，“数组还是 mapping”并不只是编码风格差异，而是成本模型差异：</p>
+<ul>
+<li>数组常见操作（查找、去重、删除某个元素）通常需要遍历，成本是 <strong>O(n)</strong>，并且容易触发不受限循环</li>
+<li>mapping 的读写是按 key 直接定位，成本接近 <strong>O(1)</strong>，更稳定、更可控</li>
+</ul>
+<h4 id="场景-1成员判断contains">场景 1：成员判断（contains）
+</h4><p>不推荐：用数组存储成员并在链上查找</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">address</span>[] <span style="color:#66d9ef">public</span> members;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">isMember</span>(<span style="color:#66d9ef">address</span> a) <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">view</span> <span style="color:#66d9ef">returns</span> (<span style="color:#66d9ef">bool</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> members.length; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (members[i] <span style="color:#f92672">==</span> a) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>问题：</p>
+<ul>
+<li>每次判断都要遍历</li>
+<li>成员越多越贵</li>
+<li>最坏情况下可能 Out of Gas</li>
+</ul>
+<p>推荐：用 mapping 做存在性判断</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">mapping</span>(<span style="color:#66d9ef">address</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">public</span> isMember;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">addMember</span>(<span style="color:#66d9ef">address</span> a) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    isMember[a] <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">removeMember</span>(<span style="color:#66d9ef">address</span> a) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    isMember[a] <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>优点：</p>
+<ul>
+<li>判断存在性是 O(1)</li>
+<li>成本可预测</li>
+<li>不需要循环</li>
+</ul>
+<h4 id="场景-2需要可枚举的集合既要-o1-判断又要列出所有成员">场景 2：需要“可枚举”的集合（既要 O(1) 判断，又要列出所有成员）
+</h4><p>很多业务既需要 <code>isMember[a]</code> 这种 O(1) 判断，也需要枚举所有成员（给前端展示）。这时可以用“mapping + 数组”组合结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">mapping</span>(<span style="color:#66d9ef">address</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">public</span> isMember;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">address</span>[] <span style="color:#66d9ef">public</span> memberList;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">mapping</span>(<span style="color:#66d9ef">address</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">uint256</span>) <span style="color:#66d9ef">private</span> indexPlusOne; <span style="color:#75715e">// 下标+1，0 表示不存在
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">addMember</span>(<span style="color:#66d9ef">address</span> a) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (indexPlusOne[a] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>; <span style="color:#75715e">// 已存在
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    isMember[a] <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    memberList.push(a);
+</span></span><span style="display:flex;"><span>    indexPlusOne[a] <span style="color:#f92672">=</span> memberList.length; <span style="color:#75715e">// 存的是 index+1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">removeMember</span>(<span style="color:#66d9ef">address</span> a) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> idxPlusOne <span style="color:#f92672">=</span> indexPlusOne[a];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (idxPlusOne <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> idx <span style="color:#f92672">=</span> idxPlusOne <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> last <span style="color:#f92672">=</span> memberList.length <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (idx <span style="color:#f92672">!=</span> last) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">address</span> lastAddr <span style="color:#f92672">=</span> memberList[last];
+</span></span><span style="display:flex;"><span>        memberList[idx] <span style="color:#f92672">=</span> lastAddr;
+</span></span><span style="display:flex;"><span>        indexPlusOne[lastAddr] <span style="color:#f92672">=</span> idx <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    memberList.pop();
+</span></span><span style="display:flex;"><span>    indexPlusOne[a] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    isMember[a] <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>解释：</p>
+<ul>
+<li><code>mapping</code> 负责 O(1) 判断与定位</li>
+<li><code>array</code> 负责枚举</li>
+<li>删除用 swap-and-pop，避免 O(n) 移动</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>这种结构会引入额外存储（索引 mapping），但换来的是操作复杂度和成本可控，通常非常值得</li>
+</ul>
+<h4 id="什么时候不该用数组">什么时候不该用数组
+</h4><p>如果你发现你在数组上做这些操作，基本就该考虑 mapping：</p>
+<ul>
+<li>contains/查找</li>
+<li>去重</li>
+<li>删除指定元素</li>
+<li>防重复写入</li>
+<li>任何“长度可能增长且由用户输入驱动”的遍历逻辑</li>
+</ul>
+<p>一句话总结：</p>
+<blockquote>
+<p>数组适合“顺序数据”和“按下标访问”，mapping 适合“按 key 查询/去重/存在性判断”。当你需要查找或删除时，mapping 往往更省 Gas，也更安全。</p>
+</blockquote>
+<h2 id="4-数据位置与函数接口设计">4. 数据位置与函数接口设计
+</h2><p>在减少了不必要的 storage 读写之后，下一类非常值得关注的优化点是：
+<strong>函数的接口设计，包括参数的数据位置（data location）和函数的可见性（visibility）。</strong></p>
+<p>这些选择通常不会改变业务逻辑，但却会直接影响：</p>
+<ul>
+<li>是否发生不必要的数据拷贝</li>
+<li>是否触发额外的编码 / 解码</li>
+<li>函数调用在 EVM 中走的是哪条路径</li>
+</ul>
+<p>合理的接口设计，往往是“低风险、高收益”的 Gas 优化。</p>
+<h3 id="41-三种数据位置的成本直觉">4.1 三种数据位置的成本直觉
+</h3><p>在 Solidity 中，引用类型（数组、struct、string、bytes）必须显式或隐式指定数据位置：</p>
+<ul>
+<li><strong>calldata</strong>：只读，位于调用数据中</li>
+<li><strong>memory</strong>：可读写，函数执行期间存在</li>
+<li><strong>storage</strong>：永久存储在链上</li>
+</ul>
+<p>从成本角度，可以建立一个简单直觉：</p>
+<ul>
+<li>calldata 读取：便宜</li>
+<li>memory 读写：中等</li>
+<li>storage 读写：昂贵</li>
+</ul>
+<p>因此，一个基本原则是：</p>
+<blockquote>
+<p><strong>能用 calldata 就不要用 memory，能用 memory 就不要用 storage。</strong></p>
+</blockquote>
+<h3 id="42-external-函数与-calldata">4.2 external 函数与 calldata
+</h3><p>对于只从外部调用的函数，最推荐的写法是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">process</span>(<span style="color:#66d9ef">uint256</span>[] calldata data) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 使用 data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>原因在于：</p>
+<ul>
+<li>external 函数的参数天然来自 calldata</li>
+<li>使用 calldata 不需要将参数复制到 memory</li>
+<li>对于大数组或复杂结构，拷贝成本差异非常明显</li>
+</ul>
+<p>相反，如果写成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">process</span>(<span style="color:#66d9ef">uint256</span>[] <span style="color:#66d9ef">memory</span> data) <span style="color:#66d9ef">public</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 使用 data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>即使你并未修改 <code>data</code>，编译器仍然需要：</p>
+<ul>
+<li>将 calldata 中的数据完整复制到 memory</li>
+<li>为此支付额外的 Gas 成本</li>
+</ul>
+<h3 id="43-什么时候必须使用-memory">4.3 什么时候必须使用 memory
+</h3><p>calldata 的限制也非常明确：<strong>只读</strong>。</p>
+<p>一旦你的函数需要：</p>
+<ul>
+<li>修改数组内容</li>
+<li>排序</li>
+<li>去重</li>
+<li>动态构造新数组</li>
+</ul>
+<p>就必须使用 memory。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">normalize</span>(<span style="color:#66d9ef">uint256</span>[] calldata data) <span style="color:#66d9ef">external</span> <span style="color:#66d9ef">returns</span> (<span style="color:#66d9ef">uint256</span>[] <span style="color:#66d9ef">memory</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span>[] <span style="color:#66d9ef">memory</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">uint256</span>[](data.length);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> data.length; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        result[i] <span style="color:#f92672">=</span> data[i] <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> result;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里的关键点是：</p>
+<ul>
+<li>输入参数使用 calldata（避免拷贝）</li>
+<li>输出结果使用 memory（必须可写）</li>
+</ul>
+<p>这是一种非常常见、也非常合理的组合。</p>
+<h3 id="44-函数可见性的-gas-含义">4.4 函数可见性的 Gas 含义
+</h3><p>函数可见性不仅影响可调用范围，也会影响 Gas。</p>
+<p>可以从以下角度理解：</p>
+<ul>
+<li><strong>external</strong>：直接从 calldata 读取参数，最省 Gas</li>
+<li><strong>public</strong>：参数会被复制到 memory，成本更高</li>
+<li><strong>internal</strong>：编译期内联或直接跳转，最便宜</li>
+<li><strong>private</strong>：与 internal 类似，但仅限当前合约</li>
+</ul>
+<p>一个重要结论是：</p>
+<blockquote>
+<p><strong>public 并不是“内外通用的最优选择”。</strong></p>
+</blockquote>
+<h3 id="45-external-入口--internal-实现">4.5 external 入口 + internal 实现
+</h3><p>在实际工程中，最推荐的模式是：</p>
+<ul>
+<li>对外暴露的函数使用 <code>external</code></li>
+<li>将核心逻辑提取到 <code>internal</code> 函数中</li>
+</ul>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">update</span>(<span style="color:#66d9ef">uint256</span> x) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    _update(x);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">_update</span>(<span style="color:#66d9ef">uint256</span> x) <span style="color:#66d9ef">internal</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 核心逻辑
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>这样做的好处包括：</p>
+<ul>
+<li>external 函数使用 calldata，参数拷贝最少</li>
+<li>internal 函数调用成本极低</li>
+<li>内部调用和外部调用共享同一份逻辑</li>
+</ul>
+<p>这种模式几乎没有副作用，却能避免很多隐性的 Gas 浪费。</p>
+<h3 id="46-为什么要避免-this-调用当前合约">4.6 为什么要避免 this 调用当前合约
+</h3><p>一个非常隐蔽但代价很高的写法是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span>this.update(x);
+</span></span></code></pre></div><p>即使 <code>update</code> 定义在当前合约中，这种写法也会：</p>
+<ul>
+<li>触发一次完整的 external call</li>
+<li>进行 ABI 编码和解码</li>
+<li>走 CALL 指令路径</li>
+</ul>
+<p>这意味着：</p>
+<ul>
+<li>更高的 Gas 成本</li>
+<li>更复杂的执行路径</li>
+<li>潜在的可重入风险</li>
+</ul>
+<p>如果你发现自己需要 <code>this.foo()</code>，通常意味着：</p>
+<ul>
+<li>逻辑划分不合理</li>
+<li>internal 函数抽象不充分</li>
+</ul>
+<p>正确的重构方式，是将逻辑提取为 internal 函数，并在 external 函数中调用它。</p>
+<h3 id="47-一个对比示例">4.7 一个对比示例
+</h3><p>对比下面两种实现：</p>
+<p>不推荐的写法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">foo</span>(<span style="color:#66d9ef">uint256</span>[] <span style="color:#66d9ef">memory</span> data) <span style="color:#66d9ef">public</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 使用 data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">bar</span>(<span style="color:#66d9ef">uint256</span>[] <span style="color:#66d9ef">memory</span> data) <span style="color:#66d9ef">public</span> {
+</span></span><span style="display:flex;"><span>    foo(data);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>推荐的写法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">foo</span>(<span style="color:#66d9ef">uint256</span>[] calldata data) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    _foo(data);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">bar</span>(<span style="color:#66d9ef">uint256</span>[] calldata data) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    _foo(data);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">_foo</span>(<span style="color:#66d9ef">uint256</span>[] calldata data) <span style="color:#66d9ef">internal</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 使用 data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>第二种写法在以下方面更优：</p>
+<ul>
+<li>参数不被重复拷贝</li>
+<li>逻辑集中，避免重复</li>
+<li>internal 调用成本更低</li>
+</ul>
+<h2 id="5-状态布局设计storage-packing">5. 状态布局设计：Storage Packing
+</h2><p>在前几节中，我们讨论的优化大多发生在“如何使用状态变量”。
+这一节关注一个更偏设计层面的问题：<strong>状态变量是如何被放进 storage 的</strong>。</p>
+<p>很多 Gas 浪费并不是来自频繁读写，而是来自<strong>状态布局本身不合理</strong>，导致：</p>
+<ul>
+<li>使用了更多的 storage slot</li>
+<li>每次读写都触发更多的 SLOAD / SSTORE</li>
+<li>合约长期运行成本被放大</li>
+</ul>
+<h3 id="51-storage-slot-与-32-字节对齐">5.1 Storage slot 与 32 字节对齐
+</h3><p>从 EVM 的角度看，storage 是以 <strong>32 字节（256 bit）为一个 slot</strong> 来组织的。</p>
+<p>Solidity 的状态变量会按照声明顺序，依次放入这些 slot 中：</p>
+<ul>
+<li>如果变量大小小于 32 字节，编译器会尝试将多个变量放进同一个 slot</li>
+<li>如果当前 slot 剩余空间不足，变量会被放到下一个 slot</li>
+<li>一旦一个 slot 被填满，就不会再继续向其中塞变量</li>
+</ul>
+<p>这一机制被称为 <strong>storage packing</strong>。</p>
+<h3 id="52-一个最基础的打包示例">5.2 一个最基础的打包示例
+</h3><p>考虑下面的变量声明：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">uint128</span> a;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">uint128</span> b;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">uint256</span> c;
+</span></span></code></pre></div><p>每个 <code>uint128</code> 占 16 字节，因此这两个变量可以共享同一个 storage slot。<code>uint256</code> 独占 16 字节，因此这三个变量总共使用了 2 个 slot。</p>
+<p>但如果顺序稍有不同：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">uint128</span> a;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">uint256</span> c;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">uint128</span> b;
+</span></span></code></pre></div><p>那么：</p>
+<ul>
+<li><code>a</code> 占用 slot0 的前 16 字节</li>
+<li><code>c</code> 独占 slot1</li>
+<li><code>b</code> 由于 slot0 剩余空间不足，只能进入 slot2</li>
+</ul>
+<p>现在这三个变量总共使用了 3 个 slot。仅仅因为声明顺序不同，就多消耗了一个 slot。</p>
+<h3 id="53-为什么-slot-数量直接影响-gas">5.3 为什么 slot 数量直接影响 Gas
+</h3><p>每一个额外的 storage slot，都会带来长期成本：</p>
+<ul>
+<li>读取更多 slot → 更多 SLOAD</li>
+<li>写入更多 slot → 更多 SSTORE</li>
+<li>结构体整体读写成本上升</li>
+</ul>
+<p>尤其是在：</p>
+<ul>
+<li>高频调用函数</li>
+<li>需要整体复制或更新 struct 的场景中</li>
+</ul>
+<p>slot 数量的差异，会直接体现在 Gas 消耗上。</p>
+<h3 id="54-小类型并不总是越小越好">5.4 小类型并不总是“越小越好”
+</h3><p>需要注意的是：</p>
+<ul>
+<li>选择小于 256 bit 的类型，并不一定自动省 Gas</li>
+<li>只有在<strong>成功打包</strong>的前提下，小类型才有意义</li>
+</ul>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">uint128</span> a;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">uint256</span> b;
+</span></span></code></pre></div><p>即使 <code>a</code> 是 <code>uint128</code>，它依然会独占一个 slot，因为后面紧跟着一个 <code>uint256</code>。</p>
+<p>因此，类型选择和声明顺序应当结合考虑，而不是孤立决策。</p>
+<h3 id="55-什么时候应该关心-storage-packing">5.5 什么时候应该关心 storage packing
+</h3><p>并不是所有合约都需要精细打包。
+storage packing 不仅适用于合约级变量，也同样适用于 struct。</p>
+<p>storage packing 尤其适合以下场景：</p>
+<ul>
+<li>状态变量数量较多</li>
+<li>使用大量 struct</li>
+<li>状态会被频繁读写</li>
+<li>合约生命周期较长</li>
+</ul>
+<p>而在状态极少、只部署一次、很少交互的合约中，过度调整字段顺序的收益可能有限。</p>
+<h2 id="6-循环与批处理">6. 循环与批处理
+</h2><p>在前几节中，我们已经看到：
+storage 读写本身很贵，而<strong>循环会把这种成本按次数放大</strong>。
+因此，循环往往不是 Gas 的来源，但却是 Gas 的“放大器”。</p>
+<p><strong>不是所有循环都是问题，但不受控制的循环几乎一定会成为问题。</strong></p>
+<h3 id="61-为什么循环容易成为-gas-黑洞">6.1 为什么循环容易成为 Gas 黑洞
+</h3><p>从 EVM 的角度看，循环并不是一个特殊结构，它只是：</p>
+<ul>
+<li>重复执行一段指令序列</li>
+<li>每一次迭代都会完整支付指令成本</li>
+</ul>
+<p>如果循环体中包含：</p>
+<ul>
+<li>storage 读写</li>
+<li>昂贵的计算</li>
+<li>外部调用</li>
+</ul>
+<p>那么 Gas 消耗就会与循环次数线性增长。</p>
+<p>当循环次数由外部输入控制时，风险尤其明显。</p>
+<h3 id="62-缓存数组-length-与中间结果">6.2 缓存数组 length 与中间结果
+</h3><p>一个非常常见、也非常基础的优化点，是缓存数组的长度。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">sum</span>(<span style="color:#66d9ef">uint256</span>[] calldata arr) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> arr.length; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">+=</span> arr[i];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>虽然 <code>arr.length</code> 看起来很轻量，但在每次循环判断中，都会被重新读取。</p>
+<p>更好的写法是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">sum</span>(<span style="color:#66d9ef">uint256</span>[] calldata arr) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> len <span style="color:#f92672">=</span> arr.length;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">+=</span> arr[i];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这类优化在单次调用中节省的 Gas 不多，但在高频或大数组场景下，会逐渐显现差异。</p>
+<h3 id="63-避免在循环中直接写-storage">6.3 避免在循环中直接写 storage
+</h3><p>如前几节所强调的，在循环中写 storage 是非常昂贵的。</p>
+<p>原则可以总结为：</p>
+<blockquote>
+<p><strong>循环中尽量只做内存计算，把 storage 写入放到循环之外。</strong></p>
+</blockquote>
+<h3 id="64-在安全前提下使用-unchecked">6.4 在安全前提下使用 unchecked
+</h3><p>从 Solidity 0.8 开始，整数运算默认包含溢出检查。
+这对安全非常有价值，但在某些场景中，也会带来不必要的 Gas 开销。</p>
+<p>一个典型场景是 for 循环的计数器：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>如果你能明确保证：</p>
+<ul>
+<li><code>i</code> 不会接近 <code>type(uint256).max</code></li>
+<li>循环条件有明确上界</li>
+</ul>
+<p>那么可以使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unchecked</span> {
+</span></span><span style="display:flex;"><span>        i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这类优化的收益不如减少 storage 读写明显，但在大循环中仍然是可测量的。</p>
+<h3 id="65-避免无上限循环">6.5 避免无上限循环
+</h3><p>在设计合约接口时，应当尽量避免：</p>
+<ul>
+<li>循环次数完全由用户输入决定</li>
+<li>没有任何上界或约束</li>
+</ul>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">process</span>(<span style="color:#66d9ef">uint256</span>[] calldata items) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> items.length; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>如果 <code>items.length</code> 没有被限制，调用者可以传入极大的数组，导致：</p>
+<ul>
+<li>调用失败（Out of Gas）</li>
+<li>合约在某些情况下“不可用”</li>
+</ul>
+<p>常见的改进方式包括：</p>
+<ul>
+<li>明确限制最大长度</li>
+<li>将操作拆分为多次调用</li>
+<li>提供分页或游标式接口</li>
+</ul>
+<h3 id="66-批处理batch设计的取舍">6.6 批处理（Batch）设计的取舍
+</h3><p>批处理是减少交易次数、摊薄固定成本的常见手段，但它并不是没有代价。</p>
+<p>优点包括：</p>
+<ul>
+<li>减少外部调用次数</li>
+<li>摊薄函数入口和校验成本</li>
+</ul>
+<p>风险包括：</p>
+<ul>
+<li>单笔交易 Gas 不可控</li>
+<li>更容易触发 OOG</li>
+<li>更难估算 Gas 上限</li>
+</ul>
+<p>因此，批处理接口通常应当具备：</p>
+<ul>
+<li>明确的单次处理上限</li>
+<li>可预期的最坏情况成本</li>
+<li>清晰的失败行为</li>
+</ul>
+<h3 id="67-一个批处理示例">6.7 一个批处理示例
+</h3><p>不推荐的写法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">batchUpdate</span>(<span style="color:#66d9ef">uint256</span>[] calldata ids) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> ids.length; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        update(ids[i]);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>改进后的写法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">uint256</span> <span style="color:#66d9ef">constant</span> MAX_BATCH <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">batchUpdate</span>(<span style="color:#66d9ef">uint256</span>[] calldata ids) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> len <span style="color:#f92672">=</span> ids.length;
+</span></span><span style="display:flex;"><span>    require(len <span style="color:#f92672">&lt;=</span> MAX_BATCH, <span style="color:#e6db74">&#34;too many items&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; ) {
+</span></span><span style="display:flex;"><span>        _update(ids[i]);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">unchecked</span> {
+</span></span><span style="display:flex;"><span>            i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里的关键不是“省多少 Gas”，而是：</p>
+<ul>
+<li>成本可控</li>
+<li>行为可预测</li>
+<li>接口对调用者友好</li>
+</ul>
+<h2 id="7-错误处理与字节码体积优化">7. 错误处理与字节码体积优化
+</h2><p>在讨论 Gas 优化时，很多人会把注意力集中在“成功执行路径”上，而忽略了<strong>失败路径和合约本身体积</strong>的成本。
+实际上，错误处理方式不仅影响交易失败时的 Gas 消耗，也会影响：</p>
+<ul>
+<li>合约部署成本</li>
+<li>每次调用的基础开销</li>
+<li>字节码大小与可维护性</li>
+</ul>
+<p>这一节将聚焦一个非常具体但收益稳定的优化点：<strong>如何更高效地处理错误和回滚。</strong></p>
+<h3 id="71-revert-本身并不是免费的">7.1 revert 本身并不是“免费”的
+</h3><p>当一笔交易 <code>revert</code> 时，状态会被回滚，但 Gas 并不会全部返还。
+尤其是以下几类成本：</p>
+<ul>
+<li>已执行指令消耗的 Gas</li>
+<li>错误信息本身携带的数据</li>
+<li>与 ABI 编码相关的开销</li>
+</ul>
+<p>因此，一个频繁触发的校验逻辑，其失败路径的成本，同样值得认真对待。</p>
+<h3 id="72-requirestring-的真实代价">7.2 require(string) 的真实代价
+</h3><p>最传统、也最常见的错误处理方式是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span>require(msg.sender <span style="color:#f92672">==</span> owner, <span style="color:#e6db74">&#34;Not owner&#34;</span>);
+</span></span></code></pre></div><p>这种写法的问题不在于功能，而在于成本：</p>
+<ul>
+<li>错误字符串会被编译进合约字节码</li>
+<li>每一次 revert 都需要返回这段字符串数据</li>
+<li>字符串越长，部署成本和失败成本越高</li>
+</ul>
+<p>在复杂合约中，大量使用 <code>require(string)</code> 会显著增加 bytecode 体积。</p>
+<h3 id="73-使用-custom-error-的动机">7.3 使用 custom error 的动机
+</h3><p>从 Solidity 0.8.4 开始，引入了 <strong>custom error</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span>error NotOwner();
+</span></span></code></pre></div><p>并配合：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (msg.sender <span style="color:#f92672">!=</span> owner) revert NotOwner();
+</span></span></code></pre></div><p>这种写法的优势在于：</p>
+<ul>
+<li>不需要存储字符串</li>
+<li>错误标识以 selector 形式存在</li>
+<li>revert 时返回的数据更小</li>
+</ul>
+<p>从成本角度看，它同时降低了：</p>
+<ul>
+<li>部署 Gas</li>
+<li>revert 路径的 Gas</li>
+</ul>
+<h3 id="74-对比示例">7.4 对比示例
+</h3><p>考虑一个最简单的权限校验。</p>
+<p>使用 <code>require(string)</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">withdraw</span>() <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    require(msg.sender <span style="color:#f92672">==</span> owner, <span style="color:#e6db74">&#34;Not owner&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>使用 custom error：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span>error NotOwner();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">withdraw</span>() <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (msg.sender <span style="color:#f92672">!=</span> owner) revert NotOwner();
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>两种写法在成功路径上的 Gas 几乎相同，但在以下方面存在差异：</p>
+<ul>
+<li>合约部署体积</li>
+<li>revert 时的 Gas 消耗</li>
+<li>错误信息的编码方式</li>
+</ul>
+<p>在高频调用或复杂合约中，这种差异会逐渐积累。</p>
+<h3 id="75-错误信息该写多详细">7.5 错误信息该写多“详细”
+</h3><p>一个常见误区是：
+<strong>错误信息越详细越好。</strong></p>
+<p>从链上执行的角度看，这并不总是成立。</p>
+<p>更合理的分工是：</p>
+<ul>
+<li>链上：提供简洁、结构化的错误标识</li>
+<li>链下：通过文档或映射表解释错误含义</li>
+</ul>
+<p>custom error 非常适合这种模式，因为它：</p>
+<ul>
+<li>本身就是结构化的</li>
+<li>可携带参数</li>
+<li>便于前端或 SDK 解码</li>
+</ul>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span>error InsufficientBalance(<span style="color:#66d9ef">uint256</span> available, <span style="color:#66d9ef">uint256</span> required);
+</span></span></code></pre></div><h3 id="76-字节码体积为什么值得关注">7.6 字节码体积为什么值得关注
+</h3><p>合约字节码体积会直接影响：</p>
+<ul>
+<li>部署成本</li>
+<li>部署是否成功（有大小上限）</li>
+<li>每次调用的基础 Gas（代码越大，加载成本越高）</li>
+</ul>
+<p>以下写法都会增加字节码体积：</p>
+<ul>
+<li>大量字符串常量</li>
+<li>重复的逻辑分支</li>
+<li>冗长的错误信息</li>
+</ul>
+<p>因此，Gas 优化不仅是“执行时优化”，也包括<strong>部署时优化</strong>。</p>
+<h3 id="77-错误处理与可读性的平衡">7.7 错误处理与可读性的平衡
+</h3><p>需要强调的是：</p>
+<ul>
+<li>custom error 并不是为了“压缩到极限”</li>
+<li>也不意味着完全放弃可读性</li>
+</ul>
+<p>合理的做法是：</p>
+<ul>
+<li>对外暴露的核心接口：使用清晰的 custom error</li>
+<li>内部断言或开发阶段检查：适度使用 require</li>
+<li>避免在错误信息中携带冗长文本</li>
+</ul>
+<h2 id="8-事件与返回值设计">8. 事件与返回值设计
+</h2><p>在智能合约中，事件（event）和函数返回值常被用于“对外提供信息”。
+但如果设计不当，它们很容易成为 <strong>隐性的 Gas 消耗来源</strong>，尤其是在高频调用或数据量较大的场景中。</p>
+<p>这一节的核心观点可以先给出：</p>
+<blockquote>
+<p><strong>区块链擅长做状态验证，不擅长做数据查询。</strong></p>
+</blockquote>
+<p>理解这一点，有助于你在事件和返回值设计上做出更经济的选择。</p>
+<h3 id="81-事件的作用边界">8.1 事件的作用边界
+</h3><p>事件的主要用途是：</p>
+<ul>
+<li>供链下系统监听和索引</li>
+<li>记录重要的状态变化</li>
+<li>作为审计和分析的依据</li>
+</ul>
+<p>事件<strong>不会</strong>被合约在链上读取，也不会影响后续执行逻辑。
+因此，从合约执行的角度看，事件是“写一次、只给链下用”的数据。</p>
+<p>这意味着一个设计原则：</p>
+<blockquote>
+<p><strong>事件应当服务于链下，而不是替代链上状态查询。</strong></p>
+</blockquote>
+<h3 id="82-事件的-gas-成本构成">8.2 事件的 Gas 成本构成
+</h3><p>一个事件的 Gas 成本主要由两部分组成：</p>
+<ol>
+<li>
+<p><strong>topics</strong></p>
+<ul>
+<li>包括事件签名</li>
+<li>以及最多 3 个 <code>indexed</code> 参数</li>
+</ul>
+</li>
+<li>
+<p><strong>data</strong></p>
+<ul>
+<li>非 indexed 的参数</li>
+<li>按字节数计费</li>
+</ul>
+</li>
+</ol>
+<p>直觉上可以这样理解：</p>
+<ul>
+<li><code>indexed</code> 参数更利于过滤和查询</li>
+<li>但 <code>indexed</code> 并不是“免费”的</li>
+<li>data 部分越大，Gas 成本越高</li>
+</ul>
+<p>因此，事件设计需要在<strong>可查询性</strong>和<strong>成本</strong>之间取舍。</p>
+<h3 id="83-indexed-的合理使用">8.3 indexed 的合理使用
+</h3><p>考虑一个转账事件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">event</span> <span style="color:#a6e22e">Transfer</span>(<span style="color:#66d9ef">address</span> <span style="color:#66d9ef">indexed</span> <span style="color:#66d9ef">from</span>, <span style="color:#66d9ef">address</span> <span style="color:#66d9ef">indexed</span> to, <span style="color:#66d9ef">uint256</span> amount);
+</span></span></code></pre></div><p>这种设计是合理的，因为：</p>
+<ul>
+<li><code>from</code> 和 <code>to</code> 是最常用的查询条件</li>
+<li><code>amount</code> 通常不用于过滤</li>
+</ul>
+<p>但如果写成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">event</span> <span style="color:#a6e22e">Transfer</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">address</span> <span style="color:#66d9ef">indexed</span> <span style="color:#66d9ef">from</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">address</span> <span style="color:#66d9ef">indexed</span> to,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> <span style="color:#66d9ef">indexed</span> amount
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>那么：</p>
+<ul>
+<li>查询能力并没有显著提升</li>
+<li>Gas 成本却增加了</li>
+<li>而且 indexed 参数最多只能有 3 个</li>
+</ul>
+<p>一个实用原则是：</p>
+<blockquote>
+<p><strong>只为“经常作为过滤条件”的字段加 indexed。</strong></p>
+</blockquote>
+<h3 id="84-避免在事件中携带大数据">8.4 避免在事件中携带大数据
+</h3><p>一个常见但代价很高的做法，是在事件中携带大量数据：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">event</span> <span style="color:#a6e22e">DataUpdated</span>(<span style="color:#66d9ef">uint256</span>[] values);
+</span></span></code></pre></div><p>这种设计的问题包括：</p>
+<ul>
+<li>数组会被完整写入日志</li>
+<li>Gas 成本随数据量线性增长</li>
+<li>链上执行成本和链下存储成本都很高</li>
+</ul>
+<p>更合理的替代方案是：</p>
+<ul>
+<li>只记录关键信息（如 ID、hash、计数）</li>
+<li>将完整数据存储在链下</li>
+<li>通过 hash 或索引进行关联</li>
+</ul>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">event</span> <span style="color:#a6e22e">DataUpdated</span>(<span style="color:#66d9ef">bytes32</span> dataHash);
+</span></span></code></pre></div><h3 id="85-避免在链上返回大数组">8.5 避免在链上返回大数组
+</h3><p>在 Solidity 中，函数返回数组或结构体在语法上是完全合法的，例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getUsers</span>() <span style="color:#66d9ef">external</span> <span style="color:#66d9ef">view</span> <span style="color:#66d9ef">returns</span> (User[] <span style="color:#66d9ef">memory</span>);
+</span></span></code></pre></div><p>从接口设计的角度看，这样的函数非常直观：
+“调用一次，就能拿到所有用户数据。”</p>
+<p>问题在于，这种直观并不等于便宜。</p>
+<h4 id="链上调用时会发生什么">链上调用时会发生什么
+</h4><p>如果这个函数被 <strong>另一个合约</strong> 调用，那么即使它是 <code>view</code> 函数，也会真实消耗 Gas。
+在这种情况下，EVM 需要做的事情包括：</p>
+<ul>
+<li>从 storage 中逐个读取所有 <code>User</code></li>
+<li>将这些数据复制到 memory</li>
+<li>按 ABI 规则编码整个数组</li>
+<li>将编码后的字节作为返回值</li>
+</ul>
+<p>这些操作的成本，都会随着数组长度线性增长。</p>
+<p>也就是说，<strong>返回的数据越多，Gas 消耗越高，而且没有上限。</strong></p>
+<h4 id="这类成本往往是没必要的">这类成本往往是“没必要的”
+</h4><p>在实际项目中，完整的数据列表通常是：</p>
+<ul>
+<li>给前端或后端服务用的</li>
+<li>用于展示、统计或分析</li>
+<li>不会被其他合约在链上依赖</li>
+</ul>
+<p>而这些链下系统，完全可以通过 <code>eth_call</code> 免费读取 view 函数的返回值。</p>
+<p>这就造成了一种常见的浪费：</p>
+<ul>
+<li>链上调用为返回数据付出了 Gas</li>
+<li>真正需要这些数据的是链下系统</li>
+<li>而链下系统本可以不花任何 Gas</li>
+</ul>
+<h4 id="更合理的设计思路">更合理的设计思路
+</h4><p>因此，在设计函数返回值时，应该明确区分两种使用场景：</p>
+<ul>
+<li>
+<p><strong>链上调用的函数</strong>
+返回值应当尽量简单，甚至可以不返回任何数据</p>
+</li>
+<li>
+<p><strong>链下查询用的函数</strong>
+可以返回数组或结构体，但要意识到它们只适合通过 <code>eth_call</code> 使用</p>
+</li>
+</ul>
+<p>如果存在链上也需要读取部分数据的需求，那么分页或游标式接口通常是更安全的选择。</p>
+<h3 id="86-用分页与游标来替代一次性返回">8.6 用分页与游标来替代一次性返回
+</h3><p>如果确实需要从合约中读取大量数据，更合理的方式是分页。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getUsers</span>(<span style="color:#66d9ef">uint256</span> offset, <span style="color:#66d9ef">uint256</span> limit)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">external</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">view</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">returns</span> (User[] <span style="color:#66d9ef">memory</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 返回一部分数据
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>这种设计的优势是：</p>
+<ul>
+<li>链上调用时可以控制 Gas 上限</li>
+<li>链下系统可以逐页拉取</li>
+<li>接口行为更可预测</li>
+</ul>
+<h3 id="87-一个事件设计对比示例">8.7 一个事件设计对比示例
+</h3><p>不推荐的写法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">event</span> <span style="color:#a6e22e">OrderCreated</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">address</span> user,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span>[] itemIds,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span>[] prices
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>改进后的写法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">event</span> <span style="color:#a6e22e">OrderCreated</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">address</span> <span style="color:#66d9ef">indexed</span> user,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bytes32</span> orderId
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>并在链下系统中：</p>
+<ul>
+<li>根据 <code>orderId</code> 关联完整订单数据</li>
+<li>使用事件作为“索引信号”，而不是数据载体</li>
+</ul>
+<p>这种设计在可扩展性和成本上都更加合理。</p>
+<h2 id="9-紧凑表示与低级优化谨慎使用">9. 紧凑表示与低级优化（谨慎使用）
+</h2><p>在前面的内容中，我们讨论的优化大多具备一个共同特点：
+<strong>不牺牲可读性，风险可控，收益稳定。</strong></p>
+<p>现在我们开始讨论一些进阶技巧，这些技巧<strong>确实可以省 Gas</strong>，但同时也会带来：</p>
+<ul>
+<li>可读性下降</li>
+<li>实现复杂度上升</li>
+<li>更高的审计和维护成本</li>
+</ul>
+<p>因此，这一节的核心不是“教你一定要用”，而是回答：</p>
+<blockquote>
+<p><strong>哪些低级优化在什么情况下值得用，什么时候应该果断放弃。</strong></p>
+</blockquote>
+<h3 id="91-位运算与-bitmap">9.1 位运算与 bitmap
+</h3><p>一个非常典型、也相对安全的进阶优化手段，是 <strong>bitmap（位图）</strong>。</p>
+<p>假设你需要维护一组布尔状态，例如：</p>
+<ul>
+<li>某个地址是否已完成某一步操作</li>
+<li>某些 ID 是否已被使用</li>
+<li>一组固定大小的开关位</li>
+</ul>
+<p>最直观的写法是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">mapping</span>(<span style="color:#66d9ef">uint256</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">bool</span>) used;
+</span></span></code></pre></div><p>这种写法清晰、易懂，但每一个 <code>bool</code> 实际上都会占用一个完整的 storage slot。</p>
+<h4 id="使用-bitmap-的思路">使用 bitmap 的思路
+</h4><p>如果这些布尔值的 key 是：</p>
+<ul>
+<li>连续的</li>
+<li>范围有限的</li>
+<li>数量较多的</li>
+</ul>
+<p>那么可以考虑用一个 <code>uint256</code> 来存储 256 个布尔值：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">uint256</span> bitmap;
+</span></span></code></pre></div><ul>
+<li>第 n 位表示第 n 个状态</li>
+<li>通过位运算进行读写</li>
+</ul>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">isUsed</span>(<span style="color:#66d9ef">uint256</span> index) <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">view</span> <span style="color:#66d9ef">returns</span> (<span style="color:#66d9ef">bool</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (bitmap <span style="color:#f92672">&amp;</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> index)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">setUsed</span>(<span style="color:#66d9ef">uint256</span> index) <span style="color:#66d9ef">internal</span> {
+</span></span><span style="display:flex;"><span>    bitmap <span style="color:#f92672">|=</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> index);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这样做的直接收益是：</p>
+<ul>
+<li>用 1 个 storage slot 表示 256 个状态</li>
+<li>大幅减少 storage 读写次数</li>
+<li>在高频场景下节省可观的 Gas</li>
+</ul>
+<h3 id="92-bitmap-的适用边界">9.2 bitmap 的适用边界
+</h3><p>bitmap 并不是 mapping(bool) 的“全面替代”，它适合以下场景：</p>
+<ul>
+<li>状态数量上限明确</li>
+<li>index 可控且不来自任意用户输入</li>
+<li>逻辑相对稳定，不易变更</li>
+</ul>
+<p>不适合以下场景：</p>
+<ul>
+<li>key 是 address 或 hash</li>
+<li>状态数量不可预期</li>
+<li>逻辑频繁变动、需要高度可读性</li>
+</ul>
+<p>一个实用判断是：</p>
+<blockquote>
+<p><strong>如果你需要在文档中专门解释“这一位代表什么”，那就说明复杂度已经上升了。</strong></p>
+</blockquote>
+<h3 id="93-紧凑编码与省-slot思维">9.3 紧凑编码与“省 slot”思维
+</h3><p>除了 bitmap，一些项目还会尝试：</p>
+<ul>
+<li>在一个 <code>uint256</code> 中打包多个小字段</li>
+<li>用位移和掩码存储多个数值</li>
+<li>手动实现类似 storage packing 的逻辑</li>
+</ul>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">uint256</span> packed;
+</span></span></code></pre></div><p>其中：</p>
+<ul>
+<li>高 128 位表示余额</li>
+<li>低 128 位表示时间戳</li>
+</ul>
+<p>这种写法在理论上可以减少 slot 数量，但需要注意：</p>
+<ul>
+<li>每一次读写都需要位运算</li>
+<li>容易引入边界错误</li>
+<li>调试和审计难度明显增加</li>
+</ul>
+<p>这类优化通常只在以下情况下才值得考虑：</p>
+<ul>
+<li>数据结构极其稳定</li>
+<li>访问频率非常高</li>
+<li>已经确认 slot 数量是主要瓶颈</li>
+</ul>
+<h3 id="94-关于-assembly">9.4 关于 assembly
+</h3><p>Solidity 允许通过 <code>assembly</code> 直接编写 EVM 指令，这意味着：</p>
+<ul>
+<li>可以跳过部分编译器生成的冗余逻辑</li>
+<li>在极端情况下获得更低的 Gas</li>
+</ul>
+<p>例如，直接使用 <code>sload</code>、<code>sstore</code>、<code>calldataload</code>。</p>
+<p>但需要非常谨慎：</p>
+<ul>
+<li>assembly 不做类型检查</li>
+<li>不提供溢出保护</li>
+<li>可读性和可维护性显著下降</li>
+</ul>
+<p>在大多数业务合约中，<strong>assembly 带来的收益往往小于它引入的风险</strong>。</p>
+<h3 id="95-assembly-什么时候才值得用">9.5 assembly 什么时候才值得用
+</h3><p>相对合理的使用场景包括：</p>
+<ul>
+<li>经常被调用的“热路径”</li>
+<li>非常底层、逻辑稳定的工具函数</li>
+<li>已有充分测试覆盖</li>
+<li>有经验的开发者和审计支持</li>
+</ul>
+<p>不推荐的场景包括：</p>
+<ul>
+<li>业务逻辑核心</li>
+<li>权限、资金相关代码</li>
+<li>仅为了节省少量 Gas</li>
+</ul>
+<p>一个保守但实用的原则是：</p>
+<blockquote>
+<p><strong>如果不用 assembly 也能把 Gas 控制在合理范围内，那就不要用 assembly。</strong></p>
+</blockquote>
+<h3 id="96-进阶优化的真实收益评估">9.6 进阶优化的真实收益评估
+</h3><p>需要特别强调的是，进阶优化的收益往往是：</p>
+<ul>
+<li>单次调用节省几十到几百 Gas</li>
+<li>只有在高频调用时才会显现价值</li>
+</ul>
+<p>因此，在决定采用这些技巧之前，最好已经：</p>
+<ul>
+<li>完成了 storage、接口、循环等基础优化</li>
+<li>明确知道瓶颈在哪里</li>
+<li>有真实的 Gas 测试数据作为依据</li>
+</ul>
+<p>否则，很容易陷入“为优化而优化”。</p>
+<h2 id="10-如何验证优化是否有效">10. 如何验证优化是否有效
+</h2><p>到目前为止，我们已经讨论了多种 Gas 优化手段。
+但在真正的工程实践中，有一个问题始终比“怎么优化”更重要：</p>
+<p><strong>你怎么确定，这次优化真的有价值？</strong></p>
+<p>这一节的目标，是建立一种可执行的、数据驱动的优化方法，而不是依赖直觉或经验判断。</p>
+<h3 id="101-为什么不能凭感觉判断-gas">10.1 为什么不能凭感觉判断 Gas
+</h3><p>Gas 成本并不总是和“代码复杂度”成正比：</p>
+<ul>
+<li>有些看起来复杂的重构，几乎不影响 Gas</li>
+<li>有些只改了几行的调整，却能节省大量成本</li>
+<li>有些优化在小规模测试中无感，在大规模使用中差异巨大</li>
+</ul>
+<p>如果没有量化数据，很容易出现两种极端：</p>
+<ul>
+<li><strong>低估优化价值</strong>：错过高收益改进</li>
+<li><strong>过度优化</strong>：引入复杂性却几乎没有回报</li>
+</ul>
+<p>因此，Gas 优化必须是<strong>数据驱动的工程行为</strong>。</p>
+<h3 id="102-什么是有效的-gas-优化">10.2 什么是“有效的 Gas 优化”
+</h3><p>一个优化是否有效，通常需要回答三个问题：</p>
+<ol>
+<li><strong>节省了多少 Gas</strong></li>
+<li><strong>发生在多高频的执行路径上</strong></li>
+<li><strong>引入了多少额外复杂度或风险</strong></li>
+</ol>
+<p>只有当节省的 Gas 与复杂度之间形成合理比例时，这次优化才是值得的。</p>
+<h3 id="103-基准测试的基本思路">10.3 基准测试的基本思路
+</h3><p>最简单、也最可靠的方式，是对同一逻辑进行<strong>优化前 / 优化后对比测试</strong>。</p>
+<p>基本原则包括：</p>
+<ul>
+<li>使用相同的输入数据</li>
+<li>只改变你关心的那一处实现</li>
+<li>关注 <code>gas used</code>，而不是交易费用</li>
+</ul>
+<p>例如：</p>
+<ul>
+<li>原始版本：函数 A</li>
+<li>优化版本：函数 A′</li>
+<li>对比两者在相同调用条件下的 Gas 消耗</li>
+</ul>
+<h3 id="104-一个概念级的对比示例">10.4 一个概念级的对比示例
+</h3><p>假设你有一个累加逻辑：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">uint256</span>[] calldata xs) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> xs.length; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        total <span style="color:#f92672">+=</span> xs[i];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>和一个优化版本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-solidity" data-lang="solidity"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">addOptimized</span>(<span style="color:#66d9ef">uint256</span>[] calldata xs) <span style="color:#66d9ef">external</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> t <span style="color:#f92672">=</span> total;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint256</span> len <span style="color:#f92672">=</span> xs.length;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint256</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; ) {
+</span></span><span style="display:flex;"><span>        t <span style="color:#f92672">+=</span> xs[i];
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">unchecked</span> {
+</span></span><span style="display:flex;"><span>            i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    total <span style="color:#f92672">=</span> t;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>你关心的不是“哪一个看起来更好”，而是：</p>
+<ul>
+<li>在 <code>xs.length = 10</code>、<code>100</code>、<code>1000</code> 时</li>
+<li>两者的 Gas 消耗曲线是否明显分离</li>
+</ul>
+<p>这种对比，才能真正说明问题。</p>
+<h3 id="105-关注最坏情况而不仅是平均值">10.5 关注“最坏情况”，而不仅是平均值
+</h3><p>在智能合约中，最坏情况往往比平均情况更重要。</p>
+<p>原因包括：</p>
+<ul>
+<li>Gas 不够会直接导致交易失败</li>
+<li>用户更容易遇到极端输入</li>
+<li>批处理和循环的风险集中在最坏情况</li>
+</ul>
+<p>因此，在测试时，应当：</p>
+<ul>
+<li>尝试最大允许输入</li>
+<li>覆盖边界条件</li>
+<li>关注 Gas 是否接近区块限制或函数预期上限</li>
+</ul>
+<h3 id="106-工具并不重要方法才重要">10.6 工具并不重要，方法才重要
+</h3><p>不同团队可能使用不同工具：</p>
+<ul>
+<li>Hardhat</li>
+<li>Foundry</li>
+<li>Truffle</li>
+<li>自定义脚本</li>
+</ul>
+<p>但无论使用什么工具，核心方法都是一致的：</p>
+<ul>
+<li>固定输入</li>
+<li>重复测试</li>
+<li>对比 gas used</li>
+<li>用数据支撑决策</li>
+</ul>
+<p>不要为了“用工具而用工具”，而是让工具服务于结论。</p>
+<h3 id="107-什么时候应该停止优化">10.7 什么时候应该停止优化
+</h3><p>一个容易忽视的问题是：<strong>什么时候该停下来？</strong></p>
+<p>可以考虑以下信号：</p>
+<ul>
+<li>继续优化只能节省极少量 Gas</li>
+<li>代码复杂度明显上升</li>
+<li>已经覆盖了高频和高成本路径</li>
+<li>优化收益无法抵消审计和维护成本</li>
+</ul>
+<p>Gas 优化不是无止境的，而是一种平衡。</p>
+<h2 id="11-一份可执行的-gas-优化清单">11. 一份可执行的 Gas 优化清单
+</h2><p>到这里，我们已经从 EVM 成本模型出发，系统地讨论了 Gas 优化在设计和实现层面的主要原则。
+我们现在可以把前面的内容<strong>收敛成一份可以直接使用的清单</strong>，用于日常开发和代码评审。</p>
+<p>这份清单并不是“必须全部满足”的规则集合，而是一种<strong>优先级导向的检查顺序</strong>。</p>
+<h3 id="111-设计阶段优先检查项">11.1 设计阶段优先检查项
+</h3><p>在写代码之前，优先思考以下问题：</p>
+<ul>
+<li>是否真的需要存储这个状态，还是可以通过计算或事件获得</li>
+<li>状态变量是否会被频繁读写</li>
+<li>是否存在不受限的循环或批处理接口</li>
+<li>数据结构是否有明确的规模上限</li>
+<li>是否存在“查找/去重/删除元素”需求</li>
+</ul>
+<p>如果这些问题在设计阶段就能被回答，很多 Gas 问题可以被直接避免。</p>
+<h3 id="112-storage-相关检查项最高优先级">11.2 Storage 相关检查项（最高优先级）
+</h3><ul>
+<li>是否存在在同一函数中多次读取同一个 storage 变量的情况</li>
+<li>是否在循环中直接写 storage</li>
+<li>是否可以通过缓存变量减少 SLOAD / SSTORE</li>
+<li>状态变量和 struct 字段顺序是否合理，避免浪费 slot</li>
+<li>不再使用的状态是否及时 <code>delete</code></li>
+<li>是否用 mapping 替代数组进行存在性判断、去重、按 key 查询，避免 O(n) 遍历</li>
+<li>若必须可枚举，是否使用 mapping + array + index（swap-and-pop）实现 O(1) 增删与枚举</li>
+</ul>
+<p>这是最值得投入精力的优化区域。</p>
+<h3 id="113-函数接口与参数检查项">11.3 函数接口与参数检查项
+</h3><ul>
+<li>对外接口是否优先使用 <code>external</code></li>
+<li>external 函数参数是否使用 <code>calldata</code></li>
+<li>是否避免了不必要的 <code>public</code> 函数</li>
+<li>是否存在 <code>this</code> 调用当前合约的情况</li>
+<li>是否采用了 external 入口 + internal 实现的模式</li>
+</ul>
+<p>这些优化通常风险低、收益稳定。</p>
+<h3 id="114-循环与批处理检查项">11.4 循环与批处理检查项
+</h3><ul>
+<li>是否缓存了数组 length 和中间结果</li>
+<li>循环中是否避免了 storage 读写</li>
+<li>是否避免在循环中做 O(n) 查找</li>
+<li>是否在安全前提下使用 <code>unchecked</code></li>
+<li>循环是否存在明确的上限</li>
+<li>批处理接口是否限制了单次处理数量</li>
+</ul>
+<p>循环是 Gas 放大器，尤其需要从“最坏情况”角度审视。</p>
+<h3 id="115-错误处理与字节码体积">11.5 错误处理与字节码体积
+</h3><ul>
+<li>是否使用 custom error 替代 <code>require(string)</code></li>
+<li>错误信息是否简洁、结构化</li>
+<li>是否避免在字节码中嵌入大量字符串</li>
+<li>合约体积是否接近部署限制</li>
+</ul>
+<p>这些优化往往在合约复杂后才显现价值，但越早统一越好。</p>
+<h3 id="116-事件与返回值设计">11.6 事件与返回值设计
+</h3><ul>
+<li>事件是否只记录必要信息</li>
+<li><code>indexed</code> 参数是否只用于高频过滤字段</li>
+<li>是否避免在事件中携带大数组或字符串</li>
+<li>是否避免链上返回大量数据</li>
+<li>是否通过分页或链下索引替代一次性查询</li>
+</ul>
+<p>这里的目标是：<strong>不把链当数据库使用。</strong></p>
+<h3 id="117-进阶优化谨慎项">11.7 进阶优化（谨慎项）
+</h3><ul>
+<li>是否已经完成基础优化</li>
+<li>是否明确瓶颈来自 slot 数量或高频调用</li>
+<li>位运算或 bitmap 是否真的降低了 storage 使用</li>
+<li>是否避免在核心业务逻辑中滥用 assembly</li>
+</ul>
+<p>这些优化应当是“有数据支撑的例外”，而不是常规手段。</p>
+<h3 id="118-用数据驱动最终决策">11.8 用数据驱动最终决策
+</h3><p>在合并任何 Gas 优化之前，建议确认：</p>
+<ul>
+<li>是否有明确的 Gas 对比数据</li>
+<li>优化是否发生在高频或关键路径</li>
+<li>引入的复杂度是否可被测试和审计覆盖</li>
+</ul>
+<p>如果优化的收益无法清晰说明，那通常意味着它并不重要。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/web3/">Web3</a>
+        
+            <a href="/tags/evm/">Evm</a>
+        
+            <a href="/tags/solidity/">Solidity</a>
+        
+            <a href="/tags/gas%E4%BC%98%E5%8C%96/">Gas优化</a>
+        
+            <a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/">区块链</a>
+        
+            <a href="/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/">智能合约</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-concentrated-liquidity/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">深入理解Uniswap的集中流动性基本原理</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/a-deep-dive-into-the-fundamental-principles-of-uniswaps-xyk-model/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">深入理解Uniswap的XYK模型基本原理</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'zh-CN',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 王离谱
+    </section>
+    
+    <section class="powerby">
+        
+            <a href="https://beian.miit.gov.cn/">粤ICP备2022043168号</a> <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

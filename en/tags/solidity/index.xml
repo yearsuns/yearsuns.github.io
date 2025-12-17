@@ -1,0 +1,1386 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Solidity on Ryan&#39;s Janky Website</title>
+        <link>https://yearsuns-github-io.vercel.app/en/tags/solidity/</link>
+        <description>Recent content in Solidity on Ryan&#39;s Janky Website</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-US</language>
+        <copyright>Yearsuns</copyright>
+        <lastBuildDate>Sat, 20 Sep 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/en/tags/solidity/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Best Practices for Gas Optimization in Solidity</title>
+        <link>https://yearsuns-github-io.vercel.app/en/p/best-practices-for-gas-optimization-in-solidity/</link>
+        <pubDate>Sat, 20 Sep 2025 14:59:56 +0800</pubDate>
+        
+        <guid>https://yearsuns-github-io.vercel.app/en/p/best-practices-for-gas-optimization-in-solidity/</guid>
+        <description>&lt;h2 id=&#34;1-why-gas-optimization-matters&#34;&gt;1. Why Gas Optimization Matters
+&lt;/h2&gt;&lt;p&gt;When developing smart contracts on Ethereum, Gas is an unavoidable concept.
+It is neither merely a “transaction fee” nor just a temporary cost caused by network congestion. Instead, it represents a &lt;strong&gt;long-term constraint on contract design quality&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Many developers start paying attention to Gas only after encountering situations such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Exceptionally high deployment costs&lt;/li&gt;
+&lt;li&gt;Frequent “Out of Gas” errors when users call certain functions&lt;/li&gt;
+&lt;li&gt;Significant cost differences between different implementations of the same functionality&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These issues usually do not stem from business logic mistakes, but rather from a &lt;strong&gt;lack of intuition about the EVM cost model&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;11-the-two-meanings-of-gas&#34;&gt;1.1 The Two Meanings of Gas
+&lt;/h3&gt;&lt;p&gt;Before discussing optimization, it is important to distinguish two commonly confused concepts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;gas used&lt;/strong&gt;: the number of Gas units actually consumed when executing a transaction&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;gas price&lt;/strong&gt;: the price you are willing to pay per unit of Gas&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Contract code can only affect &lt;strong&gt;gas used&lt;/strong&gt;, not gas price.&lt;/p&gt;
+&lt;p&gt;This means:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Network congestion increases gas price, but does not change a contract’s gas usage&lt;/li&gt;
+&lt;li&gt;A poorly designed contract is expensive under any network conditions&lt;/li&gt;
+&lt;li&gt;When gas price is high, inefficiencies in contract design become even more costly&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Therefore, Gas optimization is not about “betting on network conditions,” but about &lt;strong&gt;minimizing the number of Gas units consumed per execution&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;12-why-functionally-correct-does-not-mean-cost-efficient&#34;&gt;1.2 Why “Functionally Correct” Does Not Mean “Cost-Efficient”
+&lt;/h3&gt;&lt;p&gt;In traditional software development, as long as the program works correctly, performance issues can often be optimized later.
+In smart contracts, however, &lt;strong&gt;performance is cost&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Even a contract that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Has no security vulnerabilities&lt;/li&gt;
+&lt;li&gt;Implements the intended functionality correctly&lt;/li&gt;
+&lt;li&gt;Passes all tests&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;can still become impractical because:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Certain functions are too expensive to execute on-chain&lt;/li&gt;
+&lt;li&gt;Transaction failure rates increase during peak periods&lt;/li&gt;
+&lt;li&gt;Users pay unnecessary costs for the same functionality over time&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These problems are rarely caused by “wrong code,” but by &lt;strong&gt;ignoring structural Gas costs at the design stage&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;13-the-goals-of-gas-optimization&#34;&gt;1.3 The Goals of Gas Optimization
+&lt;/h3&gt;&lt;p&gt;Gas optimization is not about achieving the absolute lowest cost, but about serving three practical goals:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Reducing long-term usage costs&lt;/strong&gt;
+For frequently called functions, saving even a few hundred Gas can add up significantly over time.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Improving transaction success rates&lt;/strong&gt;
+More predictable Gas usage reduces the risk of running out of Gas in complex execution paths.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Improving cost predictability&lt;/strong&gt;
+Making it easier for callers to estimate required Gas and reducing uncertainty.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This is why Gas optimization should usually focus on:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;High-frequency execution paths&lt;/li&gt;
+&lt;li&gt;Core business logic&lt;/li&gt;
+&lt;li&gt;Functions where users directly pay execution costs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;14-when-not-to-over-optimize&#34;&gt;1.4 When Not to Over-Optimize
+&lt;/h3&gt;&lt;p&gt;It is important to recognize that &lt;strong&gt;Gas optimization has diminishing returns&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;The following are usually not worth doing:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Introducing complex and obscure code to save a trivial amount of Gas&lt;/li&gt;
+&lt;li&gt;Applying heavy micro-optimizations to low-frequency or cold paths&lt;/li&gt;
+&lt;li&gt;Sacrificing safety checks or readability for marginal gains&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A reasonable principle is:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Write safe, clear, and maintainable code first, then optimize only where it truly matters.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In most cases, understanding and avoiding high-cost structures is more valuable than memorizing isolated tricks.&lt;/p&gt;
+&lt;h3 id=&#34;15-what-comes-next&#34;&gt;1.5 What Comes Next
+&lt;/h3&gt;&lt;p&gt;The following sections start from the fundamentals:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What the EVM actually charges Gas for&lt;/li&gt;
+&lt;li&gt;Which instructions are expensive and which are almost negligible&lt;/li&gt;
+&lt;li&gt;Why storage access is the core driver of Gas costs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once you understand these principles, later optimization practices will feel natural rather than rule-based.&lt;/p&gt;
+&lt;h2 id=&#34;2-the-gas-cost-model&#34;&gt;2. The Gas Cost Model
+&lt;/h2&gt;&lt;p&gt;Before diving into specific optimization techniques, it is essential to build a clear cost intuition: &lt;strong&gt;not all EVM operations cost the same&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Many Solidity constructs that appear “simple” consume large amounts of Gas because they trigger expensive low-level instructions.&lt;/p&gt;
+&lt;p&gt;The goal of this section is simple:
+&lt;strong&gt;Know which operations should be avoided or minimized, and which can be largely ignored.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;21-instruction-level-pricing&#34;&gt;2.1 Instruction-Level Pricing
+&lt;/h3&gt;&lt;p&gt;The EVM is a stack-based virtual machine. Solidity code is compiled into a sequence of EVM opcodes such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Arithmetic and comparison instructions like &lt;code&gt;ADD&lt;/code&gt;, &lt;code&gt;SUB&lt;/code&gt;, &lt;code&gt;LT&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Memory operations like &lt;code&gt;MLOAD&lt;/code&gt;, &lt;code&gt;MSTORE&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Storage operations like &lt;code&gt;SLOAD&lt;/code&gt;, &lt;code&gt;SSTORE&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;External calls like &lt;code&gt;CALL&lt;/code&gt;, &lt;code&gt;DELEGATECALL&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Gas is charged entirely at the instruction level&lt;/strong&gt;, not at the Solidity syntax level. This means:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A single line of Solidity can compile into multiple opcodes&lt;/li&gt;
+&lt;li&gt;Different-looking code can compile into very different instruction sequences&lt;/li&gt;
+&lt;li&gt;Gas differences come from instruction types and counts, not from code length&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In essence, Gas optimization means one thing:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Execute expensive instructions fewer times.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;22-cost-tiers&#34;&gt;2.2 Cost Tiers
+&lt;/h3&gt;&lt;p&gt;From a cost perspective, EVM operations can be roughly grouped (from cheapest to most expensive):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Pure computation (arithmetic, comparisons, bitwise operations)&lt;/li&gt;
+&lt;li&gt;Memory reads and writes&lt;/li&gt;
+&lt;li&gt;Calldata reads&lt;/li&gt;
+&lt;li&gt;Storage reads (&lt;code&gt;SLOAD&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Storage writes (&lt;code&gt;SSTORE&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;External calls and large data returns&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The key takeaway is:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Storage operations are far more expensive than most computations.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This is why so many Gas optimizations ultimately converge on the same goal:
+&lt;strong&gt;reducing storage access.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;23-what-storage-is-and-why-it-is-expensive&#34;&gt;2.3 What Storage Is and Why It Is Expensive
+&lt;/h3&gt;&lt;p&gt;In Solidity, all state variables are stored in &lt;strong&gt;storage&lt;/strong&gt;.
+From the EVM’s perspective, storage is a massive key–value store:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Key: storage slot index&lt;/li&gt;
+&lt;li&gt;Value: 32 bytes of data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Storage has several defining characteristics:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Data is persistent&lt;/li&gt;
+&lt;li&gt;It affects the global state trie&lt;/li&gt;
+&lt;li&gt;All full nodes must agree on its contents&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Every storage write modifies the global state, which is the fundamental reason storage operations are so costly.&lt;/p&gt;
+&lt;h3 id=&#34;24-the-real-cost-of-reading-storage&#34;&gt;2.4 The Real Cost of Reading Storage
+&lt;/h3&gt;&lt;p&gt;When you read a state variable, for example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; count;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;the key instruction is &lt;code&gt;SLOAD&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Since EIP-2929, &lt;code&gt;SLOAD&lt;/code&gt; has two cost modes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Cold access&lt;/strong&gt;: the first access to a storage slot in a transaction&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Warm access&lt;/strong&gt;: subsequent accesses to the same slot in the same transaction&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Intuitively:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The first read “brings the value in”&lt;/li&gt;
+&lt;li&gt;Subsequent reads are cheaper, but still far more expensive than memory or computation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Even warm &lt;code&gt;SLOAD&lt;/code&gt; is significantly more expensive than arithmetic or memory access.&lt;/p&gt;
+&lt;h3 id=&#34;25-why-writing-storage-is-among-the-most-expensive-operations&#34;&gt;2.5 Why Writing Storage Is Among the Most Expensive Operations
+&lt;/h3&gt;&lt;p&gt;When you modify a state variable, such as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;count &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; count &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;this is not a simple increment, but a full read–modify–write sequence:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;SLOAD&lt;/code&gt; – read the old value&lt;/li&gt;
+&lt;li&gt;Perform the addition&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SSTORE&lt;/code&gt; – write the new value&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The cost of &lt;code&gt;SSTORE&lt;/code&gt; depends on the state transition:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Zero → non-zero: most expensive&lt;/li&gt;
+&lt;li&gt;Non-zero → non-zero: less expensive&lt;/li&gt;
+&lt;li&gt;Non-zero → zero: cheaper and may trigger a refund&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These rules are designed to encourage contracts to free unused storage.&lt;/p&gt;
+&lt;h3 id=&#34;26-what-a-single-line-of-solidity-really-does&#34;&gt;2.6 What a Single Line of Solidity Really Does
+&lt;/h3&gt;&lt;p&gt;Consider this common statement:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;count &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From Solidity’s perspective, it is trivial.
+From the EVM’s perspective, it usually means:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;One &lt;code&gt;SLOAD&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;One arithmetic instruction&lt;/li&gt;
+&lt;li&gt;One &lt;code&gt;SSTORE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you repeat it in the same function:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;count &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;count &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;count &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;you are not performing three additions, but triggering:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;3 &lt;code&gt;SLOAD&lt;/code&gt;s&lt;/li&gt;
+&lt;li&gt;3 &lt;code&gt;SSTORE&lt;/code&gt;s&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is how Gas costs escalate quickly.&lt;/p&gt;
+&lt;h3 id=&#34;27-a-key-intuition&#34;&gt;2.7 A Key Intuition
+&lt;/h3&gt;&lt;p&gt;At this point, a crucial intuition should be clear:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Arithmetic and logic are rarely the bottleneck&lt;/li&gt;
+&lt;li&gt;Storage reads and writes dominate Gas costs&lt;/li&gt;
+&lt;li&gt;Repeated access to the same storage slot is one of the most common and overlooked sources of waste&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once this intuition is established, later optimizations—caching, write merging, storage packing—will feel obvious rather than magical.&lt;/p&gt;
+&lt;h2 id=&#34;3-reducing-storage-reads-and-writes&#34;&gt;3. Reducing Storage Reads and Writes
+&lt;/h2&gt;&lt;p&gt;After understanding the EVM cost model, the priority of Gas optimization becomes very clear:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Any reduction in storage access almost certainly leads to significant Gas savings.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Most Gas optimization techniques revolve around a single core objective:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Make &lt;code&gt;SLOAD&lt;/code&gt; and &lt;code&gt;SSTORE&lt;/code&gt; execute as few times as possible.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;31-why-storage-optimization-has-the-highest-roi&#34;&gt;3.1 Why Storage Optimization Has the Highest ROI
+&lt;/h3&gt;&lt;p&gt;As discussed earlier:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Arithmetic operations are very cheap&lt;/li&gt;
+&lt;li&gt;Memory operations are moderately priced&lt;/li&gt;
+&lt;li&gt;Storage writes are among the most expensive operations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This implies:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Eliminating a single &lt;code&gt;SSTORE&lt;/code&gt; is often more valuable than optimizing dozens of arithmetic instructions&lt;/li&gt;
+&lt;li&gt;Optimizing storage access typically yields order-of-magnitude improvements&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In practice, Gas optimization should follow this order:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;First, reduce storage reads and writes&lt;/li&gt;
+&lt;li&gt;Then consider secondary optimizations such as loops, parameters, and bit-level tricks&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;32-caching-repeated-reads-turning-multiple-sloads-into-one&#34;&gt;3.2 Caching Repeated Reads: Turning Multiple &lt;code&gt;SLOAD&lt;/code&gt;s into One
+&lt;/h3&gt;&lt;p&gt;One of the most common and easily overlooked inefficiencies is reading the same state variable multiple times within a function.&lt;/p&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;increment&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    require(count &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; max, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;too large&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    count &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; count &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    emit Updated(count);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this code, &lt;code&gt;count&lt;/code&gt; is actually read multiple times:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Once in the &lt;code&gt;require&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Once during the increment&lt;/li&gt;
+&lt;li&gt;Once again when emitting the event&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A more efficient version caches it in a local variable:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;increment&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; count;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    require(c &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; max, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;too large&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; c &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    count &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; c;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    emit Updated(c);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Storage is read only once&lt;/li&gt;
+&lt;li&gt;Storage is written only once&lt;/li&gt;
+&lt;li&gt;All intermediate operations happen in memory&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This change barely affects readability, yet can significantly reduce Gas usage.&lt;/p&gt;
+&lt;h3 id=&#34;33-merging-writes-avoiding-repeated-sstores&#34;&gt;3.3 Merging Writes: Avoiding Repeated &lt;code&gt;SSTORE&lt;/code&gt;s
+&lt;/h3&gt;&lt;p&gt;Another common issue is writing to the same storage variable multiple times within a single function.&lt;/p&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;update&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; x) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; threshold) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; bonus;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Although the logic is clear, this code may trigger multiple &lt;code&gt;SSTORE&lt;/code&gt;s on &lt;code&gt;value&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;A better approach is to perform all calculations in memory first:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;update&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; x) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; v &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; value;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    v &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; threshold) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        v &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; bonus;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The guiding principle is:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Do not repeatedly write to storage inside conditional logic—compute first, then write back once.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;34-storage-pitfalls-inside-loops&#34;&gt;3.4 Storage Pitfalls Inside Loops
+&lt;/h3&gt;&lt;p&gt;Loops are where storage inefficiencies are most easily amplified.&lt;/p&gt;
+&lt;p&gt;Consider the following implementation:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata arr) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; arr.length; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        total &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; arr[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this loop:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;total&lt;/code&gt; is read and written on every iteration&lt;/li&gt;
+&lt;li&gt;For an array of length &lt;code&gt;n&lt;/code&gt;, this triggers &lt;code&gt;n&lt;/code&gt; &lt;code&gt;SLOAD&lt;/code&gt;s and &lt;code&gt;n&lt;/code&gt; &lt;code&gt;SSTORE&lt;/code&gt;s&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A more efficient version is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata arr) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; total;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; len &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; arr.length;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; len; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        t &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; arr[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    total &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; t;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This small change has an impact that grows linearly with the array length.&lt;/p&gt;
+&lt;h3 id=&#34;35-design-principles-for-avoiding-storage-writes-in-loops&#34;&gt;3.5 Design Principles for Avoiding Storage Writes in Loops
+&lt;/h3&gt;&lt;p&gt;When designing contracts, try to avoid patterns like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Writing to storage inside unbounded loops&lt;/li&gt;
+&lt;li&gt;Updating state on every iteration&lt;/li&gt;
+&lt;li&gt;Letting loop bounds be fully controlled by external input&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Better alternatives include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Computing results in memory and committing once&lt;/li&gt;
+&lt;li&gt;Designing batch interfaces with strict per-call limits&lt;/li&gt;
+&lt;li&gt;Moving complex computation off-chain and only verifying results on-chain&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These are not mere “coding tricks,” but &lt;strong&gt;structural design decisions that should be made early&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;36-using-mappings-instead-of-arrays&#34;&gt;3.6 Using Mappings Instead of Arrays
+&lt;/h3&gt;&lt;p&gt;In contracts, the choice between arrays and mappings is not just a style preference—it reflects a fundamental cost model difference:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Array operations like search, deduplication, or deletion often require traversal, with &lt;strong&gt;O(n)&lt;/strong&gt; cost and unbounded loops&lt;/li&gt;
+&lt;li&gt;Mapping access is direct by key, close to &lt;strong&gt;O(1)&lt;/strong&gt;, making it more predictable and Gas-efficient&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;case-1-membership-checks-contains&#34;&gt;Case 1: Membership Checks (contains)
+&lt;/h4&gt;&lt;p&gt;Not recommended: storing members in an array and searching on-chain&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt;[] &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; members;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;isMember&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; a) &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;view&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;returns&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; members.length; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (members[i] &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; a) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Problems:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Requires traversal on every check&lt;/li&gt;
+&lt;li&gt;Cost grows with the number of members&lt;/li&gt;
+&lt;li&gt;Worst case can run out of Gas&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Recommended: use a mapping for existence checks&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;mapping&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; isMember;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;addMember&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; a) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    isMember[a] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;removeMember&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; a) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    isMember[a] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Advantages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;O(1) existence checks&lt;/li&gt;
+&lt;li&gt;Predictable cost&lt;/li&gt;
+&lt;li&gt;No loops required&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;case-2-enumerable-sets-o1-checks--enumeration&#34;&gt;Case 2: Enumerable Sets (O(1) checks + enumeration)
+&lt;/h4&gt;&lt;p&gt;Some applications require both:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;O(1) membership checks&lt;/li&gt;
+&lt;li&gt;Enumeration of all members (e.g., for frontends)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A common pattern is &lt;strong&gt;mapping + array&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;mapping&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; isMember;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt;[] &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; memberList;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;mapping&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; indexPlusOne; &lt;span style=&#34;color:#75715e&#34;&gt;// index + 1, 0 means absent
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;addMember&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; a) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (indexPlusOne[a] &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    isMember[a] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    memberList.push(a);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    indexPlusOne[a] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; memberList.length;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;removeMember&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; a) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; idxPlusOne &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; indexPlusOne[a];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (idxPlusOne &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; idx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; idxPlusOne &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; last &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; memberList.length &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (idx &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; last) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; lastAddr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; memberList[last];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        memberList[idx] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; lastAddr;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        indexPlusOne[lastAddr] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; idx &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    memberList.pop();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    indexPlusOne[a] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    isMember[a] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Explanation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The mapping handles O(1) checks and indexing&lt;/li&gt;
+&lt;li&gt;The array handles enumeration&lt;/li&gt;
+&lt;li&gt;Deletion uses swap-and-pop to avoid O(n) shifts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Note:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;This introduces extra storage (index mapping)&lt;/li&gt;
+&lt;li&gt;In exchange, operation cost becomes predictable and bounded—usually well worth it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;when-arrays-are-the-wrong-choice&#34;&gt;When Arrays Are the Wrong Choice
+&lt;/h4&gt;&lt;p&gt;If you find yourself doing any of the following with arrays, consider switching to mappings:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Membership checks&lt;/li&gt;
+&lt;li&gt;Deduplication&lt;/li&gt;
+&lt;li&gt;Deleting arbitrary elements&lt;/li&gt;
+&lt;li&gt;Preventing duplicate inserts&lt;/li&gt;
+&lt;li&gt;Any traversal driven by unbounded user input&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In short:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Arrays are for ordered data and index-based access. Mappings are for lookup, deduplication, and existence checks. When searching or deleting is involved, mappings are usually cheaper and safer.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;4-data-location-and-function-interface-design&#34;&gt;4. Data Location and Function Interface Design
+&lt;/h2&gt;&lt;p&gt;After reducing unnecessary storage access, the next category of high–value optimizations lies in &lt;strong&gt;function interface design&lt;/strong&gt;, especially:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Parameter data locations&lt;/li&gt;
+&lt;li&gt;Function visibility&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These choices usually do not affect business logic, but they directly influence:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Whether unnecessary data copying occurs&lt;/li&gt;
+&lt;li&gt;Whether extra ABI encoding/decoding is triggered&lt;/li&gt;
+&lt;li&gt;Which execution path the EVM takes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Well-designed interfaces often provide &lt;strong&gt;low-risk, high-return&lt;/strong&gt; Gas optimizations.&lt;/p&gt;
+&lt;h3 id=&#34;41-cost-intuition-for-data-locations&#34;&gt;4.1 Cost Intuition for Data Locations
+&lt;/h3&gt;&lt;p&gt;In Solidity, reference types (arrays, structs, strings, bytes) must explicitly or implicitly specify a data location:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;calldata&lt;/strong&gt;: read-only, located in call data&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;memory&lt;/strong&gt;: read–write, exists during function execution&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;storage&lt;/strong&gt;: persistent, stored on-chain&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;From a cost perspective, a simple intuition applies:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reading calldata: cheap&lt;/li&gt;
+&lt;li&gt;Reading/writing memory: moderate&lt;/li&gt;
+&lt;li&gt;Reading/writing storage: expensive&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A fundamental rule follows:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Prefer calldata over memory, and memory over storage whenever possible.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;42-external-functions-and-calldata&#34;&gt;4.2 &lt;code&gt;external&lt;/code&gt; Functions and &lt;code&gt;calldata&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;For functions that are only called externally, the recommended pattern is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata data) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// use data
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Reasons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Parameters of &lt;code&gt;external&lt;/code&gt; functions naturally live in calldata&lt;/li&gt;
+&lt;li&gt;No need to copy data into memory&lt;/li&gt;
+&lt;li&gt;For large arrays or complex structs, the savings can be substantial&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;By contrast:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] &lt;span style=&#34;color:#66d9ef&#34;&gt;memory&lt;/span&gt; data) &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// use data
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Even if &lt;code&gt;data&lt;/code&gt; is not modified, the compiler must:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Copy the entire calldata payload into memory&lt;/li&gt;
+&lt;li&gt;Pay the additional Gas cost for that copy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;43-when-memory-is-required&#34;&gt;4.3 When &lt;code&gt;memory&lt;/code&gt; Is Required
+&lt;/h3&gt;&lt;p&gt;The limitation of calldata is clear: &lt;strong&gt;it is read-only&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;If a function needs to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Modify array contents&lt;/li&gt;
+&lt;li&gt;Sort&lt;/li&gt;
+&lt;li&gt;Deduplicate&lt;/li&gt;
+&lt;li&gt;Dynamically construct new arrays&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;then &lt;code&gt;memory&lt;/code&gt; is required.&lt;/p&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;normalize&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata data)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;returns&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] &lt;span style=&#34;color:#66d9ef&#34;&gt;memory&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] &lt;span style=&#34;color:#66d9ef&#34;&gt;memory&lt;/span&gt; result &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[](data.length);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; data.length; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        result[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; data[i] &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; result;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Key points:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Input parameters use calldata to avoid copying&lt;/li&gt;
+&lt;li&gt;Output uses memory because it must be writable&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is a very common and sensible pattern.&lt;/p&gt;
+&lt;h3 id=&#34;44-gas-implications-of-function-visibility&#34;&gt;4.4 Gas Implications of Function Visibility
+&lt;/h3&gt;&lt;p&gt;Function visibility affects not only accessibility, but also Gas cost.&lt;/p&gt;
+&lt;p&gt;A useful intuition:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;external&lt;/strong&gt;: reads parameters directly from calldata, cheapest&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;public&lt;/strong&gt;: parameters are copied into memory, more expensive&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;internal&lt;/strong&gt;: often inlined or called via jump, very cheap&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;private&lt;/strong&gt;: similar to internal, but limited to the contract&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;An important conclusion:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;public&lt;/code&gt; is not a universally optimal “inside-and-outside” choice.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;45-external-entry--internal-implementation&#34;&gt;4.5 External Entry + Internal Implementation
+&lt;/h3&gt;&lt;p&gt;A highly recommended pattern in real projects is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Expose &lt;code&gt;external&lt;/code&gt; functions&lt;/li&gt;
+&lt;li&gt;Move core logic into &lt;code&gt;internal&lt;/code&gt; functions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;update&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; x) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    _update(x);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_update&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; x) &lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// core logic
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Benefits:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;External calls use calldata with minimal copying&lt;/li&gt;
+&lt;li&gt;Internal calls are extremely cheap&lt;/li&gt;
+&lt;li&gt;One shared implementation for both internal and external usage&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This pattern has almost no downsides and avoids many hidden Gas costs.&lt;/p&gt;
+&lt;h3 id=&#34;46-why-you-should-avoid-calling-this&#34;&gt;4.6 Why You Should Avoid Calling &lt;code&gt;this&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;A subtle but expensive anti-pattern is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;this.update(x);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Even if &lt;code&gt;update&lt;/code&gt; is defined in the same contract, this triggers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A full external call&lt;/li&gt;
+&lt;li&gt;ABI encoding and decoding&lt;/li&gt;
+&lt;li&gt;A &lt;code&gt;CALL&lt;/code&gt; opcode execution&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Consequences:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Higher Gas cost&lt;/li&gt;
+&lt;li&gt;More complex execution path&lt;/li&gt;
+&lt;li&gt;Potential reentrancy risks&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you find yourself using &lt;code&gt;this.foo()&lt;/code&gt;, it usually means:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Logic is poorly structured&lt;/li&gt;
+&lt;li&gt;Internal abstraction is insufficient&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The correct refactor is to extract logic into an internal function and call it directly.&lt;/p&gt;
+&lt;h3 id=&#34;47-a-comparison-example&#34;&gt;4.7 A Comparison Example
+&lt;/h3&gt;&lt;p&gt;Less efficient approach:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;foo&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] &lt;span style=&#34;color:#66d9ef&#34;&gt;memory&lt;/span&gt; data) &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// use data
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bar&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] &lt;span style=&#34;color:#66d9ef&#34;&gt;memory&lt;/span&gt; data) &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    foo(data);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Recommended approach:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;foo&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata data) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    _foo(data);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bar&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata data) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    _foo(data);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_foo&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata data) &lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// use data
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Why the second approach is better:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Avoids repeated parameter copying&lt;/li&gt;
+&lt;li&gt;Centralizes logic&lt;/li&gt;
+&lt;li&gt;Uses cheaper internal calls&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;5-state-layout-design-storage-packing&#34;&gt;5. State Layout Design: Storage Packing
+&lt;/h2&gt;&lt;p&gt;So far, most optimizations have focused on &lt;em&gt;how&lt;/em&gt; state variables are accessed.
+This section addresses a more structural question:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;How state variables are laid out in storage.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A significant amount of Gas waste comes not from frequent access, but from &lt;strong&gt;inefficient state layout&lt;/strong&gt;, leading to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;More storage slots than necessary&lt;/li&gt;
+&lt;li&gt;Extra &lt;code&gt;SLOAD&lt;/code&gt; / &lt;code&gt;SSTORE&lt;/code&gt; operations&lt;/li&gt;
+&lt;li&gt;Amplified long-term costs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;51-storage-slots-and-32-byte-alignment&#34;&gt;5.1 Storage Slots and 32-Byte Alignment
+&lt;/h3&gt;&lt;p&gt;From the EVM’s perspective, storage is organized in &lt;strong&gt;32-byte (256-bit) slots&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Solidity places state variables into slots in declaration order:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Variables smaller than 32 bytes may share a slot&lt;/li&gt;
+&lt;li&gt;If remaining space is insufficient, a new slot is used&lt;/li&gt;
+&lt;li&gt;Once a slot is full, no more variables are packed into it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This mechanism is known as &lt;strong&gt;storage packing&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;52-a-basic-packing-example&#34;&gt;5.2 A Basic Packing Example
+&lt;/h3&gt;&lt;p&gt;Consider:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint128&lt;/span&gt; a;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint128&lt;/span&gt; b;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; c;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Each &lt;code&gt;uint128&lt;/code&gt; uses 16 bytes, so &lt;code&gt;a&lt;/code&gt; and &lt;code&gt;b&lt;/code&gt; share one slot.
+&lt;code&gt;c&lt;/code&gt; occupies its own slot.
+Total: &lt;strong&gt;2 slots&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Now change the order:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint128&lt;/span&gt; a;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; c;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint128&lt;/span&gt; b;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Result:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;a&lt;/code&gt; uses the first 16 bytes of slot 0&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;c&lt;/code&gt; occupies slot 1 entirely&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;b&lt;/code&gt; cannot fit in slot 0 and goes to slot 2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Total: &lt;strong&gt;3 slots&lt;/strong&gt;—one extra slot used purely due to ordering.&lt;/p&gt;
+&lt;h3 id=&#34;53-why-slot-count-directly-affects-gas&#34;&gt;5.3 Why Slot Count Directly Affects Gas
+&lt;/h3&gt;&lt;p&gt;Every additional storage slot increases long-term cost:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;More slots read → more &lt;code&gt;SLOAD&lt;/code&gt;s&lt;/li&gt;
+&lt;li&gt;More slots written → more &lt;code&gt;SSTORE&lt;/code&gt;s&lt;/li&gt;
+&lt;li&gt;Higher cost when copying or updating structs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is especially important in:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;High-frequency functions&lt;/li&gt;
+&lt;li&gt;Struct-heavy designs&lt;/li&gt;
+&lt;li&gt;Long-lived contracts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;54-smaller-types-are-not-always-cheaper&#34;&gt;5.4 Smaller Types Are Not Always Cheaper
+&lt;/h3&gt;&lt;p&gt;Important caveat:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Using types smaller than 256 bits does &lt;strong&gt;not&lt;/strong&gt; automatically save Gas&lt;/li&gt;
+&lt;li&gt;Savings only occur if packing actually happens&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint128&lt;/span&gt; a;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; b;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Even though &lt;code&gt;a&lt;/code&gt; is smaller, it still occupies its own slot because &lt;code&gt;b&lt;/code&gt; follows it.&lt;/p&gt;
+&lt;p&gt;Type choice and declaration order must be considered together.&lt;/p&gt;
+&lt;h3 id=&#34;55-when-storage-packing-is-worth-the-effort&#34;&gt;5.5 When Storage Packing Is Worth the Effort
+&lt;/h3&gt;&lt;p&gt;Not every contract needs aggressive packing.&lt;/p&gt;
+&lt;p&gt;Storage packing is most valuable when:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;There are many state variables&lt;/li&gt;
+&lt;li&gt;Structs are used extensively&lt;/li&gt;
+&lt;li&gt;State is frequently read and written&lt;/li&gt;
+&lt;li&gt;The contract has a long operational lifetime&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For small, rarely-used contracts, the benefit may be marginal.&lt;/p&gt;
+&lt;h2 id=&#34;6-loops-and-batch-processing&#34;&gt;6. Loops and Batch Processing
+&lt;/h2&gt;&lt;p&gt;From the previous sections, one pattern should already be clear:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Storage access is expensive&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Loops amplify that cost linearly&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Loops themselves are not inherently bad, but &lt;strong&gt;unbounded or poorly designed loops almost always become a Gas problem&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;61-why-loops-easily-become-gas-black-holes&#34;&gt;6.1 Why Loops Easily Become Gas Black Holes
+&lt;/h3&gt;&lt;p&gt;From the EVM’s perspective, a loop is nothing special—it simply:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Repeats a sequence of instructions&lt;/li&gt;
+&lt;li&gt;Pays the full instruction cost on every iteration&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If the loop body contains:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Storage reads or writes&lt;/li&gt;
+&lt;li&gt;Expensive computations&lt;/li&gt;
+&lt;li&gt;External calls&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;then Gas usage grows linearly with the iteration count.&lt;/p&gt;
+&lt;p&gt;The risk becomes severe when the loop length is controlled by external input.&lt;/p&gt;
+&lt;h3 id=&#34;62-caching-array-length-and-intermediate-results&#34;&gt;6.2 Caching Array Length and Intermediate Results
+&lt;/h3&gt;&lt;p&gt;A very common and basic optimization is caching an array’s length.&lt;/p&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata arr) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; arr.length; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        s &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; arr[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Although &lt;code&gt;arr.length&lt;/code&gt; looks trivial, it is re-read on every loop condition check.&lt;/p&gt;
+&lt;p&gt;A better version is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata arr) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; len &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; arr.length;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; len; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        s &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; arr[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This optimization saves little Gas per iteration, but the difference becomes noticeable in large arrays or high-frequency calls.&lt;/p&gt;
+&lt;h3 id=&#34;63-avoid-writing-to-storage-inside-loops&#34;&gt;6.3 Avoid Writing to Storage Inside Loops
+&lt;/h3&gt;&lt;p&gt;As emphasized earlier, writing to storage inside loops is extremely expensive.&lt;/p&gt;
+&lt;p&gt;The principle can be summarized as:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Do calculations inside loops, but commit results to storage only once, outside the loop.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;64-using-unchecked-safely&#34;&gt;6.4 Using &lt;code&gt;unchecked&lt;/code&gt; Safely
+&lt;/h3&gt;&lt;p&gt;Since Solidity 0.8, integer arithmetic includes overflow checks by default.
+This is valuable for safety, but it also introduces extra Gas cost.&lt;/p&gt;
+&lt;p&gt;A typical example is a loop counter:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; len; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you can guarantee that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;i&lt;/code&gt; will never approach &lt;code&gt;type(uint256).max&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;The loop has a strict upper bound&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;then you can use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; len; ) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;unchecked&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Gas savings are smaller than storage optimizations, but still measurable in large loops.&lt;/p&gt;
+&lt;h3 id=&#34;65-avoid-unbounded-loops&#34;&gt;6.5 Avoid Unbounded Loops
+&lt;/h3&gt;&lt;p&gt;When designing contract interfaces, try to avoid:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Loop bounds fully controlled by user input&lt;/li&gt;
+&lt;li&gt;Loops without explicit upper limits&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata items) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; items.length; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If &lt;code&gt;items.length&lt;/code&gt; is unrestricted, callers can pass extremely large arrays, causing:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Transaction failure due to Out of Gas&lt;/li&gt;
+&lt;li&gt;Practical unavailability of the function&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Common improvements include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Enforcing a maximum length&lt;/li&gt;
+&lt;li&gt;Splitting work across multiple transactions&lt;/li&gt;
+&lt;li&gt;Providing paginated or cursor-based APIs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;66-trade-offs-in-batch-design&#34;&gt;6.6 Trade-offs in Batch Design
+&lt;/h3&gt;&lt;p&gt;Batch processing is often used to reduce transaction count and amortize fixed costs, but it is not free.&lt;/p&gt;
+&lt;p&gt;Advantages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fewer external calls&lt;/li&gt;
+&lt;li&gt;Amortized function entry and validation cost&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Risks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Unpredictable per-transaction Gas usage&lt;/li&gt;
+&lt;li&gt;Higher likelihood of Out of Gas&lt;/li&gt;
+&lt;li&gt;Harder Gas estimation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Therefore, batch interfaces should usually provide:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A clear per-call upper bound&lt;/li&gt;
+&lt;li&gt;Predictable worst-case cost&lt;/li&gt;
+&lt;li&gt;Well-defined failure behavior&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;67-a-batch-processing-example&#34;&gt;6.7 A Batch Processing Example
+&lt;/h3&gt;&lt;p&gt;Not recommended:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;batchUpdate&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata ids) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; ids.length; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        update(ids[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Improved version:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;constant&lt;/span&gt; MAX_BATCH &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;batchUpdate&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata ids) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; len &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ids.length;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    require(len &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; MAX_BATCH, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;too many items&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; len; ) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        _update(ids[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;unchecked&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The key improvement is not raw Gas savings, but:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Controlled cost&lt;/li&gt;
+&lt;li&gt;Predictable behavior&lt;/li&gt;
+&lt;li&gt;A more user-friendly interface&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;7-error-handling-and-bytecode-size-optimization&#34;&gt;7. Error Handling and Bytecode Size Optimization
+&lt;/h2&gt;&lt;p&gt;Gas optimization discussions often focus on the “successful execution path,” while overlooking &lt;strong&gt;failure paths and contract bytecode size&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In reality, error handling affects not only revert-time Gas usage, but also:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Deployment cost&lt;/li&gt;
+&lt;li&gt;Baseline execution cost&lt;/li&gt;
+&lt;li&gt;Bytecode size and maintainability&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This section focuses on a practical and consistently beneficial optimization:
+&lt;strong&gt;efficient error handling and reverts&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;71-reverts-are-not-free&#34;&gt;7.1 Reverts Are Not Free
+&lt;/h3&gt;&lt;p&gt;When a transaction reverts, state changes are rolled back—but Gas is not fully refunded.&lt;/p&gt;
+&lt;p&gt;Costs that still apply include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Gas consumed by executed instructions&lt;/li&gt;
+&lt;li&gt;Data returned with the revert&lt;/li&gt;
+&lt;li&gt;ABI encoding overhead&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Therefore, frequently triggered validation logic deserves careful cost consideration, even on failure paths.&lt;/p&gt;
+&lt;h3 id=&#34;72-the-real-cost-of-requirestring&#34;&gt;7.2 The Real Cost of &lt;code&gt;require(string)&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;The traditional error-handling pattern is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;require(msg.sender &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; owner, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Not owner&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The problem is not correctness, but cost:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The string literal is embedded in bytecode&lt;/li&gt;
+&lt;li&gt;Each revert returns the string data&lt;/li&gt;
+&lt;li&gt;Longer strings increase deployment and revert costs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In large contracts, extensive use of &lt;code&gt;require(string)&lt;/code&gt; significantly increases bytecode size.&lt;/p&gt;
+&lt;h3 id=&#34;73-motivation-for-custom-errors&#34;&gt;7.3 Motivation for Custom Errors
+&lt;/h3&gt;&lt;p&gt;Solidity 0.8.4 introduced &lt;strong&gt;custom errors&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;error NotOwner();
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Used as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (msg.sender &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; owner) revert NotOwner();
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Advantages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;No embedded strings&lt;/li&gt;
+&lt;li&gt;Error identifiers encoded as selectors&lt;/li&gt;
+&lt;li&gt;Much smaller revert payloads&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;From a cost perspective, this reduces:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Deployment Gas&lt;/li&gt;
+&lt;li&gt;Revert-path Gas&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;74-comparison-example&#34;&gt;7.4 Comparison Example
+&lt;/h3&gt;&lt;p&gt;Using &lt;code&gt;require(string)&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;withdraw&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    require(msg.sender &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; owner, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Not owner&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Using a custom error:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;error NotOwner();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;withdraw&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (msg.sender &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; owner) revert NotOwner();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Gas usage on the success path is nearly identical, but differences appear in:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Contract size&lt;/li&gt;
+&lt;li&gt;Revert Gas cost&lt;/li&gt;
+&lt;li&gt;Error encoding efficiency&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These differences accumulate in complex or high-frequency contracts.&lt;/p&gt;
+&lt;h3 id=&#34;75-how-detailed-should-error-messages-be&#34;&gt;7.5 How Detailed Should Error Messages Be?
+&lt;/h3&gt;&lt;p&gt;A common misconception is:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;More detailed error messages are always better.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;From an on-chain perspective, this is often untrue.&lt;/p&gt;
+&lt;p&gt;A better division of responsibility is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;On-chain: concise, structured error identifiers&lt;/li&gt;
+&lt;li&gt;Off-chain: documentation or mapping tables explaining errors&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Custom errors fit this model well because they are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Structured&lt;/li&gt;
+&lt;li&gt;Parameterizable&lt;/li&gt;
+&lt;li&gt;Easy for frontends and SDKs to decode&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;error InsufficientBalance(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; available, &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; required);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;76-why-bytecode-size-matters&#34;&gt;7.6 Why Bytecode Size Matters
+&lt;/h3&gt;&lt;p&gt;Contract bytecode size directly affects:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Deployment cost&lt;/li&gt;
+&lt;li&gt;Deployment success (there is a size limit)&lt;/li&gt;
+&lt;li&gt;Baseline execution cost (larger code costs more to load)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following increase bytecode size:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Large numbers of string literals&lt;/li&gt;
+&lt;li&gt;Repeated logic branches&lt;/li&gt;
+&lt;li&gt;Verbose error messages&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Gas optimization is therefore not only about runtime execution, but also &lt;strong&gt;deployment-time efficiency&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;77-balancing-error-handling-and-readability&#34;&gt;7.7 Balancing Error Handling and Readability
+&lt;/h3&gt;&lt;p&gt;It is important to stress:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Custom errors are not about extreme compression&lt;/li&gt;
+&lt;li&gt;They do not require sacrificing readability&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A reasonable approach is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use custom errors for public-facing core interfaces&lt;/li&gt;
+&lt;li&gt;Use &lt;code&gt;require&lt;/code&gt; selectively for internal assertions or development checks&lt;/li&gt;
+&lt;li&gt;Avoid embedding long textual descriptions in bytecode&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;8-event-and-return-value-design&#34;&gt;8. Event and Return Value Design
+&lt;/h2&gt;&lt;p&gt;In smart contracts, &lt;strong&gt;events&lt;/strong&gt; and &lt;strong&gt;function return values&lt;/strong&gt; are commonly used to expose information externally.
+However, if designed poorly, they can easily become &lt;strong&gt;hidden sources of Gas consumption&lt;/strong&gt;, especially in high-frequency or data-heavy scenarios.&lt;/p&gt;
+&lt;p&gt;The core idea of this section can be summarized as:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Blockchains are good at state verification, not data querying.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Understanding this helps you make more economical design choices for events and return values.&lt;/p&gt;
+&lt;h3 id=&#34;81-the-role-boundary-of-events&#34;&gt;8.1 The Role Boundary of Events
+&lt;/h3&gt;&lt;p&gt;The primary purposes of events are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Allowing off-chain systems to listen and index&lt;/li&gt;
+&lt;li&gt;Recording important state changes&lt;/li&gt;
+&lt;li&gt;Supporting auditing and analysis&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Events are &lt;strong&gt;not readable on-chain&lt;/strong&gt; and do not affect subsequent execution logic.
+From an execution perspective, events are “write once, off-chain only” data.&lt;/p&gt;
+&lt;p&gt;This leads to a key design principle:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Events should serve off-chain consumers, not replace on-chain state queries.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;82-gas-cost-composition-of-events&#34;&gt;8.2 Gas Cost Composition of Events
+&lt;/h3&gt;&lt;p&gt;The Gas cost of an event consists of two parts:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Topics&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The event signature&lt;/li&gt;
+&lt;li&gt;Up to three &lt;code&gt;indexed&lt;/code&gt; parameters&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Data&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Non-indexed parameters&lt;/li&gt;
+&lt;li&gt;Charged by byte size&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Intuitively:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;indexed&lt;/code&gt; parameters improve filterability&lt;/li&gt;
+&lt;li&gt;But they are not free&lt;/li&gt;
+&lt;li&gt;Larger data payloads cost more Gas&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Event design therefore requires a trade-off between &lt;strong&gt;queryability&lt;/strong&gt; and &lt;strong&gt;cost&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;83-proper-use-of-indexed&#34;&gt;8.3 Proper Use of &lt;code&gt;indexed&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;Consider a typical transfer event:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Transfer&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;indexed&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;indexed&lt;/span&gt; to, &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; amount);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This design makes sense because:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;from&lt;/code&gt; and &lt;code&gt;to&lt;/code&gt; are common filter fields&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;amount&lt;/code&gt; is rarely used as a filter&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;But if written as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Transfer&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;indexed&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;indexed&lt;/span&gt; to,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;indexed&lt;/span&gt; amount
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Query power barely improves&lt;/li&gt;
+&lt;li&gt;Gas cost increases&lt;/li&gt;
+&lt;li&gt;You quickly hit the three-index limit&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A practical rule of thumb:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Only mark fields as &lt;code&gt;indexed&lt;/code&gt; if they are frequently used for filtering.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;84-avoid-carrying-large-data-in-events&#34;&gt;8.4 Avoid Carrying Large Data in Events
+&lt;/h3&gt;&lt;p&gt;A common but expensive pattern is emitting large data structures:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DataUpdated&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] values);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Problems:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Entire arrays are written to logs&lt;/li&gt;
+&lt;li&gt;Gas cost grows linearly with data size&lt;/li&gt;
+&lt;li&gt;Both on-chain execution and off-chain storage become expensive&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Better alternatives include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Emitting only identifiers, hashes, or counters&lt;/li&gt;
+&lt;li&gt;Storing full data off-chain&lt;/li&gt;
+&lt;li&gt;Linking via hashes or IDs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DataUpdated&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;bytes32&lt;/span&gt; dataHash);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;85-avoid-returning-large-arrays-on-chain&#34;&gt;8.5 Avoid Returning Large Arrays On-Chain
+&lt;/h3&gt;&lt;p&gt;Solidity allows functions to return arrays or structs:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getUsers&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;view&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;returns&lt;/span&gt; (User[] &lt;span style=&#34;color:#66d9ef&#34;&gt;memory&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While intuitive, this design is not cheap.&lt;/p&gt;
+&lt;h4 id=&#34;what-happens-in-on-chain-calls&#34;&gt;What Happens in On-Chain Calls
+&lt;/h4&gt;&lt;p&gt;If this function is called &lt;strong&gt;by another contract&lt;/strong&gt;, even as a &lt;code&gt;view&lt;/code&gt; function, it still consumes Gas.
+The EVM must:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Read all &lt;code&gt;User&lt;/code&gt; entries from storage&lt;/li&gt;
+&lt;li&gt;Copy them into memory&lt;/li&gt;
+&lt;li&gt;ABI-encode the entire array&lt;/li&gt;
+&lt;li&gt;Return the encoded bytes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All of these costs scale linearly with array size—&lt;strong&gt;with no upper bound&lt;/strong&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;why-this-is-often-unnecessary&#34;&gt;Why This Is Often Unnecessary
+&lt;/h4&gt;&lt;p&gt;In real-world projects, full data lists are usually:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Needed by frontends or backend services&lt;/li&gt;
+&lt;li&gt;Used for display, analytics, or reporting&lt;/li&gt;
+&lt;li&gt;Not relied upon by other contracts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Off-chain systems can retrieve such data for free using &lt;code&gt;eth_call&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This creates a common inefficiency:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;On-chain callers pay Gas for data&lt;/li&gt;
+&lt;li&gt;The actual consumers are off-chain&lt;/li&gt;
+&lt;li&gt;Off-chain consumers could have read the data at zero cost&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;a-better-design-approach&#34;&gt;A Better Design Approach
+&lt;/h4&gt;&lt;p&gt;Function return values should distinguish between:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;On-chain callable functions&lt;/strong&gt;
+Keep return values minimal or return nothing&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Off-chain query functions&lt;/strong&gt;
+Returning arrays or structs is acceptable, but intended for &lt;code&gt;eth_call&lt;/code&gt; only&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If on-chain access is required, pagination or cursor-based APIs are safer.&lt;/p&gt;
+&lt;h3 id=&#34;86-pagination-and-cursor-based-access&#34;&gt;8.6 Pagination and Cursor-Based Access
+&lt;/h3&gt;&lt;p&gt;For large datasets, pagination is usually preferable:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getUsers&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; offset, &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; limit)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;view&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;returns&lt;/span&gt; (User[] &lt;span style=&#34;color:#66d9ef&#34;&gt;memory&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// return a slice
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Benefits:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Bounded Gas usage for on-chain calls&lt;/li&gt;
+&lt;li&gt;Efficient off-chain iteration&lt;/li&gt;
+&lt;li&gt;Predictable interface behavior&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;87-event-design-comparison-example&#34;&gt;8.7 Event Design Comparison Example
+&lt;/h3&gt;&lt;p&gt;Not recommended:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;OrderCreated&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; user,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] itemIds,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] prices
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Improved version:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;OrderCreated&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;address&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;indexed&lt;/span&gt; user,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;bytes32&lt;/span&gt; orderId
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With off-chain systems:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Resolving full order data via &lt;code&gt;orderId&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Treating events as index signals, not data containers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This design is far more scalable and cost-effective.&lt;/p&gt;
+&lt;h2 id=&#34;9-compact-representation-and-low-level-optimizations-use-with-caution&#34;&gt;9. Compact Representation and Low-Level Optimizations (Use with Caution)
+&lt;/h2&gt;&lt;p&gt;So far, most optimizations discussed share common traits:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;No major readability loss&lt;/li&gt;
+&lt;li&gt;Controlled risk&lt;/li&gt;
+&lt;li&gt;Stable, predictable gains&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This section covers &lt;strong&gt;advanced techniques&lt;/strong&gt; that can save Gas, but also introduce:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reduced readability&lt;/li&gt;
+&lt;li&gt;Higher implementation complexity&lt;/li&gt;
+&lt;li&gt;Increased audit and maintenance costs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The goal here is not to advocate their use, but to answer:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Which low-level optimizations are worth using, and under what conditions.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;91-bit-operations-and-bitmaps&#34;&gt;9.1 Bit Operations and Bitmaps
+&lt;/h3&gt;&lt;p&gt;A common and relatively safe advanced technique is the &lt;strong&gt;bitmap&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Suppose you need to track many boolean states:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Whether an address completed a step&lt;/li&gt;
+&lt;li&gt;Whether an ID is used&lt;/li&gt;
+&lt;li&gt;A fixed-size set of flags&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The straightforward approach:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;mapping&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;) used;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is clear, but each &lt;code&gt;bool&lt;/code&gt; consumes an entire storage slot.&lt;/p&gt;
+&lt;h4 id=&#34;bitmap-approach&#34;&gt;Bitmap Approach
+&lt;/h4&gt;&lt;p&gt;If the keys are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Sequential&lt;/li&gt;
+&lt;li&gt;Bounded&lt;/li&gt;
+&lt;li&gt;Numerous&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;you can pack 256 boolean values into one &lt;code&gt;uint256&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; bitmap;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;isUsed&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; index) &lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;view&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;returns&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (bitmap &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; index)) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setUsed&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; index) &lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    bitmap &lt;span style=&#34;color:#f92672&#34;&gt;|=&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; index);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Benefits:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;One slot stores 256 flags&lt;/li&gt;
+&lt;li&gt;Far fewer storage reads/writes&lt;/li&gt;
+&lt;li&gt;Significant Gas savings in high-frequency scenarios&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;92-when-bitmaps-make-sense&#34;&gt;9.2 When Bitmaps Make Sense
+&lt;/h3&gt;&lt;p&gt;Bitmaps are suitable when:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The maximum number of states is known&lt;/li&gt;
+&lt;li&gt;Indices are controlled and not arbitrary user input&lt;/li&gt;
+&lt;li&gt;Logic is stable and unlikely to change&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;They are unsuitable when:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Keys are addresses or hashes&lt;/li&gt;
+&lt;li&gt;State count is unbounded&lt;/li&gt;
+&lt;li&gt;Readability and flexibility are critical&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A useful heuristic:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;If you need documentation just to explain what each bit means, complexity has already increased significantly.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;93-compact-encoding-and-slot-saving-thinking&#34;&gt;9.3 Compact Encoding and “Slot-Saving” Thinking
+&lt;/h3&gt;&lt;p&gt;Some projects go further by:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Packing multiple fields into a single &lt;code&gt;uint256&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Using bit shifts and masks manually&lt;/li&gt;
+&lt;li&gt;Re-implementing storage packing logic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; packed;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Where:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Upper 128 bits store balance&lt;/li&gt;
+&lt;li&gt;Lower 128 bits store timestamp&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;While this can reduce slot count, it also:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Requires bit manipulation on every access&lt;/li&gt;
+&lt;li&gt;Increases risk of boundary bugs&lt;/li&gt;
+&lt;li&gt;Makes auditing and debugging harder&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Such techniques are justified only when:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Data structures are extremely stable&lt;/li&gt;
+&lt;li&gt;Access frequency is very high&lt;/li&gt;
+&lt;li&gt;Slot count is confirmed as the main bottleneck&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;94-about-assembly&#34;&gt;9.4 About &lt;code&gt;assembly&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;Solidity allows inline &lt;code&gt;assembly&lt;/code&gt;, enabling direct EVM opcode usage:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Skipping compiler-generated overhead&lt;/li&gt;
+&lt;li&gt;Achieving lower Gas in extreme cases&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;But be cautious:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;No type checks&lt;/li&gt;
+&lt;li&gt;No overflow protection&lt;/li&gt;
+&lt;li&gt;Dramatically reduced readability&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In most business contracts, &lt;strong&gt;the risk outweighs the benefit&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;95-when-assembly-is-worth-using&#34;&gt;9.5 When &lt;code&gt;assembly&lt;/code&gt; Is Worth Using
+&lt;/h3&gt;&lt;p&gt;Reasonable scenarios include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Extremely hot execution paths&lt;/li&gt;
+&lt;li&gt;Low-level utility functions&lt;/li&gt;
+&lt;li&gt;Logic that is stable and well-tested&lt;/li&gt;
+&lt;li&gt;Teams with audit support and experience&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Avoid using assembly for:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Core business logic&lt;/li&gt;
+&lt;li&gt;Permission or fund management&lt;/li&gt;
+&lt;li&gt;Marginal Gas savings&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A conservative rule:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;If Gas is already within a reasonable range without assembly, do not use assembly.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;96-evaluating-the-real-gains-of-advanced-optimizations&#34;&gt;9.6 Evaluating the Real Gains of Advanced Optimizations
+&lt;/h3&gt;&lt;p&gt;Advanced optimizations usually yield:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tens to hundreds of Gas saved per call&lt;/li&gt;
+&lt;li&gt;Meaningful impact only in high-frequency paths&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Before using them, you should already have:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Completed storage, interface, and loop optimizations&lt;/li&gt;
+&lt;li&gt;Identified real bottlenecks&lt;/li&gt;
+&lt;li&gt;Measured Gas with actual test data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Otherwise, it is easy to fall into “optimization for its own sake.”&lt;/p&gt;
+&lt;h2 id=&#34;10-how-to-verify-whether-an-optimization-is-effective&#34;&gt;10. How to Verify Whether an Optimization Is Effective
+&lt;/h2&gt;&lt;p&gt;After discussing many techniques, a more important question emerges:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;How do you know an optimization is actually worth it?&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This section emphasizes a &lt;strong&gt;data-driven approach&lt;/strong&gt; rather than intuition.&lt;/p&gt;
+&lt;h3 id=&#34;101-why-you-cannot-rely-on-intuition&#34;&gt;10.1 Why You Cannot Rely on Intuition
+&lt;/h3&gt;&lt;p&gt;Gas cost does not always correlate with perceived code complexity:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Some complex refactors barely change Gas&lt;/li&gt;
+&lt;li&gt;Some small changes save a lot&lt;/li&gt;
+&lt;li&gt;Some optimizations matter only at scale&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Without measurement, it is easy to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Miss high-impact improvements&lt;/li&gt;
+&lt;li&gt;Over-optimize low-impact areas&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Gas optimization must therefore be &lt;strong&gt;measured engineering&lt;/strong&gt;, not guesswork.&lt;/p&gt;
+&lt;h3 id=&#34;102-what-makes-an-optimization-effective&#34;&gt;10.2 What Makes an Optimization “Effective”
+&lt;/h3&gt;&lt;p&gt;An optimization should answer three questions:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;How much Gas does it save?&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;How frequently does this code path execute?&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;How much complexity or risk does it introduce?&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Only when savings justify complexity is the optimization worthwhile.&lt;/p&gt;
+&lt;h3 id=&#34;103-basic-benchmarking-approach&#34;&gt;10.3 Basic Benchmarking Approach
+&lt;/h3&gt;&lt;p&gt;The simplest and most reliable method is &lt;strong&gt;before/after comparison&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Same input&lt;/li&gt;
+&lt;li&gt;Only one implementation change&lt;/li&gt;
+&lt;li&gt;Compare &lt;code&gt;gas used&lt;/code&gt;, not transaction fees&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Original function A&lt;/li&gt;
+&lt;li&gt;Optimized function A′&lt;/li&gt;
+&lt;li&gt;Measure Gas under identical conditions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;104-a-conceptual-comparison-example&#34;&gt;10.4 A Conceptual Comparison Example
+&lt;/h3&gt;&lt;p&gt;Original:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata xs) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; xs.length; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        total &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; xs[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Optimized:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-solidity&#34; data-lang=&#34;solidity&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;addOptimized&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt;[] calldata xs) &lt;span style=&#34;color:#66d9ef&#34;&gt;external&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; total;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; len &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; xs.length;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint256&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; len; ) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        t &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; xs[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;unchecked&lt;/span&gt; { i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    total &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; t;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The real question is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;At &lt;code&gt;xs.length = 10&lt;/code&gt;, &lt;code&gt;100&lt;/code&gt;, &lt;code&gt;1000&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Do Gas curves diverge meaningfully?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;That divergence is what matters.&lt;/p&gt;
+&lt;h3 id=&#34;105-focus-on-worst-case-not-just-averages&#34;&gt;10.5 Focus on Worst-Case, Not Just Averages
+&lt;/h3&gt;&lt;p&gt;In smart contracts, worst-case behavior often matters more:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Insufficient Gas causes failure&lt;/li&gt;
+&lt;li&gt;Users hit edge cases&lt;/li&gt;
+&lt;li&gt;Batch and loop risks concentrate at extremes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Testing should therefore:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use maximum allowed inputs&lt;/li&gt;
+&lt;li&gt;Cover boundary conditions&lt;/li&gt;
+&lt;li&gt;Check proximity to block or function Gas limits&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;106-tools-matter-less-than-methodology&#34;&gt;10.6 Tools Matter Less Than Methodology
+&lt;/h3&gt;&lt;p&gt;Teams may use:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hardhat&lt;/li&gt;
+&lt;li&gt;Foundry&lt;/li&gt;
+&lt;li&gt;Truffle&lt;/li&gt;
+&lt;li&gt;Custom scripts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The methodology is always the same:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fix inputs&lt;/li&gt;
+&lt;li&gt;Repeat tests&lt;/li&gt;
+&lt;li&gt;Compare Gas usage&lt;/li&gt;
+&lt;li&gt;Let data drive decisions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;107-when-to-stop-optimizing&#34;&gt;10.7 When to Stop Optimizing
+&lt;/h3&gt;&lt;p&gt;A frequently overlooked question is: &lt;strong&gt;when is enough enough?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Stop when:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Further savings are marginal&lt;/li&gt;
+&lt;li&gt;Code complexity increases noticeably&lt;/li&gt;
+&lt;li&gt;High-frequency and high-cost paths are already optimized&lt;/li&gt;
+&lt;li&gt;Audit and maintenance costs outweigh benefits&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Gas optimization is a balance, not an endless pursuit.&lt;/p&gt;
+&lt;h2 id=&#34;11-an-actionable-gas-optimization-checklist&#34;&gt;11. An Actionable Gas Optimization Checklist
+&lt;/h2&gt;&lt;p&gt;After systematically covering Gas optimization principles, we can now condense them into a &lt;strong&gt;practical checklist&lt;/strong&gt; for daily development and code reviews.&lt;/p&gt;
+&lt;p&gt;This is not a rigid rulebook, but a &lt;strong&gt;priority-driven review order&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;111-design-phase-checks&#34;&gt;11.1 Design-Phase Checks
+&lt;/h3&gt;&lt;p&gt;Before writing code, consider:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Is this state truly necessary, or derivable?&lt;/li&gt;
+&lt;li&gt;Will the state be frequently accessed?&lt;/li&gt;
+&lt;li&gt;Are there unbounded loops or batch interfaces?&lt;/li&gt;
+&lt;li&gt;Does the data structure have a clear size limit?&lt;/li&gt;
+&lt;li&gt;Are lookup, deduplication, or deletion required?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Many Gas issues can be avoided at this stage.&lt;/p&gt;
+&lt;h3 id=&#34;112-storage-checks-highest-priority&#34;&gt;11.2 Storage Checks (Highest Priority)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Are storage variables read multiple times in one function?&lt;/li&gt;
+&lt;li&gt;Is storage written inside loops?&lt;/li&gt;
+&lt;li&gt;Can caching reduce &lt;code&gt;SLOAD&lt;/code&gt; / &lt;code&gt;SSTORE&lt;/code&gt;?&lt;/li&gt;
+&lt;li&gt;Are variable and struct field orders optimized for packing?&lt;/li&gt;
+&lt;li&gt;Is unused state deleted?&lt;/li&gt;
+&lt;li&gt;Are mappings used instead of arrays for lookup and deduplication?&lt;/li&gt;
+&lt;li&gt;If enumeration is needed, is mapping + array + index used with swap-and-pop?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is where optimization effort pays off the most.&lt;/p&gt;
+&lt;h3 id=&#34;113-function-interface-and-parameter-checks&#34;&gt;11.3 Function Interface and Parameter Checks
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Are external interfaces marked &lt;code&gt;external&lt;/code&gt;?&lt;/li&gt;
+&lt;li&gt;Do external functions use &lt;code&gt;calldata&lt;/code&gt;?&lt;/li&gt;
+&lt;li&gt;Are unnecessary &lt;code&gt;public&lt;/code&gt; functions avoided?&lt;/li&gt;
+&lt;li&gt;Are &lt;code&gt;this&lt;/code&gt; calls avoided?&lt;/li&gt;
+&lt;li&gt;Is the external-entry + internal-implementation pattern used?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These optimizations are low-risk and consistently effective.&lt;/p&gt;
+&lt;h3 id=&#34;114-loop-and-batch-checks&#34;&gt;11.4 Loop and Batch Checks
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Are array lengths and intermediate values cached?&lt;/li&gt;
+&lt;li&gt;Is storage avoided inside loops?&lt;/li&gt;
+&lt;li&gt;Are O(n) lookups avoided in loops?&lt;/li&gt;
+&lt;li&gt;Is &lt;code&gt;unchecked&lt;/code&gt; used safely where applicable?&lt;/li&gt;
+&lt;li&gt;Are loop bounds explicit?&lt;/li&gt;
+&lt;li&gt;Do batch interfaces limit per-call size?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Loops amplify Gas—always review them from a worst-case perspective.&lt;/p&gt;
+&lt;h3 id=&#34;115-error-handling-and-bytecode-size&#34;&gt;11.5 Error Handling and Bytecode Size
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Are custom errors used instead of &lt;code&gt;require(string)&lt;/code&gt;?&lt;/li&gt;
+&lt;li&gt;Are error identifiers concise and structured?&lt;/li&gt;
+&lt;li&gt;Are long strings avoided in bytecode?&lt;/li&gt;
+&lt;li&gt;Is contract size close to deployment limits?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These optimizations become more valuable as contracts grow.&lt;/p&gt;
+&lt;h3 id=&#34;116-events-and-return-values&#34;&gt;11.6 Events and Return Values
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Do events only log essential information?&lt;/li&gt;
+&lt;li&gt;Are &lt;code&gt;indexed&lt;/code&gt; fields used only for frequent filters?&lt;/li&gt;
+&lt;li&gt;Are large arrays or strings avoided in events?&lt;/li&gt;
+&lt;li&gt;Are large on-chain return values avoided?&lt;/li&gt;
+&lt;li&gt;Are pagination or off-chain indexing used instead?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The goal: &lt;strong&gt;do not treat the chain as a database.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;117-advanced-optimizations-use-sparingly&#34;&gt;11.7 Advanced Optimizations (Use Sparingly)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Are foundational optimizations already complete?&lt;/li&gt;
+&lt;li&gt;Is the bottleneck clearly identified?&lt;/li&gt;
+&lt;li&gt;Do bitmaps or packing actually reduce slot usage?&lt;/li&gt;
+&lt;li&gt;Is assembly avoided in core business logic?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Advanced optimizations should be &lt;strong&gt;data-backed exceptions&lt;/strong&gt;, not defaults.&lt;/p&gt;
+&lt;h3 id=&#34;118-let-data-drive-final-decisions&#34;&gt;11.8 Let Data Drive Final Decisions
+&lt;/h3&gt;&lt;p&gt;Before merging any optimization:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Is there clear Gas comparison data?&lt;/li&gt;
+&lt;li&gt;Is the optimized path high-frequency or critical?&lt;/li&gt;
+&lt;li&gt;Is the added complexity testable and auditable?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If the benefit cannot be clearly explained, the optimization is probably unnecessary.&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
