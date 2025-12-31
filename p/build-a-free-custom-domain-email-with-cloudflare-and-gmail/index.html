@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一、需求背景 很多人都有这样的需求：\n有一个自己的域名（如 example.com）\n希望能使用 me@example.com 这样的邮箱，看起来更专业\n但又不想：\n搭建、维护邮件服务器 购买昂贵的企业邮箱 折腾复杂的邮件系统（Postfix / Exim / DKIM / 反垃圾等） 核心问题在于： 有没有一种几乎零成本、配置简单、又足够稳定的方案？\n">
+<meta name="keywords" content="gmail, cloudflare, 自定义域名邮箱, SMTP"><title>使用Cloudflare和Gmail打造免费的自定义域名邮箱</title>
+
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="使用Cloudflare和Gmail打造免费的自定义域名邮箱">
+<meta property='og:description' content="一、需求背景 很多人都有这样的需求：\n有一个自己的域名（如 example.com）\n希望能使用 me@example.com 这样的邮箱，看起来更专业\n但又不想：\n搭建、维护邮件服务器 购买昂贵的企业邮箱 折腾复杂的邮件系统（Postfix / Exim / DKIM / 反垃圾等） 核心问题在于： 有没有一种几乎零成本、配置简单、又足够稳定的方案？\n">
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/'>
+<meta property='og:site_name' content='王离谱的小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='gmail' /><meta property='article:tag' content='cloudflare' /><meta property='article:tag' content='自定义域名邮箱' /><meta property='article:tag' content='SMTP' /><meta property='article:published_time' content='2025-11-28T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-11-28T14:59:56&#43;08:00'/>
+<meta name="twitter:title" content="使用Cloudflare和Gmail打造免费的自定义域名邮箱">
+<meta name="twitter:description" content="一、需求背景 很多人都有这样的需求：\n有一个自己的域名（如 example.com）\n希望能使用 me@example.com 这样的邮箱，看起来更专业\n但又不想：\n搭建、维护邮件服务器 购买昂贵的企业邮箱 折腾复杂的邮件系统（Postfix / Exim / DKIM / 反垃圾等） 核心问题在于： 有没有一种几乎零成本、配置简单、又足够稳定的方案？\n">
+    <link rel="shortcut icon" href="/logo.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/logo_hu_c653ae95ee0b69fd.png" width="300"
+                            height="400" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🔞</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王离谱的小破站</a></h1>
+            <h2 class="site-description">破破烂烂</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/yearsuns'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='mailto:ryan@yearsuns.com'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>
+                
+                <span>分类</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg>
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='https://tools.yearsuns.com' target="_blank">
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-tool"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" /></svg>
+                
+                <span>工具</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/" selected>中文</option>
+                                
+                                    <option value="https://yearsuns-github-io.vercel.app/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#一需求背景">一、需求背景</a>
+      <ul>
+        <li><a href="#核心问题在于">核心问题在于：</a></li>
+      </ul>
+    </li>
+    <li><a href="#二整体方案概览">二、整体方案概览</a></li>
+    <li><a href="#三使用-cloudflare-收信转发">三、使用 Cloudflare 收信转发</a>
+      <ul>
+        <li><a href="#目标">目标</a></li>
+        <li><a href="#1-启用-cloudflare-email-routing">1️⃣ 启用 Cloudflare Email Routing</a></li>
+        <li><a href="#2-配置转发规则">2️⃣ 配置转发规则</a></li>
+        <li><a href="#3-测试收信">3️⃣ 测试收信</a></li>
+      </ul>
+    </li>
+    <li><a href="#四使用-gmail-smtp-发信">四、使用 Gmail SMTP 发信</a>
+      <ul>
+        <li><a href="#1-为-google-账号开启两步验证2fa">1️⃣ 为 Google 账号开启两步验证（2FA）</a></li>
+        <li><a href="#2-创建-gmail-app-passwordsmtp-专用密码">2️⃣ 创建 Gmail App Password（SMTP 专用密码）</a></li>
+        <li><a href="#3-在-gmail-中添加自定义域名发件地址">3️⃣ 在 Gmail 中添加自定义域名发件地址</a></li>
+        <li><a href="#4-配置-smtp-参数">4️⃣ 配置 SMTP 参数</a></li>
+        <li><a href="#5-测试发信">5️⃣ 测试发信</a></li>
+      </ul>
+    </li>
+    <li><a href="#五扩展性与进阶配置">五、扩展性与进阶配置</a>
+      <ul>
+        <li><a href="#1-spf-记录">1️⃣ SPF 记录</a></li>
+        <li><a href="#2-dmarc-记录">2️⃣ DMARC 记录</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/it/" >
+                IT
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/">使用Cloudflare和Gmail打造免费的自定义域名邮箱</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025年11月28日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="一需求背景">一、需求背景
+</h2><p>很多人都有这样的需求：</p>
+<ul>
+<li>
+<p>有一个自己的域名（如 <code>example.com</code>）</p>
+</li>
+<li>
+<p>希望能使用 <code>me@example.com</code> 这样的邮箱，看起来更专业</p>
+</li>
+<li>
+<p>但又不想：</p>
+<ul>
+<li>搭建、维护邮件服务器</li>
+<li>购买昂贵的企业邮箱</li>
+<li>折腾复杂的邮件系统（Postfix / Exim / DKIM / 反垃圾等）</li>
+</ul>
+</li>
+</ul>
+<h3 id="核心问题在于">核心问题在于：
+</h3><blockquote>
+<p><strong>有没有一种几乎零成本、配置简单、又足够稳定的方案？</strong></p>
+</blockquote>
+<p>答案就是：</p>
+<blockquote>
+<p><strong>Cloudflare Email Routing + Gmail SMTP</strong></p>
+</blockquote>
+<h2 id="二整体方案概览">二、整体方案概览
+</h2><p>在正式配置前，先明确<strong>职责分工</strong>：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>功能</th>
+          <th>由谁负责</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>接收发往你域名的邮件</td>
+          <td>Cloudflare</td>
+      </tr>
+      <tr>
+          <td>邮件转发</td>
+          <td>Cloudflare</td>
+      </tr>
+      <tr>
+          <td>使用你域名发送邮件</td>
+          <td>Gmail SMTP</td>
+      </tr>
+      <tr>
+          <td>邮件阅读 / 撰写界面</td>
+          <td>Gmail</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>⚠️ <strong>非常重要的一点</strong>：
+Cloudflare <strong>只负责“收”和“转发”</strong>，<strong>不负责“发”</strong>。
+所以「收信」和「发信」要分两部分配置。</p>
+<h2 id="三使用-cloudflare-收信转发">三、使用 Cloudflare 收信转发
+</h2><h3 id="目标">目标
+</h3><p>让别人给 <code>me@example.com</code> 发邮件时，邮件能<strong>自动转发</strong>到你的个人邮箱（如 <code>your-account@gmail.com</code>）。</p>
+<h3 id="1-启用-cloudflare-email-routing">1️⃣ 启用 Cloudflare Email Routing
+</h3><p>前提：你的域名 DNS 已托管在 Cloudflare。</p>
+<p>操作路径：</p>
+<ol>
+<li>登录 Cloudflare</li>
+<li>选择你的域名</li>
+<li>进入 <strong>Email → Email Routing</strong></li>
+<li>点击 <strong>Get Started</strong> 开始配置</li>
+</ol>
+<p><img src="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/cloudflare-email-routing.png"
+	width="1604"
+	height="794"
+	srcset="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/cloudflare-email-routing_hu_1510c93ebf309670.png 480w, /p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/cloudflare-email-routing_hu_9236f01e267d7762.png 1024w"
+	loading="lazy"
+	
+		alt="cloudflare页面"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="202"
+		data-flex-basis="484px"
+	
+></p>
+<p>Cloudflare 会提示你需要添加一些 DNS 记录（主要是 MX），<strong>直接按提示添加即可</strong>。</p>
+<h3 id="2-配置转发规则">2️⃣ 配置转发规则
+</h3><p>你可以设置：</p>
+<ul>
+<li>
+<p><strong>单个地址转发</strong></p>
+<ul>
+<li><code>me@example.com</code> → <code>your-account@gmail.com</code></li>
+</ul>
+</li>
+<li>
+<p><strong>全域转发（Catch-all）</strong></p>
+<ul>
+<li><code>*@example.com</code> → <code>your-account@gmail.com</code></li>
+</ul>
+</li>
+</ul>
+<p>👉 对个人用户来说，<strong>Catch-all 非常方便</strong>，所有未知邮箱都会被接收。</p>
+<p>Cloudflare 会向你的目标邮箱发送一封验证邮件，确认你对该邮箱有控制权。</p>
+<h3 id="3-测试收信">3️⃣ 测试收信
+</h3><p>从任意邮箱（QQ、163、Outlook 等）给：</p>
+<pre tabindex="0"><code>me@example.com
+</code></pre><p>发一封邮件，如果你能在 Gmail 收到，说明：</p>
+<p>✅ Cloudflare 收信 + 转发配置完成</p>
+<h2 id="四使用-gmail-smtp-发信">四、使用 Gmail SMTP 发信
+</h2><p>现在你已经能<strong>收信</strong>了，但还不能用 <code>me@example.com</code> 发邮件。</p>
+<p>这一部分的目标是：</p>
+<blockquote>
+<p><strong>在 Gmail 中，用 <code>me@example.com</code> 作为发件人发送邮件</strong></p>
+</blockquote>
+<h3 id="1-为-google-账号开启两步验证2fa">1️⃣ 为 Google 账号开启两步验证（2FA）
+</h3><p>这是 Gmail SMTP 的前置条件。</p>
+<p>访问 <a class="link" href="https://myaccount.google.com/signinoptions/twosv"  title="谷歌账户安全页面"
+     target="_blank" rel="noopener"
+    >谷歌账户安全页面</a></p>
+<p><img src="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/google-2fa.png"
+	width="1408"
+	height="897"
+	srcset="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/google-2fa_hu_779b1120895c6303.png 480w, /p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/google-2fa_hu_31808221a554db34.png 1024w"
+	loading="lazy"
+	
+		alt="谷歌2fa页面"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="156"
+		data-flex-basis="376px"
+	
+></p>
+<p>不开启 2FA，就<strong>无法创建 SMTP 专用密码</strong>。</p>
+<h3 id="2-创建-gmail-app-passwordsmtp-专用密码">2️⃣ 创建 Gmail App Password（SMTP 专用密码）
+</h3><p>访问 <a class="link" href="https://myaccount.google.com/apppasswords"  title="谷歌应用密码页面"
+     target="_blank" rel="noopener"
+    >谷歌应用密码页面</a></p>
+<p><img src="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/google-app-passwords.png"
+	width="1158"
+	height="629"
+	srcset="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/google-app-passwords_hu_8dd3eac1824d6ac6.png 480w, /p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/google-app-passwords_hu_571198c3ac0d832d.png 1024w"
+	loading="lazy"
+	
+		alt="谷歌应用密码页面"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="184"
+		data-flex-basis="441px"
+	
+></p>
+<ul>
+<li>应用名称：随意（如 “Cloudflare SMTP”）</li>
+</ul>
+<p>点击 <strong>Create</strong> 后你会得到一串 <strong>16 位密码</strong>，请妥善保存。</p>
+<p>⚠️ 这是 SMTP 用的，不是你的 Gmail 登录密码。</p>
+<h3 id="3-在-gmail-中添加自定义域名发件地址">3️⃣ 在 Gmail 中添加自定义域名发件地址
+</h3><p>进入 Gmail，点击 <strong>查看所有设置</strong>：</p>
+<p><img src="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-see-all-settings.png"
+	width="1206"
+	height="386"
+	srcset="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-see-all-settings_hu_6f0e825e503624af.png 480w, /p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-see-all-settings_hu_e0f343037faeea65.png 1024w"
+	loading="lazy"
+	
+		alt="查看所有设置"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="312"
+		data-flex-basis="749px"
+	
+></p>
+<p>进入设置页，依次点击：</p>
+<pre tabindex="0"><code>Accounts and Import → Send mail as → Add another email address
+</code></pre><p><img src="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-settings.png"
+	width="1401"
+	height="587"
+	srcset="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-settings_hu_afe5e08717057cfd.png 480w, /p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-settings_hu_6e787cd9c6f4481b.png 1024w"
+	loading="lazy"
+	
+		alt="gmail设置"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="238"
+		data-flex-basis="572px"
+	
+></p>
+<p>填写：</p>
+<ul>
+<li>Name：你要在邮件中展示的名字</li>
+<li>Email address：<code>me@example.com</code></li>
+<li>❗取消勾选 <strong>Treat as an alias</strong></li>
+<li>点击 <strong>Next Step</strong></li>
+</ul>
+<p><img src="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-add-another-email-address.png"
+	width="519"
+	height="296"
+	srcset="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-add-another-email-address_hu_b3d2470c90a72189.png 480w, /p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-add-another-email-address_hu_65bd883cba5bd531.png 1024w"
+	loading="lazy"
+	
+		alt="添加其他邮件地址设置"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="175"
+		data-flex-basis="420px"
+	
+></p>
+<h3 id="4-配置-smtp-参数">4️⃣ 配置 SMTP 参数
+</h3><p>填写如下信息：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SMTP Server</td>
+          <td><code>smtp.gmail.com</code></td>
+      </tr>
+      <tr>
+          <td>Port</td>
+          <td><code>587</code></td>
+      </tr>
+      <tr>
+          <td>Username</td>
+          <td>你的完整 Gmail 地址</td>
+      </tr>
+      <tr>
+          <td>Password</td>
+          <td>刚才生成的 App Password</td>
+      </tr>
+      <tr>
+          <td>加密</td>
+          <td>TLS</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><img src="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-smtp.png"
+	width="521"
+	height="314"
+	srcset="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-smtp_hu_8cd5044e859719c2.png 480w, /p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-smtp_hu_5ae2bc18c959e08f.png 1024w"
+	loading="lazy"
+	
+		alt="gmail smtp设置"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="165"
+		data-flex-basis="398px"
+	
+></p>
+<p>提交后，Gmail 会给 <code>me@example.com</code> 发一封<strong>验证邮件</strong>，用于确认这个邮箱地址是不是你在管理，只需要点击邮件中的验证链接，按照提示操作即可。</p>
+<h3 id="5-测试发信">5️⃣ 测试发信
+</h3><p>刷新 Gmail 页面，点击写信(Compose)：</p>
+<ul>
+<li>多出 From 选项</li>
+<li>下拉 From 可以看到 <code>me@example.com</code></li>
+<li>随便写点儿内容，发给其他邮箱试试吧</li>
+</ul>
+<p><img src="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-compose.png"
+	width="580"
+	height="184"
+	srcset="/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-compose_hu_ca888f0a45a2c3b2.png 480w, /p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/gmail-compose_hu_38a484ed46c86d25.png 1024w"
+	loading="lazy"
+	
+		alt="gmail发信"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="315"
+		data-flex-basis="756px"
+	
+></p>
+<p>至此：</p>
+<p>✅ Gmail 已允许你用域名邮箱发信</p>
+<h2 id="五扩展性与进阶配置">五、扩展性与进阶配置
+</h2><p>如果你希望<strong>邮件不进垃圾箱、看起来更专业、更稳定</strong>，下面这些配置非常重要。</p>
+<h3 id="1-spf-记录">1️⃣ SPF 记录
+</h3><p>在 Cloudflare DNS 中添加 TXT 记录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>v=spf1 include:_spf.mx.cloudflare.net include:_spf.google.com ~all
+</span></span></code></pre></div><p>作用：</p>
+<ul>
+<li>允许 Cloudflare 和 Google 代表你的域名发信</li>
+<li>减少被判定为伪造邮件的概率</li>
+</ul>
+<h3 id="2-dmarc-记录">2️⃣ DMARC 记录
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>v=DMARC1; p=none; rua=mailto:admin@example.com
+</span></span></code></pre></div><p>作用：</p>
+<ul>
+<li>监控 SPF / DKIM 是否通过</li>
+<li>帮助你发现邮件投递问题，并将报告发送到 <code>admin@example.com</code></li>
+<li>后续可逐步收紧策略（如 <code>quarantine</code> / <code>reject</code>）</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/gmail/">Gmail</a>
+        
+            <a href="/tags/cloudflare/">Cloudflare</a>
+        
+            <a href="/tags/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E9%82%AE%E7%AE%B1/">自定义域名邮箱</a>
+        
+            <a href="/tags/smtp/">SMTP</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send {
+        color: var(--twikoo-body-text-color-main);
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    twikoo.init({
+        envId: 'https:\/\/twikoo.yearsuns.com',
+        el: '#tcomment',lang: 'zh-CN',})
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 王离谱
+    </section>
+    
+    <section class="powerby">
+        
+            <a href="https://beian.miit.gov.cn/">粤ICP备2022043168号</a> <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

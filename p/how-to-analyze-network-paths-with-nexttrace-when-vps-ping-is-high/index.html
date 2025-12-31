@@ -4,11 +4,11 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="在实际使用 VPS 的过程中，经常会遇到这样一种现象： 服务器位于海外，配置和负载都很正常，但从国内访问时 ping 值长期偏高，例如 200ms、300ms 甚至更高，页面打开缓慢，SSH 操作也明显存在延迟。\n">
 <meta name="keywords" content="nexttrace, vps, ping, 网络路径, 国际网络, 跨境网络, CN2"><title>当VPS的ping很高时，如何使用nexttrace分析网络路径</title>
 
-<link rel='canonical' href='https://yearsuns-github-io.vercel.app/p/nexttrace/'>
+<link rel='canonical' href='https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/'>
 
 <link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="当VPS的ping很高时，如何使用nexttrace分析网络路径">
 <meta property='og:description' content="在实际使用 VPS 的过程中，经常会遇到这样一种现象： 服务器位于海外，配置和负载都很正常，但从国内访问时 ping 值长期偏高，例如 200ms、300ms 甚至更高，页面打开缓慢，SSH 操作也明显存在延迟。\n">
-<meta property='og:url' content='https://yearsuns-github-io.vercel.app/p/nexttrace/'>
+<meta property='og:url' content='https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/'>
 <meta property='og:site_name' content='王离谱的小破站'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='nexttrace' /><meta property='article:tag' content='vps' /><meta property='article:tag' content='ping' /><meta property='article:tag' content='网络路径' /><meta property='article:tag' content='国际网络' /><meta property='article:tag' content='跨境网络' /><meta property='article:tag' content='CN2' /><meta property='article:published_time' content='2025-11-10T14:59:56&#43;08:00'/><meta property='article:modified_time' content='2025-11-10T14:59:56&#43;08:00'/>
 <meta name="twitter:title" content="当VPS的ping很高时，如何使用nexttrace分析网络路径">
@@ -331,7 +331,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/p/nexttrace/">当VPS的ping很高时，如何使用nexttrace分析网络路径</a>
+            <a href="/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/">当VPS的ping很高时，如何使用nexttrace分析网络路径</a>
         </h2>
     
         
@@ -499,10 +499,10 @@ nexttrace 正是围绕这一需求设计的一款网络路径分析工具。</p>
 </h4><p>输出结果的底部提供了 MapTrace URL，用于将路径映射到地图上。
 该功能有助于理解地理走向，但在判断延迟问题时，<strong>不如文本信息直接有效</strong>。</p>
 <h3 id="4-结合示例进行路径分析">4. 结合示例进行路径分析
-</h3><p><img src="/p/nexttrace/output.png"
+</h3><p><img src="/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/output.png"
 	width="1722"
 	height="956"
-	srcset="/p/nexttrace/output_hu_46ab68a73be2f122.png 480w, /p/nexttrace/output_hu_3f76de97c160475.png 1024w"
+	srcset="/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/output_hu_46ab68a73be2f122.png 480w, /p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/output_hu_3f76de97c160475.png 1024w"
 	loading="lazy"
 	
 		alt="nexttrace输出示例"
@@ -558,10 +558,10 @@ nexttrace 正是围绕这一需求设计的一款网络路径分析工具。</p>
 </span></span></code></pre></div><p>最终进入目标 ASN，延迟稳定在 <strong>270ms 左右</strong>。</p>
 <p>这也解释了最初观察到的现象：
 <strong>ping 高，但并非偶发，而是由路径结构决定的长期结果。</strong></p>
-<p><img src="/p/nexttrace/tracemap.png"
+<p><img src="/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/tracemap.png"
 	width="1872"
 	height="768"
-	srcset="/p/nexttrace/tracemap_hu_d4bc0a8b526693c6.png 480w, /p/nexttrace/tracemap_hu_c92855a0897fa0b8.png 1024w"
+	srcset="/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/tracemap_hu_d4bc0a8b526693c6.png 480w, /p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/tracemap_hu_c92855a0897fa0b8.png 1024w"
 	loading="lazy"
 	
 		alt="nexttrace路径地图"

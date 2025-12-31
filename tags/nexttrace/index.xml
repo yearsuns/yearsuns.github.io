@@ -9,10 +9,10 @@
         <copyright>王离谱</copyright>
         <lastBuildDate>Mon, 10 Nov 2025 14:59:56 +0800</lastBuildDate><atom:link href="https://yearsuns-github-io.vercel.app/tags/nexttrace/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>当VPS的ping很高时，如何使用nexttrace分析网络路径</title>
-        <link>https://yearsuns-github-io.vercel.app/p/nexttrace/</link>
+        <link>https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/</link>
         <pubDate>Mon, 10 Nov 2025 14:59:56 +0800</pubDate>
         
-        <guid>https://yearsuns-github-io.vercel.app/p/nexttrace/</guid>
+        <guid>https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/</guid>
         <description>&lt;p&gt;在实际使用 VPS 的过程中，经常会遇到这样一种现象：
 服务器位于海外，配置和负载都很正常，但从国内访问时 &lt;strong&gt;ping 值长期偏高&lt;/strong&gt;，例如 200ms、300ms 甚至更高，页面打开缓慢，SSH 操作也明显存在延迟。&lt;/p&gt;
 &lt;p&gt;乍看之下，这类问题很容易被归因到“物理距离远”，但在实践中会发现，同样位于海外的 VPS，不同服务商、不同线路，延迟差异却可能非常明显。有的可以稳定在 150ms 左右，而有的却长期在 300ms 以上。这说明，&lt;strong&gt;距离并不是唯一决定因素&lt;/strong&gt;。&lt;/p&gt;
@@ -129,10 +129,10 @@ nexttrace 正是围绕这一需求设计的一款网络路径分析工具。&lt;
 &lt;/h4&gt;&lt;p&gt;输出结果的底部提供了 MapTrace URL，用于将路径映射到地图上。
 该功能有助于理解地理走向，但在判断延迟问题时，&lt;strong&gt;不如文本信息直接有效&lt;/strong&gt;。&lt;/p&gt;
 &lt;h3 id=&#34;4-结合示例进行路径分析&#34;&gt;4. 结合示例进行路径分析
-&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/nexttrace/output.png&#34;
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/output.png&#34;
 	width=&#34;1722&#34;
 	height=&#34;956&#34;
-	srcset=&#34;https://yearsuns-github-io.vercel.app/p/nexttrace/output_hu_46ab68a73be2f122.png 480w, https://yearsuns-github-io.vercel.app/p/nexttrace/output_hu_3f76de97c160475.png 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/output_hu_46ab68a73be2f122.png 480w, https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/output_hu_3f76de97c160475.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;nexttrace输出示例&#34;
@@ -188,10 +188,10 @@ nexttrace 正是围绕这一需求设计的一款网络路径分析工具。&lt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;最终进入目标 ASN，延迟稳定在 &lt;strong&gt;270ms 左右&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;这也解释了最初观察到的现象：
 &lt;strong&gt;ping 高，但并非偶发，而是由路径结构决定的长期结果。&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/nexttrace/tracemap.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/tracemap.png&#34;
 	width=&#34;1872&#34;
 	height=&#34;768&#34;
-	srcset=&#34;https://yearsuns-github-io.vercel.app/p/nexttrace/tracemap_hu_d4bc0a8b526693c6.png 480w, https://yearsuns-github-io.vercel.app/p/nexttrace/tracemap_hu_c92855a0897fa0b8.png 1024w&#34;
+	srcset=&#34;https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/tracemap_hu_d4bc0a8b526693c6.png 480w, https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/tracemap_hu_c92855a0897fa0b8.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;nexttrace路径地图&#34;

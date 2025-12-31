@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://yearsuns-github-io.vercel.app/categories/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <xhtml:link
                 rel="alternate"
@@ -16,12 +16,16 @@
                 href="https://yearsuns-github-io.vercel.app/categories/"
                 />
   </url><url>
-    <loc>https://yearsuns-github-io.vercel.app/tags/cn2/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <loc>https://yearsuns-github-io.vercel.app/tags/cloudflare/</loc>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/tags/gmail/</loc>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
     <loc>https://yearsuns-github-io.vercel.app/categories/it/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <xhtml:link
                 rel="alternate"
@@ -34,16 +38,8 @@
                 href="https://yearsuns-github-io.vercel.app/categories/it/"
                 />
   </url><url>
-    <loc>https://yearsuns-github-io.vercel.app/tags/nexttrace/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://yearsuns-github-io.vercel.app/tags/ping/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
     <loc>https://yearsuns-github-io.vercel.app/post/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <xhtml:link
                 rel="alternate"
@@ -56,8 +52,12 @@
                 href="https://yearsuns-github-io.vercel.app/post/"
                 />
   </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/tags/smtp/</loc>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
     <loc>https://yearsuns-github-io.vercel.app/tags/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <xhtml:link
                 rel="alternate"
@@ -70,24 +70,12 @@
                 href="https://yearsuns-github-io.vercel.app/tags/"
                 />
   </url><url>
-    <loc>https://yearsuns-github-io.vercel.app/tags/vps/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://yearsuns-github-io.vercel.app/p/nexttrace/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://yearsuns-github-io.vercel.app/tags/%E5%9B%BD%E9%99%85%E7%BD%91%E7%BB%9C/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://yearsuns-github-io.vercel.app/tags/%E8%B7%A8%E5%A2%83%E7%BD%91%E7%BB%9C/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <loc>https://yearsuns-github-io.vercel.app/p/build-a-free-custom-domain-email-with-cloudflare-and-gmail/</loc>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
     <loc>https://yearsuns-github-io.vercel.app/</loc>
-    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <xhtml:link
                 rel="alternate"
@@ -99,6 +87,38 @@
                 hreflang="zh-CN"
                 href="https://yearsuns-github-io.vercel.app/"
                 />
+  </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/tags/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E9%82%AE%E7%AE%B1/</loc>
+    <lastmod>2025-11-28T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/tags/cn2/</loc>
+    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/tags/nexttrace/</loc>
+    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/tags/ping/</loc>
+    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/tags/vps/</loc>
+    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/p/how-to-analyze-network-paths-with-nexttrace-when-vps-ping-is-high/</loc>
+    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/tags/%E5%9B%BD%E9%99%85%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://yearsuns-github-io.vercel.app/tags/%E8%B7%A8%E5%A2%83%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2025-11-10T14:59:56+08:00</lastmod>
+    <changefreq>weekly</changefreq>
   </url><url>
     <loc>https://yearsuns-github-io.vercel.app/tags/%E7%BD%91%E7%BB%9C%E8%B7%AF%E5%BE%84/</loc>
     <lastmod>2025-11-10T14:59:56+08:00</lastmod>
